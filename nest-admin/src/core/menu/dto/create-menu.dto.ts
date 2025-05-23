@@ -1,0 +1,52 @@
+import {
+  IsEnum,
+  IsOptional,
+  IsString,
+  IsBoolean,
+  IsInt,
+} from "class-validator";
+import { TypeEnum, LayoutEnum } from "../enum/menu.enum";
+
+export class CreateMenuDto {
+  @IsString()
+  name: string;
+
+  @IsString()
+  path: string;
+
+  @IsString()
+  component: string;
+
+  @IsInt()
+  parentId: number;
+
+  @IsInt()
+  sort: number;
+
+  @IsOptional()
+  @IsString()
+  icon?: string;
+
+  @IsEnum(LayoutEnum)
+  layout: LayoutEnum;
+
+  @IsEnum(TypeEnum)
+  type: TypeEnum;
+
+  @IsBoolean()
+  show: boolean;
+
+  @IsBoolean()
+  keepAlive: boolean;
+
+  @IsOptional()
+  @IsString()
+  permission?: string;
+
+  @IsBoolean()
+  isExternal: boolean;
+
+  @IsOptional()
+  @IsString()
+  externalLink?: string;
+}
