@@ -4,6 +4,7 @@ import {
   IsBoolean,
   IsOptional,
   IsArray,
+  IsObject,
 } from "class-validator";
 
 export class CreateRoleDto {
@@ -25,5 +26,8 @@ export class CreateRoleDto {
 
   @IsOptional()
   @IsArray()
-  menus?: number[]; // 菜单 ID 数组
+  menuIds?: number[]; // 菜单 ID 数组
+
+  @IsObject()
+  permissions: Record<string, string[]>;
 }

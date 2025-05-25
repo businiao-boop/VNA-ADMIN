@@ -3,7 +3,7 @@ import { Column, Entity, ManyToMany, JoinTable } from "typeorm";
 import { BaseEntity } from "@/common/entities/base.entity";
 import { UserEntity } from "@/core/user/entities/user.entity";
 import { MenuEntity } from "@/core/menu/entities/menu.entity";
-
+import { PermissionEntity } from "@/core/permission/entities/permission.entity";
 @Entity("role")
 export class RoleEntity extends BaseEntity {
   @Column({ length: 50, comment: "角色名称" })
@@ -25,6 +25,16 @@ export class RoleEntity extends BaseEntity {
     inverseJoinColumn: { name: "menuId", referencedColumnName: "id" },
   })
   menus: MenuEntity[];
+
+  @ManyToMany(() => PermissionEntity, (permission) => permission.roles, {
+    cascade: true,
+  })
+  @JoinTable({
+    name: "role_permission",
+    joinColumn: { name: "roleId", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "permissionId", referencedColumnName: "id" },
+  })
+  permissions: PermissionEntity[];
 
   // 新增反向关联：角色 -> 拥有该角色的用户列表
   @ManyToMany(() => UserEntity, (user) => user.roles)

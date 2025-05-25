@@ -1,7 +1,8 @@
-import { Column, Entity, ManyToMany } from "typeorm";
+import { Column, Entity, ManyToMany, JoinTable } from "typeorm";
 import { BaseEntity } from "@/common/entities/base.entity";
 import { TypeEnum, LayoutEnum } from "../enum/menu.enum";
 import { RoleEntity } from "@/core/role/entities/role.entity";
+import { PermissionEntity } from "@/core/permission/entities/permission.entity";
 
 @Entity("menu")
 export class MenuEntity extends BaseEntity {
@@ -66,4 +67,14 @@ export class MenuEntity extends BaseEntity {
   // 新增反向关联：菜单 -> 拥有该菜单的角色列表
   @ManyToMany(() => RoleEntity, (role) => role.menus)
   roles: RoleEntity[];
+
+  @ManyToMany(() => PermissionEntity, (permission) => permission.menus, {
+    cascade: true,
+  })
+  @JoinTable({
+    name: "menu_permission",
+    joinColumn: { name: "menuId" },
+    inverseJoinColumn: { name: "permissionId" },
+  })
+  permissions: PermissionEntity[];
 }

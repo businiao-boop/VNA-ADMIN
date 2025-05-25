@@ -41,6 +41,8 @@ $ pnpm dev
 
 ## create Module
 ```bash
+npm i -g @nestjs/cli
+
 nest g module articles --no-spec
 nest g controller articles --no-spec
 nest g service articles --no-spec

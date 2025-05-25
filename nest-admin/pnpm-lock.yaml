@@ -59,12 +59,18 @@ importers:
       mysql2:
         specifier: ^3.14.1
         version: 3.14.1
+      nest-admin:
+        specifier: 'link:'
+        version: 'link:'
       passport:
         specifier: ^0.7.0
         version: 0.7.0
       passport-jwt:
         specifier: ^4.0.1
         version: 4.0.1
+      pnpm:
+        specifier: ^10.11.0
+        version: 10.11.0
       reflect-metadata:
         specifier: '0.2'
         version: 0.2.2
@@ -1413,6 +1419,11 @@ packages:
   pluralize@8.0.0:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
+
+  pnpm@10.11.0:
+    resolution: {integrity: sha512-ZUBYP0HMX2KOs9l3Ps7oAvT575kjzEW2mJD7R5kdSwkpZGlOw6T3OKQgyRijMwYsi5JdMS9C5PDCY+tgNVH5dw==}
+    engines: {node: '>=18.12'}
+    hasBin: true
 
   process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
@@ -3262,6 +3273,8 @@ snapshots:
   picomatch@4.0.2: {}
 
   pluralize@8.0.0: {}
+
+  pnpm@10.11.0: {}
 
   process-nextick-args@2.0.1: {}
 

@@ -9,6 +9,8 @@ import { Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { CreateRoleDto } from "./dto/create-role.dto";
 import { MenuEntity } from "../menu/entities/menu.entity";
+import { RolePermissionEntity } from "./entities/role-permission";
+import { PermissionEntity } from "../permission/entities/permission.entity";
 @Injectable()
 export class RoleService extends BaseService<RoleEntity> {
   constructor(
@@ -17,19 +19,32 @@ export class RoleService extends BaseService<RoleEntity> {
     @InjectRepository(MenuEntity)
     readonly menuRepository: Repository<MenuEntity>,
     @InjectRepository(RoleMenuEntity)
-    private readonly roleMenuRepository: Repository<RoleMenuEntity>
+    private readonly roleMenuRepository: Repository<RoleMenuEntity>,
+    @InjectRepository(RolePermissionEntity)
+    private readonly rolePermissionRepository: Repository<RolePermissionEntity>,
+    @InjectRepository(PermissionEntity)
+    private readonly permissionRepository: Repository<PermissionEntity>
   ) {
     super(roleRepository);
   }
 
   async save(entity: CreateRoleDto) {
-    const { menus, ...rest } = entity;
+    const { menuIds, permissions, ...rest } = entity;
     const role = this.roleRepository.create(rest);
-    if (menus && menus.length) {
-      const menuIds = await this.menuRepository.findBy({
-        id: In(menus),
+    if (menuIds && menuIds.length) {
+      const menus = await this.menuRepository.findBy({
+        id: In(menuIds),
       });
-      role.menus = menuIds;
+      role.menus = menus;
+    }
+    if (permissions) {
+      const permissionIds = Object.values(permissions)
+        .map((id) => id)
+        .flat();
+      const ids = await this.permissionRepository.findBy({
+        id: In(permissionIds),
+      });
+      role.permissions = ids;
     }
     return super.save(role);
   }
@@ -40,6 +55,11 @@ export class RoleService extends BaseService<RoleEntity> {
         {
           field: "menus",
           joinTableRepository: this.roleMenuRepository,
+          condition: { roleId: id },
+        },
+        {
+          field: "permissions",
+          joinTableRepository: this.rolePermissionRepository,
           condition: { roleId: id },
         },
       ],
