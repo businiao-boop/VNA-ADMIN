@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { MenuService } from "./menu.service";
-import { CreateMenuDto } from "./dto/create-menu.dto";
+import { SaveMenuDto } from "./dto/save-menu.dto";
 
 @Controller("menu")
 export class MenuController {
@@ -12,7 +12,7 @@ export class MenuController {
   }
 
   @Post("save")
-  async save(@Body() createMenuDto: CreateMenuDto) {
+  async save(@Body() createMenuDto: SaveMenuDto) {
     return this.menuService.save(createMenuDto);
   }
 

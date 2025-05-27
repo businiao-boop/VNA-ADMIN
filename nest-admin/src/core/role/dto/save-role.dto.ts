@@ -5,9 +5,14 @@ import {
   IsOptional,
   IsArray,
   IsObject,
+  IsInt,
 } from "class-validator";
 
-export class CreateRoleDto {
+export class SaveRoleDto {
+  @IsInt()
+  @IsOptional()
+  id?: number;
+
   @IsString()
   @IsNotEmpty()
   name: string;

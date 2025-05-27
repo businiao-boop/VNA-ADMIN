@@ -8,7 +8,11 @@ import {
 } from "class-validator";
 import { TypeEnum, LayoutEnum } from "../enum/menu.enum";
 
-export class CreateMenuDto {
+export class SaveMenuDto {
+  @IsInt()
+  @IsOptional()
+  id?: number;
+
   @IsString()
   name: string;
 

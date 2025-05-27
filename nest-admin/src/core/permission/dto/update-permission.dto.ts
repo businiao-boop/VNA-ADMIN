@@ -1,5 +1,5 @@
 // src/modules/permission/dto/update-permission.dto.ts
 import { PartialType } from "@nestjs/mapped-types";
-import { CreatePermissionDto } from "./create-permission.dto";
+import { SavePermissionDto } from "./save-permission.dto";
 
-export class UpdatePermissionDto extends PartialType(CreatePermissionDto) {}
+export class UpdatePermissionDto extends PartialType(SavePermissionDto) {}

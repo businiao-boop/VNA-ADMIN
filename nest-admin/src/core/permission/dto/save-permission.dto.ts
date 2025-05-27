@@ -1,7 +1,7 @@
 // src/modules/permission/dto/create-permission.dto.ts
 import { IsString, IsOptional, IsBoolean } from "class-validator";
 
-export class CreatePermissionDto {
+export class SavePermissionDto {
   @IsString()
   name: string;
 

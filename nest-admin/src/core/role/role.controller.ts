@@ -1,9 +1,8 @@
 // src/modules/role/role.controller.ts
 import { Body, Controller, Post, Query } from "@nestjs/common";
 import { RoleService } from "./role.service";
-import { CreateRoleDto } from "./dto/create-role.dto";
 import { UpdateRoleDto } from "./dto/update-role.dto";
-import { SetRoleMenusDto } from "./dto/set-role-menus.dto";
+import { SaveRoleDto } from "./dto/save-role.dto";
 
 @Controller("role")
 export class RoleController {
@@ -20,7 +19,7 @@ export class RoleController {
   }
 
   @Post("save")
-  save(@Body() body: CreateRoleDto) {
+  save(@Body() body: SaveRoleDto) {
     return this.roleService.save(body);
   }
 

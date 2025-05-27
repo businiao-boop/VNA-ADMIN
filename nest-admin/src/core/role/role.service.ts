@@ -1,13 +1,12 @@
 // src/modules/role/role.service.ts
 import { RoleMenuEntity } from "./entities/role-menu.entity";
-import { SetRoleMenusDto } from "./dto/set-role-menus.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { In } from "typeorm";
 import { BaseService } from "@/common/services/base.service";
 import { RoleEntity } from "./entities/role.entity";
 import { Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
-import { CreateRoleDto } from "./dto/create-role.dto";
+import { SaveRoleDto } from "./dto/save-role.dto";
 import { MenuEntity } from "../menu/entities/menu.entity";
 import { RolePermissionEntity } from "./entities/role-permission";
 import { PermissionEntity } from "../permission/entities/permission.entity";
@@ -28,7 +27,7 @@ export class RoleService extends BaseService<RoleEntity> {
     super(roleRepository);
   }
 
-  async save(entity: CreateRoleDto): Promise<RoleEntity | RoleEntity[]> {
+  async save(entity: SaveRoleDto): Promise<RoleEntity | RoleEntity[]> {
     const { menuIds, permissions, ...rest } = entity;
     const role = this.roleRepository.create(rest);
     if (menuIds && menuIds.length) {

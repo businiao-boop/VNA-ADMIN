@@ -6,7 +6,7 @@ import { BaseService } from "@/common/services/base.service";
 import { MenuEntity } from "./entities/menu.entity";
 import { PermissionEntity } from "../permission/entities/permission.entity";
 
-import { CreateMenuDto } from "./dto/create-menu.dto";
+import { SaveMenuDto } from "./dto/save-menu.dto";
 
 @Injectable()
 export class MenuService extends BaseService<MenuEntity> {
@@ -19,9 +19,11 @@ export class MenuService extends BaseService<MenuEntity> {
     super(menuRepository);
   }
 
-  async save(entity: CreateMenuDto) {
+  async save(entity: SaveMenuDto): Promise<MenuEntity | MenuEntity[]> {
     const { permissionIds, ...rest } = entity;
     const menu = this.menuRepository.create(rest);
+    console.log(menu);
+
     if (permissionIds && permissionIds.length > 0) {
       const permissions = await this.permissionRepository.findBy({
         id: In(permissionIds),
