@@ -22,8 +22,6 @@ export class MenuService extends BaseService<MenuEntity> {
   async save(entity: SaveMenuDto): Promise<MenuEntity | MenuEntity[]> {
     const { permissionIds, ...rest } = entity;
     const menu = this.menuRepository.create(rest);
-    console.log(menu);
-
     if (permissionIds && permissionIds.length > 0) {
       const permissions = await this.permissionRepository.findBy({
         id: In(permissionIds),

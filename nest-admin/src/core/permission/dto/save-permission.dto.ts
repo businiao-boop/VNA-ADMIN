@@ -1,7 +1,10 @@
 // src/modules/permission/dto/create-permission.dto.ts
-import { IsString, IsOptional, IsBoolean } from "class-validator";
+import { IsString, IsOptional, IsBoolean, IsArray } from "class-validator";
 
 export class SavePermissionDto {
+  @IsOptional()
+  id?: number;
+
   @IsString()
   name: string;
 
@@ -15,4 +18,8 @@ export class SavePermissionDto {
   @IsOptional()
   @IsBoolean()
   isEnabled?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  menuIds?: number[];
 }

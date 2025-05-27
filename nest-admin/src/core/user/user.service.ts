@@ -49,8 +49,8 @@ export class UserService extends BaseService<UserEntity> {
     });
   }
 
-  getUserProfile(userId: number) {
-    return this.userRepository.findOne({
+  async getUserProfile(userId: number) {
+    const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: [
         "roles",
@@ -59,5 +59,38 @@ export class UserService extends BaseService<UserEntity> {
         "roles.menus.permissions", // 如果你想合并菜单下的权限
       ],
     });
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+    const menuMap = new Map<number, any>();
+    const permissionMap: Record<number, number[]> = {};
+
+    for (const role of user.roles) {
+      for (const menu of role.menus) {
+        if (!menuMap.has(menu.id)) {
+          // 克隆 menu 对象，避免原始对象被修改
+          const { permissions, ...rest } = menu;
+          menuMap.set(menu.id, rest);
+        }
+
+        // 初始化 permission 数组
+        if (!permissionMap[menu.id]) {
+          permissionMap[menu.id] = [];
+        }
+
+        for (const perm of menu.permissions || []) {
+          if (!permissionMap[menu.id].includes(perm.id)) {
+            permissionMap[menu.id].push(perm.id);
+          }
+        }
+      }
+    }
+    const { password, ...rest } = user;
+
+    return {
+      ...rest,
+      menus: Array.from(menuMap.values()),
+      permissions: permissionMap,
+    };
   }
 }
