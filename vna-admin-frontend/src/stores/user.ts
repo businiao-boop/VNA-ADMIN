@@ -1,23 +1,45 @@
 import { defineStore } from "pinia";
-import { login, LoginDto } from "@/api/auth";
-
+import { login, getUserProfile, LoginDto, UserResponseDto } from "@/api/auth";
+import { setToken } from "@/utils/auth";
 export const useUserStore = defineStore("user", {
   state: () => ({
     token: "",
-    userInfo: null as any,
+    userInfo: null as UserResponseDto | null,
+    roles: [], // 用户角色
   }),
   actions: {
     setToken(token: string) {
       this.token = token;
-      localStorage.setItem("token", token);
+      setToken(token);
     },
     setUserInfo(info: any) {
       this.userInfo = info;
     },
+    fetchUserInfo() {
+      return new Promise((resolve, reject) => {
+        getUserProfile()
+          .then((res) => {
+            this.setUserInfo(res);
+            resolve(res);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
     login(form: LoginDto) {
-      login(form).then((res) => {
-        const { access_token } = res;
-        this.setToken(access_token);
+      return new Promise((resolve, reject) => {
+        login(form)
+          .then((res) => {
+            if (!res.access_token) {
+              resolve(true);
+            }
+            this.setToken(res.access_token);
+            resolve(true);
+          })
+          .catch((err) => {
+            reject(err);
+          });
       });
     },
     logout() {

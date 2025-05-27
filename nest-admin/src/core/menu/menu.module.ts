@@ -4,8 +4,10 @@ import { MenuController } from "./menu.controller";
 import { MenuEntity } from "./entities/menu.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
+import { PermissionEntity } from "../permission/entities/permission.entity";
+
 @Module({
-  imports: [TypeOrmModule.forFeature([MenuEntity])],
+  imports: [TypeOrmModule.forFeature([MenuEntity, PermissionEntity])],
   controllers: [MenuController],
   providers: [MenuService],
 })

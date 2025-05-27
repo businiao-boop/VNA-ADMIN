@@ -28,7 +28,7 @@ export class RoleService extends BaseService<RoleEntity> {
     super(roleRepository);
   }
 
-  async save(entity: CreateRoleDto) {
+  async save(entity: CreateRoleDto): Promise<RoleEntity | RoleEntity[]> {
     const { menuIds, permissions, ...rest } = entity;
     const role = this.roleRepository.create(rest);
     if (menuIds && menuIds.length) {

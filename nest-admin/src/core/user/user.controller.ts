@@ -1,8 +1,8 @@
 import { Body, Controller, Post, Query } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { Public } from "@/common/decorators/public.decorator";
+import { SaveUserDto } from "./dto/save-user.dto";
 
 @Controller("user")
 export class UserController {
@@ -20,7 +20,7 @@ export class UserController {
 
   @Public()
   @Post("save")
-  save(@Body() body: CreateUserDto) {
+  save(@Body() body: SaveUserDto) {
     return this.userService.save(body);
   }
 

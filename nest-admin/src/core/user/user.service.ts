@@ -4,11 +4,10 @@ import { BaseService } from "@/common/services/base.service";
 import { Repository, In } from "typeorm";
 import * as bcrypt from "bcryptjs";
 
-import { CreateUserDto } from "./dto/create-user.dto";
 import { UserEntity } from "./entities/user.entity";
-// import { SetUserRolesDto } from "./dto/set-user-roles.dto";
 import { UserRoleEntity } from "./entities/user-role.entity";
 import { RoleEntity } from "../role/entities/role.entity";
+import { SaveUserDto } from "./dto/save-user.dto";
 @Injectable()
 export class UserService extends BaseService<UserEntity> {
   constructor(
@@ -22,7 +21,7 @@ export class UserService extends BaseService<UserEntity> {
     super(userRepository); // 把 User 仓库传给基类
   }
 
-  async save(entity: CreateUserDto): Promise<CreateUserDto> {
+  async save(entity: SaveUserDto): Promise<UserEntity | UserEntity[]> {
     const { roles, ...rest } = entity;
     const user = this.userRepository.create(rest);
     if (user.password) {
@@ -46,6 +45,18 @@ export class UserService extends BaseService<UserEntity> {
           joinTableRepository: this.userRoleRepository,
           condition: { userId: id },
         },
+      ],
+    });
+  }
+
+  getUserProfile(userId: number) {
+    return this.userRepository.findOne({
+      where: { id: userId },
+      relations: [
+        "roles",
+        "roles.menus",
+        // "roles.permissions",
+        "roles.menus.permissions", // 如果你想合并菜单下的权限
       ],
     });
   }

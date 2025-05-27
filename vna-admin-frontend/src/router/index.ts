@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import type { App } from "vue";
-
+import { routerGuard } from "./router-guard";
 // 常驻路由
 export const constantRoutes = [
   {
@@ -16,6 +16,7 @@ const router = createRouter({
 });
 
 export function setupRouter(app: App) {
+  routerGuard(router);
   app.use(router);
 }
 export default router;

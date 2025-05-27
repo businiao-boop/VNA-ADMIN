@@ -4,6 +4,7 @@ import {
   IsString,
   IsBoolean,
   IsInt,
+  IsArray,
 } from "class-validator";
 import { TypeEnum, LayoutEnum } from "../enum/menu.enum";
 
@@ -40,8 +41,8 @@ export class CreateMenuDto {
   keepAlive: boolean;
 
   @IsOptional()
-  @IsString()
-  permission?: string;
+  @IsArray()
+  permissionIds?: string[];
 
   @IsBoolean()
   isExternal: boolean;

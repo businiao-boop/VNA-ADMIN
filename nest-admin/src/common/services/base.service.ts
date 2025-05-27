@@ -85,10 +85,23 @@ export class BaseService<T extends ObjectLiteral> {
   }
 
   async save(entity: any) {
-    if (entity.id) {
-      return this.repository.update(entity.id, entity);
+    const id = entity?.id;
+
+    if (id) {
+      // 更新逻辑
+      const existing = await this.repository.findOne({ where: { id } as any });
+
+      if (!existing) {
+        throw new NotFoundException(`ID ${id} 对应的数据不存在`);
+      }
+
+      const merged = this.repository.merge(existing, entity);
+
+      return this.repository.save(merged);
     } else {
-      return this.repository.save(entity);
+      // 创建逻辑
+      const newEntity = this.repository.create(entity);
+      return this.repository.save(newEntity);
     }
   }
   // 软删除

@@ -11,7 +11,11 @@ import {
 } from "class-validator";
 import { GenderEnum } from "../enums/gender.enum";
 
-export class CreateUserDto {
+export class SaveUserDto {
+  @IsOptional()
+  @IsInt()
+  id?: number;
+
   @IsString()
   @IsNotEmpty({ message: "用户名不能为空" })
   @Length(3, 50, { message: "用户名长度应为 3-50 个字符" })
@@ -22,12 +26,8 @@ export class CreateUserDto {
   password: string;
 
   @IsOptional()
-  @IsEnum(GenderEnum, { message: "性别必须是 male、female 或 unknown" })
+  @IsEnum(GenderEnum, { message: "性别必须是 '0','1' 或 '2'" })
   gender?: GenderEnum;
-
-  // @IsOptional()
-  // @IsString()
-  // roles: string;
 
   @IsOptional()
   @IsArray()

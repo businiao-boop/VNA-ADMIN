@@ -29,8 +29,8 @@ async function bootstrap() {
   const globalPrefix = configService.get("app.prefix");
   app.setGlobalPrefix(globalPrefix); //设置路由全局前缀
 
-  // const reflector = app.get(Reflector);
-  // app.useGlobalGuards(new JwtAuthGuard(reflector)); // 设置全局守卫
+  const reflector = app.get(Reflector);
+  app.useGlobalGuards(new JwtAuthGuard(reflector)); // 设置全局守卫
 
   // 配置 Swagger
   const config = new DocumentBuilder()

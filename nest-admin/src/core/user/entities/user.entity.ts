@@ -6,14 +6,12 @@ import { RoleEntity } from "@/core/role/entities/role.entity";
 import { GenderEnum } from "../enums/gender.enum";
 @Entity("user")
 export class UserEntity extends BaseEntity {
-  @Column({ length: 50, unique: true })
+  @Column({ length: 50 })
   username: string;
 
   @Column()
   password: string;
 
-  // @Column({ default: "user" }) // 可选：admin/user 等角色
-  // role: string;
   // 多对多：用户-角色
   @ManyToMany(() => RoleEntity, (role) => role.users, { cascade: true })
   @JoinTable({

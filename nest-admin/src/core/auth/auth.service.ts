@@ -3,6 +3,7 @@ import { LoginDto } from "./dto/login-dto";
 import { UserService } from "@/core/user/user.service";
 import * as bcrypt from "bcryptjs";
 import { JwtService } from "@nestjs/jwt";
+import { PayloadDto } from "./dto/payload-dto";
 @Injectable()
 export class AuthService {
   constructor(
@@ -32,5 +33,8 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+  async infoUser(user: PayloadDto) {
+    return await this.userService.getUserProfile(user.userId);
   }
 }

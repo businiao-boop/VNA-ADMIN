@@ -24,7 +24,8 @@
 import { message } from "ant-design-vue";
 import { LoginDto } from "@/api/auth";
 import { useUserStore } from "@/stores/user";
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 const userStore = useUserStore();
 const form = reactive<LoginDto>({
   username: "arno",
@@ -36,7 +37,12 @@ const handleLogin = async () => {
   if (!form.username || !form.password) {
     return message.warning("请输入用户名和密码");
   }
-  userStore.login(form);
+  userStore.login(form).then(()=>{
+      userStore.fetchUserInfo().then(()=>{
+        message.success("登录成功");
+        router.push("/");
+      })
+  });
 };
 </script>
 
