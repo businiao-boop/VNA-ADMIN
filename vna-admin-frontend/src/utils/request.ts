@@ -14,15 +14,26 @@ service.interceptors.request.use(
   }
 );
 
-service.interceptors.response.use((response) => {
-  const res = response.data;
-  if (res.code == 200) {
-    return res.data;
-  } else {
-    message.error(res.message);
-    return Promise.reject(res.message);
+service.interceptors.response.use(
+  (response) => {
+    console.log(response, "response");
+
+    const res = response.data;
+    if (res.code == 200) {
+      return res.data;
+    } else {
+      message.error(res.message);
+      return Promise.reject(res.message);
+    }
+  },
+  (error) => {
+    console.log(error, "request error");
+
+    const response = error.response;
+    const data = response.data;
+    return data.message;
   }
-});
+);
 
 type RequestFun = <T>(config: AxiosRequestConfig) => Promise<T>;
 const request: RequestFun = (config) => {

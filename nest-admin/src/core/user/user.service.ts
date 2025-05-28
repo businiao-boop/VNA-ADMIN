@@ -8,6 +8,8 @@ import { UserEntity } from "./entities/user.entity";
 import { UserRoleEntity } from "./entities/user-role.entity";
 import { RoleEntity } from "../role/entities/role.entity";
 import { SaveUserDto } from "./dto/save-user.dto";
+
+import { buildRouteTree } from "@/common/utils/route.util";
 @Injectable()
 export class UserService extends BaseService<UserEntity> {
   constructor(
@@ -52,45 +54,54 @@ export class UserService extends BaseService<UserEntity> {
   async getUserProfile(userId: number) {
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      relations: [
-        "roles",
-        "roles.menus",
-        // "roles.permissions",
-        "roles.menus.permissions", // 如果你想合并菜单下的权限
-      ],
+      relations: ["roles", "roles.menus", "roles.menus.permissions"],
     });
+    console.log(user);
+
     if (!user) {
       throw new NotFoundException("User not found");
     }
+
     const menuMap = new Map<number, any>();
-    const permissionMap: Record<number, number[]> = {};
+    const permissionMap = new Map<number, Set<number>>();
 
     for (const role of user.roles) {
       for (const menu of role.menus) {
         if (!menuMap.has(menu.id)) {
-          // 克隆 menu 对象，避免原始对象被修改
           const { permissions, ...rest } = menu;
           menuMap.set(menu.id, rest);
         }
 
-        // 初始化 permission 数组
-        if (!permissionMap[menu.id]) {
-          permissionMap[menu.id] = [];
+        if (!permissionMap.has(menu.id)) {
+          permissionMap.set(menu.id, new Set());
         }
 
         for (const perm of menu.permissions || []) {
-          if (!permissionMap[menu.id].includes(perm.id)) {
-            permissionMap[menu.id].push(perm.id);
-          }
+          permissionMap.get(menu.id)?.add(perm.id);
         }
       }
     }
-    const { password, ...rest } = user;
+
+    const permissions: Record<number, string> = {};
+    for (const [menuId, permSet] of permissionMap.entries()) {
+      const permSetArr = Array.from(permSet);
+      const permStr =
+        "0b" +
+        permSetArr
+          .map((v) => Number(v)) // 转换为数字
+          .reduce((pre, cur) => pre | cur, 0) // 按位或运算
+          .toString(2) // 转回二进制字符串（去掉了 0b）
+          .padStart(8, "0");
+      permissions[menuId] = permStr;
+    }
+
+    const { password, roles, ...restUser } = user;
 
     return {
-      ...rest,
-      menus: Array.from(menuMap.values()),
-      permissions: permissionMap,
+      ...restUser,
+      // menus: Array.from(menuMap.values()),
+      routes: buildRouteTree(Array.from(menuMap.values())),
+      permissions,
     };
   }
 }

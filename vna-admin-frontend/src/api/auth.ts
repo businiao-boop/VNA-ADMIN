@@ -1,27 +1,9 @@
 import axios from "@/utils/request";
 
-export type LoginDto = {
-  username: string;
-  password: string;
-  rememberMe?: boolean;
-};
+// 登录
 
-export type LoginResponseDto = {
-  access_token: string;
-};
 
-export type UserResponseDto = {
-  id: number;
-  username: string;
-  password: string;
-  roles: string[]; // TODO: define role type
-  gender: string;
-  nickname: string;
-  avatar: string;
-  email: string;
-  phone: string;
-  address: string;
-};
+import { UserResponseDto, LoginResponseDto, LoginDto } from "@/types/api/auth";
 export function login(data: LoginDto) {
   return axios<LoginResponseDto>({
     url: "/auth/login",

@@ -42,6 +42,8 @@ const handleLogin = async () => {
         message.success("登录成功");
         router.push("/");
       })
+  },err=>{
+    console.log("login",err);
   });
 };
 </script>
