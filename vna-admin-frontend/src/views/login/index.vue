@@ -22,7 +22,8 @@
 
 <script setup lang="ts">
 import { message } from "ant-design-vue";
-import { LoginDto } from "@/api/auth";
+// import { LoginDto } from "@/api/auth";
+import { LoginDto } from "@/types//api/auth";
 import { useUserStore } from "@/stores/user";
 import { useRouter } from "vue-router";
 const router = useRouter();
@@ -37,14 +38,17 @@ const handleLogin = async () => {
   if (!form.username || !form.password) {
     return message.warning("请输入用户名和密码");
   }
-  userStore.login(form).then(()=>{
-      userStore.fetchUserInfo().then(()=>{
+  userStore.login(form).then(
+    () => {
+      userStore.fetchUserInfo().then(() => {
         message.success("登录成功");
         router.push("/");
-      })
-  },err=>{
-    console.log("login",err);
-  });
+      });
+    },
+    (err) => {
+      console.log("login", err);
+    }
+  );
 };
 </script>
 

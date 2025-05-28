@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { login, getUserProfile } from "@/api/auth";
 import { UserResponseDto, LoginDto } from "@/types/api/auth";
 import { setToken } from "@/utils/auth";
-import { transformAsyncRoutes } from "@/utils/buildRouteTree";
+import { transformAsyncRoutes } from "@/utils/transformRoutes";
 import { BackendRoute } from "@/types/router";
 export const useUserStore = defineStore("user", {
   state: () => ({
@@ -19,7 +19,10 @@ export const useUserStore = defineStore("user", {
       this.userInfo = info;
     },
     generateRoutes(routes: BackendRoute[]) {
+      console.log(routes, "routes");
+
       const res = transformAsyncRoutes(routes);
+      console.log(res, "res");
     },
     fetchUserInfo() {
       return new Promise((resolve, reject) => {

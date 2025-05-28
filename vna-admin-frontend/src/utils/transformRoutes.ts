@@ -11,6 +11,7 @@ const loadComponent = (view: string) => {
     const relativePath = path.replace("/src/views/", "@/views/");
     return relativePath === view;
   });
+  console.log(matchedModule, "matchedModule");
 
   if (matchedModule) {
     const [, module] = matchedModule;
