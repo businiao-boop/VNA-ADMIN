@@ -1,0 +1,51 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body,
+#app {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-size: 14px;
+}
+ul,
+ol,
+li {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+input,
+button {
+  outline: none;
+  border: none;
+}
+button {
+  cursor: pointer;
+}
+img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.clamped-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5;
+  max-height: calc(var(--lines) * 1.5em); /* 计算最大高度 */
+  -webkit-line-clamp: var(--lines); /* 动态设置行数 */
+  white-space: normal; /*这个属性设置文本如何在容器内换行。normal 会根据容器宽度自动换行。*/
+  word-wrap: break-word; /*允许长单词在需要时换行。*/
+}

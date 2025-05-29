@@ -1,0 +1,11 @@
+.layout-wrapper {
+  height: 100%;
+  width: 100%;
+  $layout-header-height: 60px;
+  .layout-header {
+    height: $layout-header-height;
+  }
+  .layout-content {
+    height: calc(100% - $layout-header-height);
+  }
+}

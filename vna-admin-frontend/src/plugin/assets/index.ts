@@ -1,2 +1,2 @@
-import "@/assets/styles/index.less";
+import "@/assets/styles/index.scss";
 export const setupAssets = () => {};

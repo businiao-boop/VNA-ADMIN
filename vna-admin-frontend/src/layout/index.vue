@@ -1,17 +1,17 @@
 <script setup lang="ts">
 defineOptions({
-  name: 'Layout',
-})
-import Header from './header/index.vue'
+  name: "Layout",
+});
+import Header from "./header/index.vue";
 </script>
 <template>
-  <el-container>
-    <el-header>
-      <Header />
-    </el-header>
-    <el-main>Main</el-main>
-    <el-footer>Footer</el-footer>
-  </el-container>
+  <a-layout class="layout-wrapper">
+    <a-layout-header class="layout-header"><Header /></a-layout-header>
+    <a-layout-content class="layout-content">Content</a-layout-content>
+    <a-layout-footer class="layout-footer">Footer</a-layout-footer>
+  </a-layout>
 </template>
 
-<style scoped lang="less"></style>
+<style scoped lang="scss">
+@import "./index.scss";
+</style>

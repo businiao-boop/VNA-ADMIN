@@ -2,10 +2,12 @@
 defineOptions({
   name: "Header",
 });
-import { useUserStore } from "@/stores/user";
 import Menu from "../menu/index.vue";
 
+import { useUserStore } from "@/stores/user";
+
 const userStore = useUserStore();
+
 </script>
 <template>
   <div class="header">

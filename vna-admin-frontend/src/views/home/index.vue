@@ -1,4 +1,8 @@
-<script setup lang="ts"></script>
-<template>home</template>
+<script setup lang="ts">
+import Layout from "@/layout/index.vue";
+</script>
+<template>
+  <Layout />
+</template>
 
 <style scoped lang="scss"></style>
