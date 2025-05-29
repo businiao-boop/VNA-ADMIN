@@ -1,2 +1,2 @@
-export { setupAntd } from "./antd";
+export { setupElementPlus } from "./elementPlus";
 export { setupAssets } from "./assets";

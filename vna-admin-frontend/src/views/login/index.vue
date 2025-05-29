@@ -1,54 +1,69 @@
 <template>
   <div class="login-container">
-    <a-card title="登录" class="login-card">
-      <a-form layout="vertical" :model="form">
-        <a-form-item label="用户名" name="username">
-          <a-input v-model:value="form.username" placeholder="请输入用户名" />
-        </a-form-item>
-        <a-form-item label="密码" name="password">
-          <a-input-password
-            v-model:value="form.password"
-            placeholder="请输入密码"
-            @pressEnter="handleLogin"
+    <el-card title="登录" class="login-card">
+      <el-form layout="vertical" :model="form" ref="loginForm" :rules="rules">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="form.username" placeholder="请输入用户名" />
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input
+            v-model="form.password"
+            type="password"
+            autocomplete="off"
+            @keyup.enter.native="handleLogin(loginForm)"
           />
-        </a-form-item>
-        <a-form-item>
-          <a-button type="primary" @click="handleLogin">登录</a-button>
-        </a-form-item>
-      </a-form>
-    </a-card>
+        </el-form-item>
+        <el-form-item prop="rememberMe">
+          <el-checkbox v-model="form.rememberMe">记住我</el-checkbox>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handleLogin(loginForm)"
+            >登录</el-button
+          >
+        </el-form-item>
+      </el-form>
+    </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { message } from "ant-design-vue";
-// import { LoginDto } from "@/api/auth";
-import { LoginDto } from "@/types//api/auth";
+import { ElMessage as message, FormInstance, FormRules } from "element-plus";
 import { useUserStore } from "@/stores/user";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const userStore = useUserStore();
-const form = reactive<LoginDto>({
+const loginForm = ref<FormInstance>();
+const form = reactive({
   username: "arno",
-  password: "123",
+  password: "1234",
   rememberMe: true,
 });
 
-const handleLogin = async () => {
-  if (!form.username || !form.password) {
-    return message.warning("请输入用户名和密码");
-  }
-  userStore.login(form).then(
-    () => {
-      userStore.fetchUserInfo().then(() => {
-        message.success("登录成功");
-        router.push("/");
-      });
-    },
-    (err) => {
-      console.log("login", err);
+const rules = reactive<FormRules<typeof form>>({
+  username: [{ required: true, trigger: "blur" }],
+  password: [{ required: true, trigger: "blur" }],
+});
+
+const handleLogin = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+  formEl.validate((valid) => {
+    if(!valid)return;
+    if (valid) {
+      userStore.login(form).then(
+        () => {
+          userStore.fetchUserInfo().then(() => {
+            message.success("登录成功");
+            router.push("/");
+          });
+        },
+        (err) => {
+          console.log("login", err);
+        }
+      );
+    } else {
+      console.log("error submit!");
     }
-  );
+  });
 };
 </script>
 

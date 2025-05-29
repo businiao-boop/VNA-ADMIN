@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import { setupAntd, setupAssets } from "@/plugin"
+import { setupElementPlus, setupAssets } from "@/plugin"
 import { setupRouter } from "@/router"
 import { setupStore } from "@/stores"
 
@@ -10,7 +10,7 @@ function setupPlugins() {
   // 挂载资源
   setupAssets()
   // 挂载antd
-  setupAntd(app);
+  setupElementPlus(app);
 }
 
 async function setupApp() {
