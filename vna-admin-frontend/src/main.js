@@ -3,6 +3,7 @@ import App from './App.vue'
 import { setupElementPlus, setupAssets } from "@/plugin"
 import { setupRouter } from "@/router"
 import { setupStore } from "@/stores"
+import "element-plus/dist/index.css";
 
 const app = createApp(App);
 

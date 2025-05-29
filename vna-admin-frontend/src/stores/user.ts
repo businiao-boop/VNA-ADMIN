@@ -9,6 +9,7 @@ export const useUserStore = defineStore("user", {
     token: "",
     userInfo: null as UserResponseDto | null,
     roles: [], // 用户角色
+    routes: [] as BackendRoute[],
   }),
   actions: {
     setToken(token: string) {
@@ -18,18 +19,25 @@ export const useUserStore = defineStore("user", {
     setUserInfo(info: any) {
       this.userInfo = info;
     },
-    generateRoutes(routes: BackendRoute[]) {
-      console.log(routes, "routes");
-
-      const res = transformAsyncRoutes(routes);
-      console.log(res, "res");
+    setRoutes(routes: BackendRoute[]) {
+      this.routes = routes;
+    },
+    generateRoutes(routes: BackendRoute[]): Promise<BackendRoute[]> {
+      return new Promise((resolve, reject) => {
+        try {
+          const res = transformAsyncRoutes(routes);
+          this.setRoutes(res);
+          resolve(res);
+        } catch (error) {
+          reject(error);
+        }
+      });
     },
     fetchUserInfo() {
       return new Promise((resolve, reject) => {
         getUserProfile()
           .then((res) => {
             this.setUserInfo(res);
-            this.generateRoutes(res.routes);
             resolve(res);
           })
           .catch((err) => {

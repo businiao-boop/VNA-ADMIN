@@ -6,18 +6,27 @@ export function routerGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {
     const token = getToken();
     const userStore = useUserStore();
-    if (WhiteList.includes(to.path)) {
-      return next();
-    }
+    // ✅ 白名单放行
+    if (WhiteList.includes(to.path)) return next();
+
+    // ❌ 无 token，跳转登录页
     if (!token) return next("/login");
 
+    // ✅ 拉取用户信息（首次进入）
     if (!userStore.userInfo) {
-      try {
-        await userStore.fetchUserInfo();
-      } catch (error) {
-        console.log(error);
-        return next("/login");
-      }
+      await userStore.fetchUserInfo();
+    }
+
+    // ✅ 生成动态路由（如未添加）
+    if (userStore.routes.length === 0) {
+      const accessedRoutes = await userStore.generateRoutes(
+        userStore.userInfo!.routes
+      );
+      accessedRoutes.map((route) => {
+        router.addRoute(route);
+      });
+      // ⚠️ 必须重新跳转一次，避免动态添加路由后路由匹配失败
+      return next({ ...to, replace: true });
     }
     next();
   });
