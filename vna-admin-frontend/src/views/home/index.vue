@@ -1,9 +1,9 @@
-<script setup lang="tsx">
+<script setup lang="ts">
 import Dialog from "@/views/core/menu/editModal.vue"
 import {useFormModal} from "@/hooks/modal";
 const form = {a:1,b:2}
 const openModal = () => {
-  const showModal = useFormModal()
+  const showModal = useFormModal({title:"提示",width:1500})
   showModal(Dialog,{modalValue:form}).then(data=>{
     console.log(data,"data");
   })

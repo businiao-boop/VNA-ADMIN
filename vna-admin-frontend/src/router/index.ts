@@ -13,6 +13,11 @@ export const constantRoutes = [
     name: "Login",
     component: () => import("@/views/login/index.vue"),
   },
+  {
+    path: "/menu",
+    name: "Menu",
+    component: () => import("@/views/core/menu/index.vue"),
+  },
 ];
 
 const router = createRouter({

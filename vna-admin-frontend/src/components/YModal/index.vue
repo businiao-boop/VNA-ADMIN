@@ -2,6 +2,7 @@
 defineOptions({
   name: "YModal",
 });
+import { ref } from "vue";
 const props = defineProps({
   open: Boolean,
 });
@@ -13,17 +14,8 @@ const ok = () => {
 };
 </script>
 <template>
-  <a-modal :open="visible" :footer="null">
-    <template #title>
-      <slot name="title"></slot>
-    </template>
+  <a-modal :open="visible" @ok="ok" @cancel="visible = false" v-bind="$attrs">
     <slot />
-    <slot name="footer">
-      <a-space>
-        <a-button>取消</a-button>
-        <a-button type="primary" @click="ok">确定</a-button>
-      </a-space>
-    </slot>
   </a-modal>
 </template>
 

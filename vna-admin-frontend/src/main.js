@@ -1,9 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import { setupAntdv, setupAssets } from "@/plugin"
+import { setupAntdv, setupAssets, setupVxeTable } from "@/plugin"
 import { setupRouter } from "@/router"
 import { setupStore } from "@/stores"
-// import "element-plus/dist/index.css";
 import install from "@/hooks/modal"
 
 const app = createApp(App);
@@ -13,6 +12,8 @@ function setupPlugins() {
   setupAssets();
   // 挂载antd
   setupAntdv(app);
+  // 挂载vxeTable
+  setupVxeTable(app);
 
   install(app);
 }
