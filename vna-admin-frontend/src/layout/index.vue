@@ -13,5 +13,5 @@ import Header from "./header/index.vue";
 </template>
 
 <style scoped lang="scss">
-@import "./index.scss";
+@import url("./layou.scss");
 </style>

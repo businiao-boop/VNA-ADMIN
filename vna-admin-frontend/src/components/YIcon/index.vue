@@ -5,6 +5,10 @@
 <script setup lang="ts">
 import * as Icons from "@ant-design/icons-vue";
 
+defineOptions({
+  name: "YIcon",
+});
+
 const props = defineProps<{
   icon?: string;
 }>();

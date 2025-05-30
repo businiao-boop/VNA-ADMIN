@@ -1,1 +1,1 @@
-export const WhiteList = ["/login"];
+export const WhiteList = ["/login", "/"];

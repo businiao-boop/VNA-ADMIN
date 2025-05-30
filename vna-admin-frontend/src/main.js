@@ -3,15 +3,18 @@ import App from './App.vue'
 import { setupAntdv, setupAssets } from "@/plugin"
 import { setupRouter } from "@/router"
 import { setupStore } from "@/stores"
-import "element-plus/dist/index.css";
+// import "element-plus/dist/index.css";
+import install from "@/hooks/modal"
 
 const app = createApp(App);
 
 function setupPlugins() {
   // 挂载资源
-  setupAssets()
+  setupAssets();
   // 挂载antd
   setupAntdv(app);
+
+  install(app);
 }
 
 async function setupApp() {

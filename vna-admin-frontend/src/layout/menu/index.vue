@@ -1,6 +1,6 @@
 <template>
   <a-menu
-    mode="inline"
+    mode="horizontal"
     :selectedKeys="[activeKey]"
     :openKeys="openKeys"
     @openChange="handleOpenChange"
@@ -15,7 +15,6 @@
         </a-sub-menu>
 
         <a-menu-item v-else :key="`menu-${item.path}`" @click="() => handleClick(item)">
-          <menu-icon :icon="item.meta?.icon" />
           <span>{{ item.meta?.title }}</span>
         </a-menu-item>
       </template>

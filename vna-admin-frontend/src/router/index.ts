@@ -3,11 +3,11 @@ import type { App } from "vue";
 import { routerGuard } from "./router-guard";
 // 常驻路由
 export const constantRoutes = [
-  // {
-  //   path: "/",
-  //   name: "Home",
-  //   component: () => import("@/layout/index.vue"),
-  // },
+  {
+    path: "/",
+    name: "Home",
+    component: () => import("@/views/home/index.vue"),
+  },
   {
     path: "/login",
     name: "Login",
