@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import { setupAntdv, setupAssets, setupVxeTable } from "@/plugin"
+import { setupAntdv, setupAssets, setupVxeTable, setupComponent } from "@/plugin"
 import { setupRouter } from "@/router"
 import { setupStore } from "@/stores"
 import install from "@/hooks/modal"
@@ -14,6 +14,8 @@ function setupPlugins() {
   setupAntdv(app);
   // 挂载vxeTable
   setupVxeTable(app);
+  // 挂载组件
+  setupComponent(app);
 
   install(app);
 }
@@ -26,6 +28,5 @@ async function setupApp() {
   // // 挂载app
   app.mount("#app");
 }
-console.log(import.meta);
 setupPlugins();
 setupApp();

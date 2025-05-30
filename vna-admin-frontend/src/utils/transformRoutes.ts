@@ -1,8 +1,5 @@
-import { markRaw } from "vue";
 import { BackendRoute } from "@/types/router";
 
-import Layout from "@/layout/index.vue";
-import ParentLayout from "@/layout/index.vue";
 // 动态导入组件
 const modules = import.meta.glob("@/views/**/*.vue");
 const loadComponent = (view: string) => {
