@@ -19,7 +19,7 @@ export class UserEntity extends BaseEntity {
     joinColumn: { name: "userId", referencedColumnName: "id" },
     inverseJoinColumn: { name: "roleId", referencedColumnName: "id" },
   })
-  roles: RoleEntity[];
+  roles?: RoleEntity[];
 
   @Column({
     type: "enum",

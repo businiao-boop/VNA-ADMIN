@@ -10,6 +10,12 @@ export function login(data: LoginDto) {
     data,
   });
 }
+export function register(data: LoginDto) {
+  return axios<LoginResponseDto>({
+    url: "/auth/register",
+    data,
+  });
+}
 export function getUserProfile() {
   return axios<UserResponseDto>({
     url: "/auth/user",

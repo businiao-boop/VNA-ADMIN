@@ -64,6 +64,9 @@ export class MenuEntity extends BaseEntity {
   })
   externalLink?: string;
 
+  @Column({ type: "boolean", default: false, comment: "是否为公共菜单" })
+  isPublic: boolean;
+
   // 新增反向关联：菜单 -> 拥有该菜单的角色列表
   @ManyToMany(() => RoleEntity, (role) => role.menus)
   roles: RoleEntity[];

@@ -22,4 +22,9 @@ export class AuthController {
   // infoUser(@Body() loginDto: LoginDto) {
   //   return this.authService.infoUser(loginDto);
   // }
+  @Public()
+  @Post("register")
+  register(@Body() loginDto: LoginDto) {
+    return this.authService.register(loginDto);
+  }
 }

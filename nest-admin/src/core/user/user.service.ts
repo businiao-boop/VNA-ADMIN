@@ -56,7 +56,6 @@ export class UserService extends BaseService<UserEntity> {
       where: { id: userId },
       relations: ["roles", "roles.menus", "roles.menus.permissions"],
     });
-    console.log(user);
 
     if (!user) {
       throw new NotFoundException("User not found");
@@ -64,20 +63,21 @@ export class UserService extends BaseService<UserEntity> {
 
     const menuMap = new Map<number, any>();
     const permissionMap = new Map<number, Set<number>>();
+    if (user.roles) {
+      for (const role of user.roles) {
+        for (const menu of role.menus) {
+          if (!menuMap.has(menu.id)) {
+            const { permissions, ...rest } = menu;
+            menuMap.set(menu.id, rest);
+          }
 
-    for (const role of user.roles) {
-      for (const menu of role.menus) {
-        if (!menuMap.has(menu.id)) {
-          const { permissions, ...rest } = menu;
-          menuMap.set(menu.id, rest);
-        }
+          if (!permissionMap.has(menu.id)) {
+            permissionMap.set(menu.id, new Set());
+          }
 
-        if (!permissionMap.has(menu.id)) {
-          permissionMap.set(menu.id, new Set());
-        }
-
-        for (const perm of menu.permissions || []) {
-          permissionMap.get(menu.id)?.add(perm.id);
+          for (const perm of menu.permissions || []) {
+            permissionMap.get(menu.id)?.add(perm.id);
+          }
         }
       }
     }

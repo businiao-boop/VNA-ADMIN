@@ -54,4 +54,8 @@ export class SaveMenuDto {
   @IsOptional()
   @IsString()
   externalLink?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isPublic?: boolean;
 }

@@ -34,6 +34,9 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+  async register(dto: LoginDto) {
+    return await this.userService.save(dto);
+  }
   async infoUser(user: PayloadDto) {
     return await this.userService.getUserProfile(user.userId);
   }
