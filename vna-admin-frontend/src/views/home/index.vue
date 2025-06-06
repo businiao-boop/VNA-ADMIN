@@ -8,6 +8,15 @@ const openModal = () => {
     console.log(data,"data");
   })
 }
+import { applyTheme } from "@/utils/theme";
+
+const theme = reactive({
+  primary: "#ff6f91",
+  background: "#f9f871",
+  text: "#2e2e2e",
+});
+
+  applyTheme(theme);
 </script>
 <template>
   <div class="home">
@@ -17,9 +26,12 @@ const openModal = () => {
 
 <style scoped lang="scss">
 .home{
+  width: 100px;
+  height: 100px;
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%)
+  transform: translate(-50%,-50%);
+  background-color: var(--color-primary);
 }
 </style>

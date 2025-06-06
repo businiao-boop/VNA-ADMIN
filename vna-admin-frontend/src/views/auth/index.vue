@@ -29,7 +29,8 @@ const tab = ref("login");
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #c850c0, #4158d0);
+  // background: linear-gradient(135deg, #c850c0, #4158d0);
+  background-image: linear-gradient(to right top, #ff9671, #ff8c76, #ff817e, #ff7887, #ff6f91);
   .auth-card {
     width: 400px;
     padding: 40px 30px;
