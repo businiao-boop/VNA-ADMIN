@@ -35,6 +35,5 @@ watch(() => props.icon, resolveIcon, { immediate: true });
   display: inline-block;
   font-size: 24px;
   cursor: pointer;
-  
 }
 </style>

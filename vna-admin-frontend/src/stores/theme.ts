@@ -62,20 +62,47 @@ const themeColors: Theme = {
     default: "#2e2e2e"
   }
 }
+function hexToRgba(hex: string, alpha = 1): string {
+  // 去除 # 号
+  hex = hex.replace(/^#/, '');
+
+  // 支持 3 位简写
+  if (hex.length === 3) {
+    hex = hex.split('').map(c => c + c).join('');
+  }
+
+  if (hex.length < 6) {
+    throw new Error('Invalid HEX color.');
+  }
+
+  const r = parseInt(hex.slice(0, 2), 16);
+  const g = parseInt(hex.slice(2, 4), 16);
+  const b = parseInt(hex.slice(4, 6), 16);
+
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 
 
 export const useThemeStore = defineStore('theme', {
   state: (): { themeColors: Theme } => ({
-    themeColors: { ...themeColors }
+    themeColors: JSON.parse(JSON.stringify(themeColors)) 
   }),
   actions: {
-    setPrimaryColor(property: string, value: string) {
+    setThemeColors(property: string, value: string) { 
       this.themeColors[property].default = value
-      document.documentElement.style.setProperty(property, value)
     },
+
+    setElStyle(property: string, value: string) {
+      document.documentElement.style.setProperty(property, value);
+      const hoverColor = hexToRgba(value, .5);
+      document.documentElement.style.setProperty(property + "-hover", hoverColor);
+    },
+
     resetTheme() {
       Object.keys(themeColors).forEach((property: string) => {
-        this.setPrimaryColor(property, themeColors[property].default)
+        this.setThemeColors(property, themeColors[property].default);
+        this.setElStyle(property, themeColors[property].default);
       })
     }
   }
