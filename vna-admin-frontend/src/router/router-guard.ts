@@ -6,7 +6,6 @@ export function routerGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {
     const token = getToken();
     const userStore = useUserStore();
-    console.log(to.path,"to path")
     // ✅ 白名单放行
     if (WhiteList.includes(to.path)) return next();
 

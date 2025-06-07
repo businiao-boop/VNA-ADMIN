@@ -12,6 +12,9 @@ export class MenuEntity extends BaseEntity {
   @Column({ length: 100, comment: "菜单路径" })
   path: string;
 
+  @Column({ length: 100, comment: "路由名称" })
+  routerName: string;
+
   @Column({ length: 100, default: "", nullable: false, comment: "组件路径" })
   component: string;
 

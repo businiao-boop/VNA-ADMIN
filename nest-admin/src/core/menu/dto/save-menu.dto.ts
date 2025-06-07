@@ -17,6 +17,9 @@ export class SaveMenuDto {
   name: string;
 
   @IsString()
+  routerName: string;
+
+  @IsString()
   path: string;
 
   @IsString()

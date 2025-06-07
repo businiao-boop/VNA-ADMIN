@@ -5,6 +5,7 @@ import {useFormModal} from "@/hooks/modal";
 import editModal from './editModal.vue';
 import {saveMenu} from "@/api/menu"
 import {MenuType} from "@/types/modules/menu.type";
+import { message } from 'ant-design-vue';
 const data = ref([
   {
     name:'菜单名称',
@@ -21,8 +22,7 @@ function openModal(title="编辑菜单",row?:MenuType){
   const showModal = useFormModal({title,width:800})
   showModal<MenuType>(editModal,{modalValue:modalForm}).then((data)=>{
     saveMenu(data).then(res=>{
-      console.log(res);
-      
+      message.success('保存成功')
     })
   })
 }

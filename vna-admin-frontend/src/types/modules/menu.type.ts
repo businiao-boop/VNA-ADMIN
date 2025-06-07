@@ -12,6 +12,7 @@ export enum MenuTypeEnum {
 export type MenuType = {
   id?: number;
   name: string;
+  routerName: string;
   path: string;
   component: string;
   parentId?: number | null;

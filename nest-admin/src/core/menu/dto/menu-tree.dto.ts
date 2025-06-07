@@ -3,6 +3,7 @@ import { LayoutEnum, TypeEnum } from "../enum/menu.enum";
 export class MenuTreeDto {
   id: number;
   name: string;
+  MenuTreeDto: string;
   path: string;
   component: string;
   parentId: number;

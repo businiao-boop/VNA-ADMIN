@@ -23,25 +23,14 @@ export const useFormModal = (modalProps = {}) => {
       const close = () => {
         render(null, container);
       };
-      const modalVNode = createVNode(
-        YModal,
-        {
-          ...modalProps,
-          open: true,
-          onOk: () => {
-            close();
-            resolve(formState.value || true);
-          },
-        },
-        {
-          // 将 component 渲染到 default 插槽中
-          default: () =>
-            createVNode(component, {
-              modalValue: formState.value,
-              ...rest,
-            }),
+      const modalVNode = createVNode(component, {
+        modalValue: formState.value,
+        ...rest,
+        onOk: (res: any) => {
+          close();
+          resolve(res || formState.value || true);
         }
-      );
+      })
 
       modalVNode.appContext = appContext;
       render(modalVNode, container);
