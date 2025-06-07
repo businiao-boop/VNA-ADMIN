@@ -13,7 +13,7 @@
           />
         </a-form-item>
         <a-form-item name="rememberMe" :wrapper-col="{ offset: 8, span: 16 }">
-          <a-checkbox v-model:value="form.rememberMe">记住我</a-checkbox>
+          <a-checkbox v-model:checked="form.rememberMe">记住我</a-checkbox>
         </a-form-item>
         <a-form-item>
           <a-button type="primary" @click="handleLogin(formRef)">登录</a-button>
@@ -51,7 +51,7 @@ const rules: Record<string, Rule[]> = {
 const form = reactive<LoginDto>({
   username: "arno",
   password: "1234",
-  rememberMe: true,
+  rememberMe: false,
 });
 
 const handleLogin = async (formEl: FormInstance | undefined) => {
@@ -65,7 +65,7 @@ const handleLogin = async (formEl: FormInstance | undefined) => {
         });
       },
       (err) => {
-        console.log("login", err);
+        message.error(err.message)
       }
     );
   });

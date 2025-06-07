@@ -1,11 +1,32 @@
 .layout-wrapper {
-  height: 100%;
-  width: 100%;
-  $layout-header-height: 60px;
-  .layout-header {
-    height: $layout-header-height;
+  min-height: 100vh;
+  background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  .layout-header{
+    width: 100%;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));;
+    color: #fff;
+    padding: 0 20px;
+    box-shadow: var(--shadow-default);
+    
   }
+  
   .layout-content {
-    height: calc(100% - $layout-header-height);
+    flex: 1;
+    padding: 24px;
+    background-color: #fff;
+    color: var(--color-text);
+    overflow-y: auto;
+  }
+  
+  .layout-footer {
+    background-color: var(--color-surface);
+    color: var(--color-text-light);
+    text-align: center;
+    padding: 12px 0;
+    font-size: 14px;
+    border-top: 1px solid var(--color-border);
   }
 }
+

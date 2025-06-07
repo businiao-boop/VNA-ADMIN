@@ -29,16 +29,15 @@ const tab = ref("login");
   display: flex;
   justify-content: center;
   align-items: center;
-  // background: linear-gradient(135deg, #c850c0, #4158d0);
-  background-image: linear-gradient(to right top, #ff9671, #ff8c76, #ff817e, #ff7887, #ff6f91);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   .auth-card {
     width: 400px;
     padding: 40px 30px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    // backdrop-filter: blur(10px);
+    // -webkit-backdrop-filter: blur(10px);
     color: #fff;
     min-height: 500px; // 固定最小高度
     transition: all 0.3s ease; // 平滑过渡

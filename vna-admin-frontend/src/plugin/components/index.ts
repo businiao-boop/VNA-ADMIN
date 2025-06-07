@@ -1,12 +1,14 @@
-// 动态导入组件
-const modules = import.meta.glob("@/components/**/index.vue");
+import { App } from "vue";
 
-export const setupComponent = (app: any) => {
+export const setupGlobalComponents = async (app: App) => {
+  // 动态导入组件
+  const modules = import.meta.glob("@/components/**/index.vue");
+  console.log(modules);
   for (const path in modules) {
-    modules[path]().then((mod: any) => {
-      const component = mod.default;
+    const mod: any = await modules[path]()
+    const component = mod.default;
+    console.log(component, path.split("/").at(-2), "component");
 
-      app.component(component.name || path.split("/").at(-2), component);
-    });
+    app.component(component.name || path.split("/").at(-2), component);
   }
 };

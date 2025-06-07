@@ -92,7 +92,7 @@ const confirm = () => {
     align-items: center;
     justify-content: flex-end;
     height: 40px;
-    ::v-deep .ant-popover {
+    :deep(.ant-popover)  {
       .ant-popover-inner-content {
         display: flex;
         flex-direction: column;
