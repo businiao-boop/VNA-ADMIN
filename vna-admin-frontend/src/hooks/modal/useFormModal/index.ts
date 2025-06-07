@@ -12,14 +12,14 @@ type formProps = {
   [key: string]: any;
 };
 export const useFormModal = (modalProps = {}) => {
-  const showModal = (component: Component, formProps: formProps) => {
+  const showModal = <T>(component: Component, formProps: formProps) => {
     const container = document.createElement("div");
     const appContext = _app._context;
 
     const { modalValue, ...rest } = formProps;
-    const formState = ref({ ...modalValue });
+    const formState = ref<T>({ ...modalValue } as T);
 
-    return new Promise((resolve, reject) => {
+    const PromiseFun: Promise<T> = new Promise((resolve, reject) => {
       const close = () => {
         render(null, container);
       };
@@ -30,7 +30,7 @@ export const useFormModal = (modalProps = {}) => {
           open: true,
           onOk: () => {
             close();
-            resolve(formState || true);
+            resolve(formState.value || true);
           },
         },
         {
@@ -46,6 +46,7 @@ export const useFormModal = (modalProps = {}) => {
       modalVNode.appContext = appContext;
       render(modalVNode, container);
     });
+    return PromiseFun
   };
 
   return showModal;

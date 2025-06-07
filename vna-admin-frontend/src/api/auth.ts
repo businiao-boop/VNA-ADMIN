@@ -3,7 +3,7 @@ import axios from "@/utils/request";
 // 登录
 
 
-import { UserResponseDto, LoginResponseDto, LoginDto } from "@/types/api/auth";
+import { UserResponseDto, LoginResponseDto, LoginDto } from "@/types/modules/auth.type";
 export function login(data: LoginDto) {
   return axios<LoginResponseDto>({
     url: "/auth/login",

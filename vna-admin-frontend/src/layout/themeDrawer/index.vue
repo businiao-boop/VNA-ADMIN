@@ -74,9 +74,6 @@ const reset = () => {
 
 <style scoped lang="scss">
 .theme-drawer-wrapper {
-  .custom-class{
-    background-color: var(--color-surface);
-  }
   .theme-panel {
     padding: 10px;
 

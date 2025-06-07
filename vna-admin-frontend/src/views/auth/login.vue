@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { message } from "ant-design-vue";
-import { LoginDto } from "@/types//api/auth";
+import { LoginDto } from "@/types/modules/auth.type";
 import { useUserStore } from "@/stores/user";
 import { useRouter } from "vue-router";
 import type { Rule, FormInstance } from "ant-design-vue/es/form";

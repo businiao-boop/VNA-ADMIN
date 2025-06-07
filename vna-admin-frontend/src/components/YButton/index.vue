@@ -7,27 +7,9 @@ defineOptions({
 </script>
 
 <template>
-    <a-button v-bind="$attrs">
+    <a-button v-bind="$attrs" class="y-button">
       <slot name="prefix" />
       <slot></slot>
       <slot name="suffix" />
     </a-button>
 </template>
-
-<style scoped lang="scss">
-.ant-btn-primary{
-  background-color: var(--color-secondary);
-  &:hover{
-    background-color: var(--color-secondary-hover);
-  }
-}
-.ant-btn-dangerous{
-  background-color: var(--color-danger);
-  border-color: var(--color-danger);
-  &:hover{
-    background-color: var(--color-danger);
-    background-color: var(--color-danger-hover);
-    border-color: var(--color-danger) !important;
-  }
-}
-</style>

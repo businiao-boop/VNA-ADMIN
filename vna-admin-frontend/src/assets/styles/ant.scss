@@ -1,0 +1,101 @@
+// 按钮通用样式（你可以在 App.vue 或组件样式中引入）
+.ant-btn-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  span {
+    color: #fff;
+  }
+  svg > path {
+    color: #fff;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+  }
+}
+
+.ant-btn-secondary {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+  span {
+    color: #fff;
+  }
+  svg > path {
+    color: #fff;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-secondary-hover);
+    border-color: var(--color-secondary-hover);
+  }
+}
+
+.ant-btn-success {
+  background-color: var(--color-success);
+  border-color: var(--color-success);
+  span {
+    color: #fff;
+  }
+  svg > path {
+    color: #fff;
+  }
+  &:hover:not(:disabled) {
+    background-color: var(--color-success-hover);
+    border-color: var(--color-success-hover);
+  }
+}
+
+.ant-btn-warning {
+  background-color: var(--color-warning);
+  border-color: var(--color-warning);
+  span {
+    color: #fff;
+  }
+  svg > path {
+    color: #fff;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-warning-hover);
+    border-color: var(--color-warning-hover);
+  }
+}
+
+.ant-btn-danger {
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
+  span {
+    color: #fff;
+  }
+  svg > path {
+    color: #fff;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-danger-hover);
+    border-color: var(--color-danger-hover);
+  }
+}
+
+.ant-btn-info {
+  background-color: var(--color-info);
+  border-color: var(--color-info);
+  span {
+    color: #fff;
+  }
+  svg > path {
+    color: #fff;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-info-hover);
+    border-color: var(--color-info-hover);
+  }
+}
+
+.y-button {
+  * {
+    color: var(--color-text);
+  }
+}

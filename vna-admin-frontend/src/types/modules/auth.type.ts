@@ -1,4 +1,5 @@
-import { BackendRoute } from "../router";
+// 登录、注册相关的类型定义
+import { BackendRoute } from "@/types/router";
 export type UserResponseDto = {
   id: number;
   username: string;

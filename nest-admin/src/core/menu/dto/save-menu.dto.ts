@@ -23,7 +23,7 @@ export class SaveMenuDto {
   component: string;
 
   @IsInt()
-  parentId: number;
+  parentId?: number;
 
   @IsInt()
   sort: number;

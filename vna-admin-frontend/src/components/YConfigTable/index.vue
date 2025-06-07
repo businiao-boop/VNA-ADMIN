@@ -4,10 +4,21 @@ import { ColumnType, ListType } from "@/types/components/yConfigTable";
 defineOptions({
   name: "YConfigTable",
 });
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   columns: ColumnType[];
   modelValue: ListType[];
-}>();
+  transform?:boolean,//自动将列表转为树结构
+  rowField?:string,
+  parentField?:string,
+  resizable?:boolean,
+}>(),{
+  transform:false,
+      rowField: 'id',
+      parentField: 'parentId',
+      resizable:false,
+})
+
+const emit = defineEmits(["update:modelValue", "add"]);
 const _columns = ref<ColumnType[]>(JSON.parse(JSON.stringify(props.columns)));
 const _customOptions = ref<ColumnType[]>(JSON.parse(JSON.stringify(props.columns)));
 const toolbar = ref(null);
@@ -32,55 +43,66 @@ const confirm = () => {
   _columns.value = JSON.parse(JSON.stringify(_customOptions.value));
   visible.value = false;
 };
+const onAdd = ()=>{
+  emit("add")
+}
 </script>
 <template>
   <div class="y-confing-table">
     <div class="toolbar" ref="toolbar">
-      <a-popover
-      placement="bottomRight"
-        :getPopupContainer="() => toolbar"
-        v-model:open="visible"
-        trigger="click"
-      >
-        <template #title>
-          <a-checkbox v-model:checked="all">全部</a-checkbox>
-        </template>
-        <template #content>
-          <ul class="popover-content">
-            <li v-for="col in _customOptions" :key="col.field">
-              <a-checkbox v-model:checked="col.visible">{{
-                col.title
-              }}</a-checkbox>
-            </li>
-          </ul>
-          <div class="popover-footer">
-            <a-popconfirm
-              title="Are you sure delete this task?"
-              ok-text="Yes"
-              cancel-text="No"
-              @confirm="reset"
-            >
-              <a-button type="text" size="small">重置</a-button>
-            </a-popconfirm>
-            <a-button type="text" size="small" @click="visible = false"
-              >取消</a-button
-            >
-            <a-button type="text" size="small" @click="confirm">确定</a-button>
-          </div>
-        </template>
-        <a-button type="primary" shape="circle">
-          <y-icon icon="AppstoreOutlined"></y-icon>
-        </a-button>
-      </a-popover>
+      <div class="toolbar-item">
+        <y-button size="small" type="primary" @click="onAdd">新增</y-button>
+      </div>
+      <div class="toolbar-item">
+        <a-popover
+        placement="bottomRight"
+          :getPopupContainer="() => toolbar"
+          v-model:open="visible"
+          trigger="click"
+        >
+          <template #title>
+            <a-checkbox v-model:checked="all">全部</a-checkbox>
+          </template>
+          <template #content>
+            <ul class="popover-content">
+              <li v-for="col in _customOptions" :key="col.field">
+                <a-checkbox v-model:checked="col.visible">{{
+                  col.title
+                }}</a-checkbox>
+              </li>
+            </ul>
+            <div class="popover-footer">
+              <a-popconfirm
+                title="Are you sure delete this task?"
+                ok-text="Yes"
+                cancel-text="No"
+                @confirm="reset"
+              >
+                <a-button type="text" size="small">重置</a-button>
+              </a-popconfirm>
+              <a-button type="text" size="small" @click="visible = false"
+                >取消</a-button
+              >
+              <a-button type="text" size="small" @click="confirm">确定</a-button>
+            </div>
+          </template>
+          <y-button type="primary" shape="circle">
+            <y-icon icon="AppstoreOutlined"></y-icon>
+          </y-button>
+        </a-popover>
+      </div>
     </div>
-    <vxe-table :data="modelValue">
+    <vxe-table :columnConfig="{resizable}" :data="modelValue" :treeConfig="{transform,rowField,parentField}">
       <vxe-column
         v-for="col in _columns"
-        :visible="col.visible"
-        :field="col.field"
-        :title="col.title"
+        v-bind="col"
         :key="col.field"
-      ></vxe-column>
+      >
+      <!-- 自定义插槽支持 -->
+      <template v-if="col.slot" #default="{ row }">
+        <slot :name="col.field" :row="row" />
+      </template>
+    </vxe-column>
     </vxe-table>
   </div>
 </template>
@@ -92,6 +114,9 @@ const confirm = () => {
     align-items: center;
     justify-content: flex-end;
     height: 40px;
+    .toolbar-item{
+      margin-left: 8px;
+    }
     :deep(.ant-popover)  {
       .ant-popover-inner-content {
         display: flex;
