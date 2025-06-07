@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { login, getUserProfile } from "@/api/auth";
-import { UserResponseDto, LoginDto } from "@/types/api/auth";
+import { UserResponseDto, LoginDto } from "@/types/modules/auth.type";
 import { setToken } from "@/utils/auth";
 import { transformAsyncRoutes } from "@/utils/transformRoutes";
 import { BackendRoute } from "@/types/router";

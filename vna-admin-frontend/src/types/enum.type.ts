@@ -3,6 +3,13 @@ export enum LayoutEnum {
   FULLPAGE = 'fullpage', // 全屏
 }
 
+export enum MenuTypeEnum {
+  DIRECTORY = 'dir', // 目录
+  MENU = 'menu', // 菜单
+  BUTTON = 'button', // 按钮
+  PERMISSION = "permission", // 权限
+}
+
 export enum PermissionBit {
   INFO = 0b0000000000000001, // 查看
   UPDATE = 0b0000000000000010, // 修改

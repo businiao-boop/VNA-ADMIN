@@ -15,7 +15,7 @@ export class MenuEntity extends BaseEntity {
   @Column({ length: 100, default: "", nullable: false, comment: "组件路径" })
   component: string;
 
-  @Column({ type: "int", default: 0, comment: "父级菜单ID" })
+  @Column({ type: "int", default: 0, nullable: true, comment: "父级菜单ID" })
   parentId: number;
 
   @Column({ type: "int", default: 0, comment: "排序（越小越前）" })

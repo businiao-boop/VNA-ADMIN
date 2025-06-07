@@ -23,6 +23,7 @@ export class SaveMenuDto {
   component: string;
 
   @IsInt()
+  @IsOptional()
   parentId?: number;
 
   @IsInt()

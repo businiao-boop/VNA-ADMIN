@@ -31,6 +31,9 @@ service.interceptors.response.use(
 
     const response = error.response;
     const data = response.data;
+
+    const tipMessage = data.message.message.join();
+    message.error(tipMessage);
     return data.message;
   }
 );

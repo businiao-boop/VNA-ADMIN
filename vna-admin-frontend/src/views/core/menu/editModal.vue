@@ -30,11 +30,12 @@
       <a-row :gutter="16">
         <a-col :span="12">
           <a-form-item label="菜单类型" name="type" required>
-            <a-select v-model:value="modalValue.type" placeholder="请选择类型">
+            <!-- <a-select v-model:value="modalValue.type" placeholder="请选择类型">
               <a-select-option value="0">目录</a-select-option>
               <a-select-option value="1">菜单</a-select-option>
               <a-select-option value="2">按钮</a-select-option>
-            </a-select>
+            </a-select> -->
+            <y-select-enum v-model="modalValue.type" enum="menuTypeEnum"></y-select-enum>
           </a-form-item>
         </a-col>
         <a-col :span="12">
@@ -80,14 +81,6 @@
       <a-row :gutter="16">
         <a-col :span="12">
           <a-form-item label="布局类型" name="layout">
-            <!-- <a-select
-              v-model:value="modalValue.layout"
-              placeholder="请选择布局"
-            >
-              <a-select-option value="basic">基础布局</a-select-option>
-              <a-select-option value="blank">空白布局</a-select-option>
-              <a-select-option value="top">顶部布局</a-select-option>
-            </a-select> -->
             <y-select-enum v-model="modalValue.layout" enum="layoutEnum"></y-select-enum>
           </a-form-item>
         </a-col>
