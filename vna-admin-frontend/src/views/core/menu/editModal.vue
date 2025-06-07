@@ -94,10 +94,7 @@
         </a-col>
         <a-col :span="12">
           <a-form-item label="权限标识" name="permission">
-            <a-input
-              v-model:value="modalValue.permission"
-              placeholder="system:user:add"
-            />
+            <y-select-enum v-model="modalValue.permission" enum="premissionsEnum"></y-select-enum>
           </a-form-item>
         </a-col>
       </a-row>

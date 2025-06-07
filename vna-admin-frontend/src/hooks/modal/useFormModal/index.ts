@@ -11,7 +11,7 @@ type formProps = {
   modalValue: object;
   [key: string]: any;
 };
-export const useFormModal = (modalProps = {}) => {
+export const useFormModal = () => {
   const showModal = <T>(component: Component, formProps: formProps) => {
     const container = document.createElement("div");
     const appContext = _app._context;

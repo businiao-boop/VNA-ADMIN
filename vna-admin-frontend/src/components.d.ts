@@ -8,7 +8,16 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    RouterLink: typeof import("vue-router")["RouterLink"];
-    RouterView: typeof import("vue-router")["RouterView"];
+    RouterLink: typeof import('vue-router')['RouterLink']
+    RouterView: typeof import('vue-router')['RouterView']
+    YButton: typeof import('./components/YButton/index.vue')['default']
+    YColorPalette: typeof import('./components/YColorPalette/index.vue')['default']
+    YConfigTable: typeof import('./components/YConfigTable/index.vue')['default']
+    YIcon: typeof import('./components/YIcon/index.vue')['default']
+    YModal: typeof import('./components/YModal/index.vue')['default']
+    YPageLayout: typeof import('./components/YPageLayout/index.vue')['default']
+    YSelect: typeof import('./components/YSelect/index.vue')['default']
+    YSelectEnum: typeof import('./components/YSelectEnum/index.vue')['default']
+    YSwitch: typeof import('./components/YSwitch/index.vue')['default']
   }
 }

@@ -1,7 +1,7 @@
 export type ColumnType = {
   title: string;
   field: string;
-  visible?: boolean;
+  visible: boolean;
   slot?: boolean
 };
 

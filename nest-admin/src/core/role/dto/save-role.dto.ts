@@ -18,8 +18,8 @@ export class SaveRoleDto {
   name: string;
 
   @IsString()
-  @IsNotEmpty()
-  code: string;
+  @IsOptional()
+  code?: string;
 
   @IsString()
   @IsOptional()
@@ -34,5 +34,6 @@ export class SaveRoleDto {
   menuIds?: number[]; // 菜单 ID 数组
 
   @IsObject()
+  @IsOptional()
   permissions: Record<string, string[]>;
 }

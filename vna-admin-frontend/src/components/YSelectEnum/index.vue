@@ -31,7 +31,9 @@ function onChange(val: any) {
 <template>
   <div class="y-enum-select-wrapper">
     <a-select ref="select" v-model:value="value" @change="onChange">
-      <a-select-option v-for="item in options" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+      <slot>
+        <a-select-option v-for="item in options" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+      </slot>
     </a-select>
   </div>
 </template>

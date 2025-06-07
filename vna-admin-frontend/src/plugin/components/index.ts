@@ -1,5 +1,6 @@
 import { App } from "vue";
 
+
 export const setupGlobalComponents = async (app: App) => {
   // 动态导入组件
   const modules = import.meta.glob("@/components/**/index.vue");

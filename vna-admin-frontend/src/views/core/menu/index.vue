@@ -17,9 +17,9 @@ const data = ref([
   }
 ])
 
-function openModal(title="编辑菜单",row?:MenuType){
+function openModal(row?:MenuType){
   const modalForm = row || {}
-  const showModal = useFormModal({title,width:800})
+  const showModal = useFormModal()
   showModal<MenuType>(editModal,{modalValue:modalForm}).then((data)=>{
     saveMenu(data).then(res=>{
       message.success('保存成功')
@@ -27,11 +27,11 @@ function openModal(title="编辑菜单",row?:MenuType){
   })
 }
 function handleEdit(row:MenuType){
-  openModal("编辑菜单",row)
+  openModal(row)
 }
 function handleDelete(row:any){}
 function onAdd(){
-  openModal("添加菜单",presetFields);
+  openModal(presetFields);
 }
 </script>
 <template>

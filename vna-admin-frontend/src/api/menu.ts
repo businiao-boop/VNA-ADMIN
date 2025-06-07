@@ -7,3 +7,8 @@ export function saveMenu(data: MenuType) {
     data,
   });
 }
+export function listMenu() {
+  return axios<MenuType[]>({
+    url: "/menu/list",
+  });
+}

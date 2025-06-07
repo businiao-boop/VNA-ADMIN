@@ -1,27 +1,33 @@
+<script lang="ts">
+export default {
+  name: 'YConfigTable',
+};
+</script>
 <script setup lang="ts">
 import YIcon from "@/components/YIcon/index.vue";
-import { ColumnType, ListType } from "@/types/components/yConfigTable";
-defineOptions({
-  name: "YConfigTable",
-});
+import type { ColumnType, ListType } from "@/types/components/yConfigTable";
+// defineOptions({
+//   name: "YConfigTable",
+// });
 const props = withDefaults(defineProps<{
   columns: ColumnType[];
   modelValue: ListType[];
-  transform?:boolean,//自动将列表转为树结构
-  rowField?:string,
-  parentField?:string,
-  resizable?:boolean,
-}>(),{
-  transform:false,
-      rowField: 'id',
-      parentField: 'parentId',
-      resizable:false,
+  transform?: boolean,//自动将列表转为树结构
+  rowField?: string,
+  parentField?: string,
+  resizable?: boolean,
+}>(), {
+  columns: () => [],
+  transform: false,
+  rowField: 'id',
+  parentField: 'parentId',
+  resizable: false,
 })
 
 const emit = defineEmits(["update:modelValue", "add"]);
 const _columns = ref<ColumnType[]>(JSON.parse(JSON.stringify(props.columns)));
 const _customOptions = ref<ColumnType[]>(JSON.parse(JSON.stringify(props.columns)));
-const toolbar = ref(null);
+const toolbar = ref();
 const visible = ref(false);
 const all = computed({
   get() {
@@ -31,7 +37,7 @@ const all = computed({
     return index < 0;
   },
   set(val) {
-    _customOptions.value.map(item=>item.visible = val);
+    _customOptions.value.map(item => item.visible = val);
   },
 });
 const reset = () => {
@@ -43,7 +49,7 @@ const confirm = () => {
   _columns.value = JSON.parse(JSON.stringify(_customOptions.value));
   visible.value = false;
 };
-const onAdd = ()=>{
+const onAdd = () => {
   emit("add")
 }
 </script>
@@ -54,12 +60,7 @@ const onAdd = ()=>{
         <y-button size="small" type="primary" @click="onAdd">新增</y-button>
       </div>
       <div class="toolbar-item">
-        <a-popover
-        placement="bottomRight"
-          :getPopupContainer="() => toolbar"
-          v-model:open="visible"
-          trigger="click"
-        >
+        <a-popover placement="bottomRight" :getPopupContainer="() => toolbar" v-model:open="visible" trigger="click">
           <template #title>
             <a-checkbox v-model:checked="all">全部</a-checkbox>
           </template>
@@ -72,17 +73,10 @@ const onAdd = ()=>{
               </li>
             </ul>
             <div class="popover-footer">
-              <a-popconfirm
-                title="Are you sure delete this task?"
-                ok-text="Yes"
-                cancel-text="No"
-                @confirm="reset"
-              >
+              <a-popconfirm title="Are you sure delete this task?" ok-text="Yes" cancel-text="No" @confirm="reset">
                 <a-button type="text" size="small">重置</a-button>
               </a-popconfirm>
-              <a-button type="text" size="small" @click="visible = false"
-                >取消</a-button
-              >
+              <a-button type="text" size="small" @click="visible = false">取消</a-button>
               <a-button type="text" size="small" @click="confirm">确定</a-button>
             </div>
           </template>
@@ -92,17 +86,13 @@ const onAdd = ()=>{
         </a-popover>
       </div>
     </div>
-    <vxe-table :columnConfig="{resizable}" :data="modelValue" :treeConfig="{transform,rowField,parentField}">
-      <vxe-column
-        v-for="col in _columns"
-        v-bind="col"
-        :key="col.field"
-      >
-      <!-- 自定义插槽支持 -->
-      <template v-if="col.slot" #default="{ row }">
-        <slot :name="col.field" :row="row" />
-      </template>
-    </vxe-column>
+    <vxe-table :columnConfig="{ resizable }" :data="modelValue" :treeConfig="{ transform, rowField, parentField }">
+      <vxe-column v-for="col in _columns" v-bind="col" :key="col.field">
+        <!-- 自定义插槽支持 -->
+        <template v-if="col.slot" #default="{ row }">
+          <slot :name="col.field" :row="row" />
+        </template>
+      </vxe-column>
     </vxe-table>
   </div>
 </template>
@@ -114,20 +104,24 @@ const onAdd = ()=>{
     align-items: center;
     justify-content: flex-end;
     height: 40px;
-    .toolbar-item{
+
+    .toolbar-item {
       margin-left: 8px;
     }
-    :deep(.ant-popover)  {
+
+    :deep(.ant-popover) {
       .ant-popover-inner-content {
         display: flex;
         flex-direction: column;
-        .popover-content{
+
+        .popover-content {
           border: 1px solid #d9d9d9;
           border-left: none;
           border-right: none;
           padding: 5px;
           margin-bottom: 5px;
         }
+
         .popover-footer {
           display: flex;
           justify-content: space-between;

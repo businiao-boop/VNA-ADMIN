@@ -31,6 +31,11 @@ export const constantRoutes = [
         name: "Menu",
         component: () => import("@/views/core/menu/index.vue"),
       },
+      {
+        path: "role",
+        name: "Role",
+        component: () => import("@/views/core/role/index.vue"),
+      },
 
     ]
   },
