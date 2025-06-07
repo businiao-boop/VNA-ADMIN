@@ -1,5 +1,5 @@
 <template>
-  <y-modal :open="true" @ok="ok">
+  <y-modal :open="true" @ok="ok" :title="title">
     <a-form
       ref="formRef"
       :model="modalValue"
@@ -143,6 +143,7 @@ import {MenuTypeEnum} from "@/types/enum.type"
 const emit = defineEmits([ "ok"]);
 // 判断菜单类型为“菜单”（value === "1"）
 const isMenuType = computed(() => props.modalValue.type === MenuTypeEnum.MENU);
+const title = computed(() => (props.modalValue.id ? "修改菜单" : "添加菜单"));
 
 const rules = {
   name:[{ required: true, message: "请输入菜单名称", trigger: "blur" }],
