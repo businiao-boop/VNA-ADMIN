@@ -13,7 +13,6 @@ const open = ref(false);
 const onSettings = () => {
   open.value = true
 };
-console.log(userStore.routes,"routes");
 
 </script>
 <template>
