@@ -5,7 +5,6 @@ import { DataSource, DataSourceOptions } from "typeorm";
 // config({ path: [".env.local", `.env.${process.env.NODE_ENV}`, ".env"] });
 import { ConfigService } from "@nestjs/config";
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
-
 export const typeOrmConfig = (
   configService: ConfigService
 ): TypeOrmModuleOptions => ({

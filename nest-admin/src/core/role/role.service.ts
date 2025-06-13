@@ -1,67 +1,36 @@
-// src/modules/role/role.service.ts
-import { RoleMenuEntity } from "./entities/role-menu.entity";
-import { InjectRepository } from "@nestjs/typeorm";
-import { In } from "typeorm";
-import { BaseService } from "@/common/services/base.service";
-import { RoleEntity } from "./entities/role.entity";
-import { Injectable } from "@nestjs/common";
-import { Repository } from "typeorm";
-import { SaveRoleDto } from "./dto/save-role.dto";
-import { MenuEntity } from "../menu/entities/menu.entity";
-import { RolePermissionEntity } from "./entities/role-permission";
-import { PermissionEntity } from "../permission/entities/permission.entity";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Repository, In } from 'typeorm';
+
+import { InjectRepository } from '@nestjs/typeorm';
+import { RoleEntity } from './entities/role.entity';
+import { CreateRoleDto, UpdateRoleDto, RoleDto } from './dto';
+
 @Injectable()
-export class RoleService extends BaseService<RoleEntity> {
+export class RoleService {
   constructor(
     @InjectRepository(RoleEntity)
-    readonly roleRepository: Repository<RoleEntity>,
-    @InjectRepository(MenuEntity)
-    readonly menuRepository: Repository<MenuEntity>,
-    @InjectRepository(RoleMenuEntity)
-    private readonly roleMenuRepository: Repository<RoleMenuEntity>,
-    @InjectRepository(RolePermissionEntity)
-    private readonly rolePermissionRepository: Repository<RolePermissionEntity>,
-    @InjectRepository(PermissionEntity)
-    private readonly permissionRepository: Repository<PermissionEntity>
-  ) {
-    super(roleRepository);
+    private readonly roleRepo: Repository<RoleEntity>
+  ) { }
+
+  async findByIds(ids: number[]) {
+    return this.roleRepo.findBy({ id: In(ids) });
   }
 
-  async save(entity: SaveRoleDto): Promise<RoleEntity | RoleEntity[]> {
-    const { menuIds, permissions, ...rest } = entity;
-    const role = this.roleRepository.create(rest);
-    if (menuIds && menuIds.length) {
-      const menus = await this.menuRepository.findBy({
-        id: In(menuIds),
-      });
-      role.menus = menus;
+  async save(dto: RoleDto) {
+    if (dto.id) {
+      return await this.update(dto)
+    } else {
+      return this.roleRepo.save(dto)
     }
-    if (permissions) {
-      const permissionIds = Object.values(permissions)
-        .map((id) => id)
-        .flat();
-      const ids = await this.permissionRepository.findBy({
-        id: In(permissionIds),
-      });
-      role.permissions = ids;
-    }
-    return super.save(role);
   }
+  async update(dto: RoleDto) {
+    const role = await this.roleRepo.findOne({ where: { id: dto.id } });
+    if (!role) {
+      throw new NotFoundException('角色不存在');
+    }
 
-  softDeleteWithRelations(id: number) {
-    return super.softDeleteWithRelations(id, {
-      clearRelations: [
-        {
-          field: "menus",
-          joinTableRepository: this.roleMenuRepository,
-          condition: { roleId: id },
-        },
-        {
-          field: "permissions",
-          joinTableRepository: this.rolePermissionRepository,
-          condition: { roleId: id },
-        },
-      ],
-    });
+    // 避免用 dto 直接覆盖（例如 role.permissionIds 是空可能会被误删）
+    Object.assign(role, dto);
+    return this.roleRepo.save(role);
   }
 }

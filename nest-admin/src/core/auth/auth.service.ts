@@ -1,18 +1,20 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { LoginDto } from "./dto/login-dto";
-import { UserService } from "@/core/user/user.service";
+import { Injectable, UnauthorizedException, BadRequestException } from "@nestjs/common";
+import { RegisterDto } from "./dto";
 import * as bcrypt from "bcryptjs";
 import { JwtService } from "@nestjs/jwt";
 import { PayloadDto } from "./dto/payload-dto";
+
+import { UserService } from "@/core/user/user.service";
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService
-  ) {}
+  ) { }
+
   async validateUser(username: string, password: string) {
     // 验证用户逻辑
-    const user = await this.userService.findOne({ username });
+    const user = await this.userService.findOne(username);
     if (!user) {
       throw new UnauthorizedException("用户不存在");
     }
@@ -22,9 +24,10 @@ export class AuthService {
     }
     return user;
   }
-  async login(dto: LoginDto) {
+
+  async login(username: string, password: string) {
     // 登录逻辑
-    const user = await this.validateUser(dto.username, dto.password);
+    const user = await this.validateUser(username, password);
     const payload = {
       username: user.username,
       sub: user.id,
@@ -34,10 +37,11 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
-  async register(dto: LoginDto) {
-    return await this.userService.save(dto);
-  }
-  async infoUser(user: PayloadDto) {
-    return await this.userService.getUserProfile(user.userId);
+
+  async register(dto: RegisterDto) {
+    console.log(dto, "auth dto");
+
+    const user = await this.userService.create(dto);
+    return user;
   }
 }

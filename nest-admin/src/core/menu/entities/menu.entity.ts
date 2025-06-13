@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToMany, JoinTable } from "typeorm";
-import { BaseEntity } from "@/common/entities/base.entity";
 import { TypeEnum, LayoutEnum } from "../enum/menu.enum";
+import { BaseEntity } from "@/common/entities/base.entity";
+
 import { RoleEntity } from "@/core/role/entities/role.entity";
 import { PermissionEntity } from "@/core/permission/entities/permission.entity";
 
@@ -70,17 +71,16 @@ export class MenuEntity extends BaseEntity {
   @Column({ type: "boolean", default: false, comment: "是否为公共菜单" })
   isPublic: boolean;
 
-  // 新增反向关联：菜单 -> 拥有该菜单的角色列表
+  // 多对多：一个菜单可以属于多个角色
   @ManyToMany(() => RoleEntity, (role) => role.menus)
   roles: RoleEntity[];
 
-  @ManyToMany(() => PermissionEntity, (permission) => permission.menus, {
-    cascade: true,
-  })
+  @ManyToMany(() => PermissionEntity, permission => permission.menus)
   @JoinTable({
-    name: "menu_permission",
-    joinColumn: { name: "menuId" },
-    inverseJoinColumn: { name: "permissionId" },
+    name: 'menu_permission',
+    // joinColumn: { name: 'menu_id', referencedColumnName: 'id' },
+    // inverseJoinColumn: { name: 'permission_id', referencedColumnName: 'id' },
   })
   permissions: PermissionEntity[];
+
 }

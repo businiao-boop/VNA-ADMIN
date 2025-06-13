@@ -6,7 +6,6 @@ import { TransformInterceptor } from "@/common/interceptors/transform.intercepto
 import { ValidationPipe } from "@nestjs/common";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { ConfigService } from "@nestjs/config";
-// import { JwtAuthGuard } from "@/common/guards/jwt.auth.guard";
 import { JwtAuthGuard } from "@/core/auth/auth.guard";
 
 async function bootstrap() {
@@ -30,7 +29,7 @@ async function bootstrap() {
   app.setGlobalPrefix(globalPrefix); //设置路由全局前缀
 
   const reflector = app.get(Reflector);
-  app.useGlobalGuards(new JwtAuthGuard(reflector)); // 设置全局守卫
+  // app.useGlobalGuards(new JwtAuthGuard(reflector)); // 设置全局守卫
 
   // 配置 Swagger
   const config = new DocumentBuilder()

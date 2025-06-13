@@ -1,107 +1,91 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { BaseService } from "@/common/services/base.service";
-import { Repository, In } from "typeorm";
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import { Repository, In } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { UserDto, CreateUserDto } from "./dto";
+
+import { UserEntity } from './entities/user.entity';
+import { RoleService } from '@/core/role/role.service';
+
 import * as bcrypt from "bcryptjs";
 
-import { UserEntity } from "./entities/user.entity";
-import { UserRoleEntity } from "./entities/user-role.entity";
-import { RoleEntity } from "../role/entities/role.entity";
-import { SaveUserDto } from "./dto/save-user.dto";
-
-import { buildRouteTree } from "@/common/utils/route.util";
 @Injectable()
-export class UserService extends BaseService<UserEntity> {
+export class UserService {
   constructor(
-    @InjectRepository(UserEntity)
-    readonly userRepository: Repository<UserEntity>,
-    @InjectRepository(UserRoleEntity)
-    private readonly userRoleRepository: Repository<UserRoleEntity>,
-    @InjectRepository(RoleEntity)
-    private readonly roleRepository: Repository<RoleEntity>
-  ) {
-    super(userRepository); // 把 User 仓库传给基类
+    @InjectRepository(UserEntity) private readonly userRepo: Repository<UserEntity>,
+    private readonly roleService: RoleService,
+  ) { }
+  async findOne(identifier: string | number) {
+    const where = typeof identifier === 'string' ? { username: identifier } : { id: identifier };
+    return this.userRepo.findOne({ where, relations: ['roles', 'roles.menus'] });
   }
 
-  async save(entity: SaveUserDto): Promise<UserEntity | UserEntity[]> {
-    const { roles, ...rest } = entity;
-    const user = this.userRepository.create(rest);
+
+
+  async findByUsername(username: string) {
+    return this.userRepo.findOne({ where: { username } });
+  }
+  async findById(id: number) {
+    return this.userRepo.findOne({ where: { id } });
+  }
+  async save(dto: UserDto) {
+    if (dto.id) {
+      return await this.update(dto)
+    } else {
+      return await this.create(dto)
+    }
+  }
+
+  async create(dto: UserDto) {
+    const existing = await this.findByUsername(dto.username);//注册时检查username是否存在
+    if (existing) {
+      throw new ConflictException('用户已存在');
+    }
+
+    const { password, roleIds, ...rest } = dto;
+    const user = this.userRepo.create(rest);
+  // ✅ 加密密码
     if (user.password) {
       const saltRounds = 15;
       user.password = await bcrypt.hash(user.password, saltRounds);
     }
-    if (roles && roles.length > 0) {
-      const roleIds = await this.roleRepository.findBy({
-        id: In(roles),
-      });
-      user.roles = roleIds;
+    // ✅ 加载角色实体
+    if (roleIds && roleIds.length > 0) {
+      user.roles = await this.roleService.findByIds(roleIds);
     }
-    return super.save(user);
+
+    return this.userRepo.save(user);
   }
 
-  softDeleteWithRelations(id: number) {
-    return super.softDeleteWithRelations(id, {
-      clearRelations: [
-        {
-          field: "roles",
-          joinTableRepository: this.userRoleRepository,
-          condition: { userId: id },
-        },
-      ],
-    });
-  }
+  async update(dto: UserDto) {
+    const { id, password, roleIds, ...rest } = dto;
 
-  async getUserProfile(userId: number) {
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-      relations: ["roles", "roles.menus", "roles.menus.permissions"],
+    const user = await this.userRepo.findOne({
+      where: { id },
+      relations: ['roles'],
     });
 
     if (!user) {
-      throw new NotFoundException("User not found");
+      throw new NotFoundException('用户不存在');
     }
 
-    const menuMap = new Map<number, any>();
-    const permissionMap = new Map<number, Set<number>>();
-    if (user.roles) {
-      for (const role of user.roles) {
-        for (const menu of role.menus) {
-          if (!menuMap.has(menu.id)) {
-            const { permissions, ...rest } = menu;
-            menuMap.set(menu.id, rest);
-          }
+    // ✅ 更新普通字段（排除 password 和 roleIds）
+    Object.assign(user, rest);
 
-          if (!permissionMap.has(menu.id)) {
-            permissionMap.set(menu.id, new Set());
-          }
-
-          for (const perm of menu.permissions || []) {
-            permissionMap.get(menu.id)?.add(perm.id);
-          }
-        }
-      }
+    // ✅ 更新密码（如有）
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
     }
 
-    const permissions: Record<number, string> = {};
-    for (const [menuId, permSet] of permissionMap.entries()) {
-      const permSetArr = Array.from(permSet);
-      const permStr =
-        "0b" +
-        permSetArr
-          .map((v) => Number(v)) // 转换为数字
-          .reduce((pre, cur) => pre | cur, 0) // 按位或运算
-          .toString(2) // 转回二进制字符串（去掉了 0b）
-          .padStart(8, "0");
-      permissions[menuId] = permStr;
+    // ✅ 更新角色（如有）
+    if (roleIds?.length) {
+      user.roles = await this.roleService.findByIds(roleIds);
+    } else {
+      user.roles = [];
     }
 
-    const { password, roles, ...restUser } = user;
-
-    return {
-      ...restUser,
-      // menus: Array.from(menuMap.values()),
-      routes: buildRouteTree(Array.from(menuMap.values())),
-      permissions,
-    };
+    return this.userRepo.save(user);
   }
+
 }
