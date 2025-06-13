@@ -11,9 +11,9 @@ export enum MenuTypeEnum {
 }
 
 export enum PermissionTypeEnum {
-  INFO = 0b0000000000000001, // 查看
+  CREATE = 0b0000000000000001, // 新增
   UPDATE = 0b0000000000000010, // 修改
   DELETE = 0b0000000000000100, // 删除
-  CREATE = 0b0000000000001000, // 新增
-  EXPORT = 0b0000000000010000, // 导入
+  IMPORT = 0b0000000000001000, // 导入
+  EXPORT = 0b0000000000010000, // 下载、导出
 }

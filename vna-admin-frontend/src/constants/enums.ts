@@ -17,10 +17,10 @@ const enums: { [key: string]: EnumItemType[] } = {
   ],
   premissionsEnum: [
     { label: "创建权限", value: EnumType.PermissionTypeEnum.CREATE },
-    { label: "查看权限", value: EnumType.PermissionTypeEnum.INFO },
     { label: "修改权限", value: EnumType.PermissionTypeEnum.UPDATE },
     { label: "删除权限", value: EnumType.PermissionTypeEnum.DELETE },
-    { label: "导入权限", value: EnumType.PermissionTypeEnum.EXPORT },
+    { label: "导入权限", value: EnumType.PermissionTypeEnum.IMPORT },
+    { label: "下载权限", value: EnumType.PermissionTypeEnum.EXPORT },
   ],
 }
 export type EnumsType = keyof typeof enums

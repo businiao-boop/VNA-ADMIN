@@ -3,6 +3,8 @@
 defineOptions({
   name: "EditModal",
 });
+import {listMenu} from "@/api/menu"
+
 const props = defineProps({
   modalValue: { type: Object, default: ()=>{} },
   menus:{type: Array, default: ()=>[]}
@@ -15,11 +17,20 @@ const rules = {
 
 const title = computed(() => (props.modalValue.id ? "修改角色" : "添加角色"));
 const formRef = ref();
+const treeData = ref();
+const checkedKeys = ref([])
 function ok(){
   formRef.value.validate().then(()=>{
     emit("ok");
   })
 }
+function init(){
+  listMenu().then(res=>{
+    treeData.value = res;
+  })
+}
+
+init()
 </script>
 
 <template>
@@ -34,7 +45,9 @@ function ok(){
       <a-form-item label="角色描述" name="remark">
         <a-input v-model:value="modalValue.remark" />
       </a-form-item>
-
+      <a-form-item label="菜单">
+        <y-tree :treeData="treeData" checkable v-model:checkedKeys="checkedKeys" :expandLayer="1" title="name" key="id"></y-tree>
+      </a-form-item>
     </a-form>
   </y-modal>
 </template>

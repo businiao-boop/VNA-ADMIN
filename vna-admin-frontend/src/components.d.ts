@@ -19,5 +19,6 @@ declare module 'vue' {
     YSelect: typeof import('./components/YSelect/index.vue')['default']
     YSelectEnum: typeof import('./components/YSelectEnum/index.vue')['default']
     YSwitch: typeof import('./components/YSwitch/index.vue')['default']
+    YTree: typeof import('./components/YTree/index.vue')['default']
   }
 }
