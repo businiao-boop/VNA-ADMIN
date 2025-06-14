@@ -11,4 +11,14 @@ export class UserController {
     return this.userService.save(createUserDto);
   }
 
+  @Post("list")
+  list() {
+    return this.userService.list();
+  }
+
+  @Post("delete")
+  remove(@Body("id") id: number) {
+    return this.userService.softDeleteWithRelations(id);
+  }
+
 }

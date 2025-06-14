@@ -4,12 +4,13 @@ import { UserResponseDto, LoginDto } from "@/types/modules/auth.type";
 import { setToken } from "@/utils/auth";
 import { transformAsyncRoutes } from "@/utils/transformRoutes";
 import { BackendRoute } from "@/types/router";
+import { constantRoutes } from "@/router"
 export const useUserStore = defineStore("user", {
   state: () => ({
     token: "",
     userInfo: null as UserResponseDto | null,
     roles: [], // 用户角色
-    routes: [] as BackendRoute[],
+    routes: [...constantRoutes] as BackendRoute[],
   }),
   actions: {
     setToken(token: string) {
@@ -20,7 +21,7 @@ export const useUserStore = defineStore("user", {
       this.userInfo = info;
     },
     setRoutes(routes: BackendRoute[]) {
-      this.routes = routes;
+      this.routes = [...routes, ...constantRoutes];
     },
     generateRoutes(routes: BackendRoute[]): Promise<BackendRoute[]> {
       return new Promise((resolve, reject) => {

@@ -1,24 +1,12 @@
 <template>
   <a-menu
     mode="horizontal"
-    :selectedKeys="[activeKey]"
-    :openKeys="openKeys"
-    @openChange="handleOpenChange"
+    v-model:selectedKeys="activeKey"
+    v-model:openKeys="openKeys"
+    @click="handleClick"
+    triggerSubMenuAction="click"
   >
-    <template v-for="item in menus" :key="item.path">
-      <template v-if="!item.meta?.hidden">
-        <a-sub-menu v-if="item.children?.length" :key="`submenu-${item.path}`">
-          <template #title>
-            <span>{{ item.meta?.title }}</span>
-          </template>
-          <menu-item :menus="item.children" />
-        </a-sub-menu>
-
-        <a-menu-item v-else :key="`menu-${item.path}`" @click="() => handleClick(item)">
-          <span>{{ item.meta?.title }}</span>
-        </a-menu-item>
-      </template>
-    </template>
+  <menu-item :menus="sidebar" />
   </a-menu>
 </template>
 
@@ -27,26 +15,50 @@ import { useRouter, useRoute } from "vue-router";
 import { computed, defineProps, ref, watch } from "vue";
 import type { RouteRecordRaw } from "vue-router";
 import MenuItem from "./MenuItem.vue";
+import type { MenuInfo } from 'ant-design-vue/es/menu/src/interface';
 defineOptions({
   name: "Menu",
 })
-defineProps<{
+const props = defineProps<{
   menus: RouteRecordRaw[];
 }>();
 
 const router = useRouter();
 const route = useRoute();
 
-const activeKey = computed(() => route.path);
-const openKeys = ref<string[]>([]);
+const sidebar = computed<RouteRecordRaw[]>(() => {
+  return props.menus.map(t=>{
+    if(t.path=="/"){
+      const child = t.children ? t.children[0] : t
+      return {...child}
+    }else{
+      return {...t}
+    }
+  }).filter(t=>!!t)
+});
 
-function handleClick(item: RouteRecordRaw) {
-  if (item.path !== route.path) {
-    router.push(item.path);
+const activeKey = ref([route.path.split("/").at(-1)]);// 当前激活的菜单
+watchEffect(() => { 
+  if(route.path=="/"){
+    activeKey.value = [route.path];
+  }else{
+    activeKey.value = [route.path.split("/").at(-1)]
+  }
+  
+});
+
+const openKeys = ref<string[]>([]);//  当前展开的 SubMenu 菜单项 key 数组
+
+function handleClick(item:MenuInfo) {
+  console.log(item,"item");
+  if(!item.keyPath)return;
+  
+  const keyPath = item.keyPath.join("/");
+  console.log(keyPath,"keyPath");
+  
+  if (keyPath !== route.path) {
+    router.push(keyPath);
   }
 }
 
-function handleOpenChange(keys: string[]) {
-  openKeys.value = keys;
-}
 </script>

@@ -7,3 +7,8 @@ export function saveRole(data: RoleType) {
     data,
   });
 }
+export function listRole() {
+  return axios<RoleType[]>({
+    url: "/role/list"
+  })
+}

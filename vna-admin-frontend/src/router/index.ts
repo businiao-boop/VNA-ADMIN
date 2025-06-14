@@ -12,29 +12,40 @@ export const constantRoutes = [
       {
         path: "/",
         name: "Home",
+        meta: { title: "首页" },
         component: () => import("@/views/home/index.vue"),
-      },
+      }
     ]
   },
   {
     path: "/login",
     name: "Login",
+    meta: { hidden: true },
     component: () => import("@/views/auth/index.vue"),
   },
   {
     path:"/system",
     name:"System",
     component:Layout,
+    meta: { title: "系统管理" },
     children:[
       {
         path: "menu",
         name: "Menu",
+        meta: { title: "菜单管理" },
         component: () => import("@/views/core/menu/index.vue"),
       },
       {
         path: "role",
         name: "Role",
+        meta: { title: "角色管理" },
         component: () => import("@/views/core/role/index.vue"),
+      },
+      {
+        path: "user",
+        name: "User",
+        meta: { title: "用户管理" },
+        component: () => import("@/views/core/user/index.vue"),
       },
 
     ]

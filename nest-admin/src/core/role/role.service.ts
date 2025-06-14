@@ -16,6 +16,10 @@ export class RoleService {
     return this.roleRepo.findBy({ id: In(ids) });
   }
 
+  async list() {
+    return await this.roleRepo.find();
+  }
+
   async save(dto: RoleDto) {
     if (dto.id) {
       return await this.update(dto)

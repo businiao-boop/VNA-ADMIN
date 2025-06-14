@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException, BadRequestException } from "@nestjs/
 import { RegisterDto } from "./dto";
 import * as bcrypt from "bcryptjs";
 import { JwtService } from "@nestjs/jwt";
-import { PayloadDto } from "./dto/payload-dto";
+import { UserDto } from "@/core/user/dto";
 
 import { UserService } from "@/core/user/user.service";
 @Injectable()
@@ -38,10 +38,8 @@ export class AuthService {
     };
   }
 
-  async register(dto: RegisterDto) {
-    console.log(dto, "auth dto");
-
-    const user = await this.userService.create(dto);
+  async register(dto: UserDto) {
+    const user = await this.userService.save(dto);
     return user;
   }
 }

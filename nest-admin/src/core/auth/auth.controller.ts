@@ -3,6 +3,8 @@ import { AuthService } from "./auth.service";
 import { RegisterDto } from "./dto";
 import { Public } from "@/common/decorators/public.decorator";
 
+import { UserDto } from "@/core/user/dto";
+
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
@@ -16,7 +18,7 @@ export class AuthController {
 
   @Public()
   @Post("register")
-  async register(@Body() body: RegisterDto) {
+  async register(@Body() body: UserDto) {
     console.log(body, "auth body");
 
     return this.authService.register(body);

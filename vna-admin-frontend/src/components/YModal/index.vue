@@ -4,7 +4,10 @@ defineOptions({
 });
 import { ref } from "vue";
 const props = defineProps({
-  open: Boolean,
+  open: {
+    type: Boolean,
+    default:true
+  },
   width:{
     type:[String , Number],
     default:800
@@ -17,7 +20,7 @@ const ok = () => {
 };
 </script>
 <template>
-  <a-modal :open="visible" @ok="ok" @cancel="visible = false" v-bind="$attrs" :width="width">
+  <a-modal :open="visible" @ok="ok" @cancel="visible = false" v-bind="$attrs" :width="width" :maskClosable="false">
     <slot />
   </a-modal>
 </template>

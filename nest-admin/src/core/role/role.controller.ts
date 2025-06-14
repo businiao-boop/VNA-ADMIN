@@ -12,4 +12,9 @@ export class RoleController {
     return this.roleService.save(createRoleDto);
   }
 
+  @Post("list")
+  list() {
+    return this.roleService.list();
+  }
+
 }

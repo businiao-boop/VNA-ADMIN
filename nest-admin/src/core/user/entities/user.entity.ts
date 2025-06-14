@@ -9,6 +9,9 @@ export class UserEntity extends BaseEntity {
   @Column({ unique: true })
   username: string;
 
+  @Column({ nullable: true })
+  nickname: string;
+
   @Column()
   password: string;
 

@@ -6,6 +6,76 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1391486",
+      "name": "角色管理",
+      "font_class": "jiaoseguanli",
+      "unicode": "e648",
+      "unicode_decimal": 58952
+    },
+    {
+      "icon_id": "4735148",
+      "name": "用户管理",
+      "font_class": "yonghuguanli",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "5276541",
+      "name": "0菜单管理",
+      "font_class": "caidanguanli",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "5873076",
+      "name": "用户权限管理",
+      "font_class": "svg-",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "7329270",
+      "name": "博客",
+      "font_class": "boke",
+      "unicode": "e9f6",
+      "unicode_decimal": 59894
+    },
+    {
+      "icon_id": "12889886",
+      "name": "系统管理",
+      "font_class": "xitongguanli",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "13872290",
+      "name": "退出 ",
+      "font_class": "tuichu",
+      "unicode": "e651",
+      "unicode_decimal": 58961
+    },
+    {
+      "icon_id": "15644324",
+      "name": "登录",
+      "font_class": "denglu",
+      "unicode": "e6bd",
+      "unicode_decimal": 59069
+    },
+    {
+      "icon_id": "24271918",
+      "name": "菜单管理",
+      "font_class": "caidanguanli1",
+      "unicode": "e66e",
+      "unicode_decimal": 58990
+    },
+    {
+      "icon_id": "30039658",
+      "name": "close",
+      "font_class": "close",
+      "unicode": "e676",
+      "unicode_decimal": 58998
+    },
+    {
       "icon_id": "10091798",
       "name": "more",
       "font_class": "more-",

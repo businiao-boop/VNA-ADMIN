@@ -10,6 +10,8 @@ import ThemeDrawer from "@/layout/themeDrawer/index.vue"
 const userStore = useUserStore();
 const checked = ref(false);
 const open = ref(false);
+console.log(userStore.routes);
+
 const onSettings = () => {
   open.value = true
 };
