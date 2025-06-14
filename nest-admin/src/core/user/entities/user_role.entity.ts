@@ -12,4 +12,13 @@ export class UserRoleEntity extends BaseEntity {
   @Column()
   roleId: string;
 
+  // @ManyToMany(() => UserEntity, (user) => user.roles)
+  // @JoinTable()
+  // users: UserEntity[];
+
+  // @ManyToMany(() => RoleEntity, (role) => role.users)
+  // @JoinTable()
+  // roles: RoleEntity[];
+
+
 }

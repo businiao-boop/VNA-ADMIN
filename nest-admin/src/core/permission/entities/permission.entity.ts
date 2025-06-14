@@ -11,6 +11,9 @@ export class PermissionEntity extends BaseEntity {
   @Column()
   name: string; // 如 创建、删除、导入等
 
+  @Column({ nullable: true })
+  description: string;
+
   @ManyToMany(() => MenuEntity, menu => menu.permissions)
   menus: MenuEntity[];
 }

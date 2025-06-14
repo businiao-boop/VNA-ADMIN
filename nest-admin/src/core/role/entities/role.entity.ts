@@ -19,12 +19,14 @@ export class RoleEntity extends BaseEntity {
 
   // 多对多：一个角色可以分配给多个用户
   @ManyToMany(() => UserEntity, (user) => user.roles)
+  @JoinTable({ name: 'user_role' })
   users: UserEntity[];
 
   @ManyToMany(() => MenuEntity)
   @JoinTable({ name: 'role_menu' })
   menus: MenuEntity[];
 
-  @OneToMany(() => RoleMenuPermissionEntity, rmp => rmp.role)
+  @OneToMany(() => RoleMenuPermissionEntity, rmp => rmp.roleId)
+  @JoinTable({ name: 'role_menu_permission' })
   menuPermissions: RoleMenuPermissionEntity[];
 }

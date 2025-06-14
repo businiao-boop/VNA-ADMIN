@@ -15,7 +15,7 @@ export class UserEntity extends BaseEntity {
   @Column()
   password: string;
 
-  @ManyToMany(() => RoleEntity)
+  @ManyToMany(() => RoleEntity, role => role.users, { cascade: true })
   @JoinTable({ name: 'user_role' })
   roles: RoleEntity[];
 }

@@ -74,10 +74,10 @@ $footer-height: 40px;
     padding-top: $padding-y;
     padding-bottom: $padding-y;
     &-wrapper{
-      border: 1px solid var(--color-secondary);
-      border-radius: 10px;
+      // border: 1px solid var(--color-secondary);
+      // border-radius: 10px;
       padding: 20px;
-      background-color: #fff;
+      background-color: transparent;
       height: calc(100vh - #{$header-height} - #{$footer-height} - #{$tabs-height} - $padding-y * 2);
     }
   }

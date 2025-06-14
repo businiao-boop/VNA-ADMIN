@@ -3,22 +3,54 @@ import { Repository, In } from 'typeorm';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { RoleEntity } from './entities/role.entity';
-import { CreateRoleDto, UpdateRoleDto, RoleDto } from './dto';
-
+import { RoleDto } from './dto';
+import { RoleMenuPermissionEntity } from "@/core/role-menu-permission/entities/role-menu-permission.entity"
 @Injectable()
 export class RoleService {
   constructor(
     @InjectRepository(RoleEntity)
-    private readonly roleRepo: Repository<RoleEntity>
+    private readonly roleRepo: Repository<RoleEntity>,
+    @InjectRepository(RoleMenuPermissionEntity)
+    private readonly rmpRepo: Repository<RoleMenuPermissionEntity>
   ) { }
 
   async findByIds(ids: number[]) {
     return this.roleRepo.findBy({ id: In(ids) });
   }
 
-  async list() {
-    return await this.roleRepo.find();
+  async findByIdsWithRelations(ids: number[]) {
+    return await this.roleRepo.find({
+      where: { id: In(ids) },
+      relations: ['menus'],
+    });
   }
+  async list() {
+    // 1. 查询所有角色及其菜单
+    const roles = await this.roleRepo.find({
+      relations: ['menus'],
+    });
+
+    const roleIds = roles.map(role => role.id);
+    const menuIds = roles.flatMap(role => role.menus.map(menu => menu.id));
+
+    // 2. 查询 role_menu_permission，包含关联的权限实体
+    const rmpList = await this.rmpRepo.find({
+      where: {
+        roleId: In(roleIds),
+        menuId: In(menuIds),
+      },
+      relations: ['permission'],
+    });
+
+
+    return {
+      roles,
+      menuIds,
+      rmpList
+    }
+  }
+
+
 
   async save(dto: RoleDto) {
     if (dto.id) {

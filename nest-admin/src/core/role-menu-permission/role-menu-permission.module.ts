@@ -14,5 +14,6 @@ import { RoleMenuPermissionEntity } from "@/core/role-menu-permission/entities/r
   ],
   controllers: [RoleMenuPermissionController],
   providers: [RoleMenuPermissionService],
+  exports: [RoleMenuPermissionService],
 })
 export class RoleMenuPermissionModule { }

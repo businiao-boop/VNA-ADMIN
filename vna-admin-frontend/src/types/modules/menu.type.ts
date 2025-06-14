@@ -11,7 +11,7 @@ export enum MenuTypeEnum {
 
 export type MenuType = {
   id?: number;
-  name: string;
+  menuName: string;
   routerName: string;
   path: string;
   component: string;
@@ -25,6 +25,7 @@ export type MenuType = {
   permission?: string;
   isExternal: boolean;
   externalLink?: string;
+  permissionIds: number[];
 }
 
 export type MenuResponseDto = MenuType & {

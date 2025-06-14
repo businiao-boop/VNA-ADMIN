@@ -1,5 +1,5 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
-import { Repository, DataSource } from 'typeorm';
+import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
+import { Repository, DataSource, In } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from "@/common/services/base.service";
 
@@ -7,6 +7,8 @@ import { UserDto } from "./dto";
 
 import { UserEntity } from './entities/user.entity';
 import { RoleService } from '@/core/role/role.service';
+import { RoleMenuPermissionService } from "@/core/role-menu-permission/role-menu-permission.service"
+import { RoleMenuPermissionEntity } from "@/core/role-menu-permission/entities/role-menu-permission.entity"
 
 import * as bcrypt from "bcryptjs";
 
@@ -14,8 +16,10 @@ import * as bcrypt from "bcryptjs";
 export class UserService {
   constructor(
     @InjectRepository(UserEntity) private readonly userRepo: Repository<UserEntity>,
+    @InjectRepository(RoleMenuPermissionEntity) private readonly rmpRepo: Repository<RoleMenuPermissionEntity>,
     private readonly roleService: RoleService,
-    private readonly dataSource: DataSource
+    private readonly dataSource: DataSource,
+    private readonly rmpService: RoleMenuPermissionService,
   ) {
   }
   async findOne(identifier: string | number) {
@@ -71,9 +75,6 @@ export class UserService {
       Object.assign(user, rest);
     }
 
-
-
-
     // ✅ 加密密码
     if (user.password) {
       const saltRounds = 15;
@@ -86,9 +87,35 @@ export class UserService {
     } else {
       user.roles = [];
     }
-    console.log(user);
-
     return this.userRepo.save(user);
   }
+  async getUserProfile(userId: number) {
+    const user = await this.userRepo.findOne({
+      where: { id: userId },
+      relations: ['roles'],
+    });
+    if (!user) throw new UnauthorizedException("用户不存在");
+    const roleIds = user.roles.map(r => r.id);
+    // 加载菜单
+    const role = await this.roleService.findByIdsWithRelations(roleIds);
 
+    // const menuIds = role.flatMap(rm => rm.menus.map(m => m.id));
+    const menus = role.flatMap(rm => rm.menus)
+    const menuIds = menus.map(t => t.id)
+
+    // 加载权限
+    const rmp = await this.rmpRepo.find({
+      where: { roleId: In(roleIds), menuId: In(menuIds) },
+      relations: ['permission'],
+    });
+
+
+    const permissions = rmp.map(p => p.permission);
+
+    return {
+      ...user,
+      menus: menus,
+      permissions: permissions,
+    };
+  }
 }

@@ -3,7 +3,7 @@ import { MenuTypeEnum } from "@/types/modules/menu.type"
 export const columns = [
   {
     title: '菜单名称',
-    field: "name",
+    field: "menuName",
     visible: true
 
   },
@@ -41,7 +41,7 @@ export const columns = [
 ]
 
 export const presetFields = {
-  name: "",
+  menuName: "",
   routerName: "",
   path: "",
   component: "",
@@ -55,5 +55,6 @@ export const presetFields = {
   permission: "",
   isExternal: false,
   externalLink: "",
+  permissionIds: [],
 
 }

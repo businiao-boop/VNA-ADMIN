@@ -24,4 +24,9 @@ export class AuthController {
     return this.authService.register(body);
   }
 
+  @Post("user")
+  infoUser(@Req() req: any) {
+    return this.authService.infoUser(req.user);
+  }
+
 }

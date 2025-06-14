@@ -5,6 +5,7 @@ import { JwtService } from "@nestjs/jwt";
 import { UserDto } from "@/core/user/dto";
 
 import { UserService } from "@/core/user/user.service";
+import { PayloadDto } from "./dto/payload-dto";
 @Injectable()
 export class AuthService {
   constructor(
@@ -14,7 +15,7 @@ export class AuthService {
 
   async validateUser(username: string, password: string) {
     // 验证用户逻辑
-    const user = await this.userService.findOne(username);
+    const user = await this.userService.findByUsername(username);
     if (!user) {
       throw new UnauthorizedException("用户不存在");
     }
@@ -41,5 +42,10 @@ export class AuthService {
   async register(dto: UserDto) {
     const user = await this.userService.save(dto);
     return user;
+  }
+  async infoUser(user: PayloadDto) {
+    console.log(user, "user");
+
+    return await this.userService.getUserProfile(user.userId);
   }
 }

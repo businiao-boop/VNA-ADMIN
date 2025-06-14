@@ -5,11 +5,13 @@ import { RoleEntity } from "./entities/role.entity";
 
 import { RoleService } from './role.service';
 import { RoleController } from './role.controller';
+import { RoleMenuPermissionEntity } from '@/core/role-menu-permission/entities/role-menu-permission.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      RoleEntity
+      RoleEntity,
+      RoleMenuPermissionEntity
     ]),
   ],
   controllers: [RoleController],

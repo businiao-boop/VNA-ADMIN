@@ -3,24 +3,31 @@ import YConfigTable from '@/components/YConfigTable/index.vue'
 import {columns ,presetFields} from "./settings";
 import {useFormModal} from "@/hooks/modal";
 import editModal from './editModal.vue';
-import {saveMenu} from "@/api/menu"
+import {saveMenu,listMenu} from "@/api/menu"
+import {listPer} from "@/api/permission";
 import {MenuType} from "@/types/modules/menu.type";
 import { message } from 'ant-design-vue';
-const data = ref([
-  {
-    name:'菜单名称',
-    path:'/home',
-    icon:'home',
-    type:'1',
-    status:'1',
-    createTime:'2022-01-01'
-  }
-])
+import {PermissionType} from "@/types/modules/permission.type";
+const menuList = ref<MenuType[]>([])
+const permissionList = ref<PermissionType[]>([])
+function init(){
+  listMenu().then(res=>{
+    if(res){
+      menuList.value = res
+    }
+  })
+  listPer().then(res=>{
+    if(res){
+      permissionList.value = res
+    }
+  })
+}
+init();
 
 function openModal(row?:MenuType){
   const modalForm = row || {}
   const showModal = useFormModal()
-  showModal<MenuType>(editModal,{modalValue:modalForm}).then((data)=>{
+  showModal<MenuType>(editModal,{modalValue:modalForm,permissionList:permissionList.value}).then((data)=>{
     saveMenu(data).then(res=>{
       message.success('保存成功')
     })
@@ -36,7 +43,7 @@ function onAdd(){
 </script>
 <template>
   <div class="menu-wrapper">
-    <y-config-table :columns="columns" v-model="data" @add="onAdd">
+    <y-config-table :columns="columns" v-model="menuList" @add="onAdd">
       <template #action="{row}">
         <div class="action-wrapper">
           <y-button type="primary" size="small" @click="handleEdit(row)">编辑</y-button>

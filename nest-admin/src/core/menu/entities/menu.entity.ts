@@ -8,7 +8,7 @@ import { PermissionEntity } from "@/core/permission/entities/permission.entity";
 @Entity("menu")
 export class MenuEntity extends BaseEntity {
   @Column({ length: 100, comment: "菜单名称" })
-  name: string;
+  menuName: string;
 
   @Column({ length: 100, comment: "菜单路径" })
   path: string;
@@ -73,6 +73,7 @@ export class MenuEntity extends BaseEntity {
 
   // 多对多：一个菜单可以属于多个角色
   @ManyToMany(() => RoleEntity, (role) => role.menus)
+  @JoinTable({ name: "role_menu" })
   roles: RoleEntity[];
 
   @ManyToMany(() => PermissionEntity, permission => permission.menus)
