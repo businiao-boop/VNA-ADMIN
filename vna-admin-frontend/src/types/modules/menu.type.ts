@@ -1,5 +1,6 @@
 // 菜单功能、api相关的类型定义
-import { LayoutEnum } from "@/types/enum.type"
+import { LayoutEnum } from "@/types/enum.type";
+import { PermissionDto } from "./permission.type";
 export enum MenuTypeEnum {
   DIRECTORY = 'dir', // 目录
   MENU = 'menu', // 菜单
@@ -9,8 +10,8 @@ export enum MenuTypeEnum {
 
 
 
-export type MenuType = {
-  id?: number;
+type MenuType = {
+  id: number | null;
   menuName: string;
   routerName: string;
   path: string;
@@ -28,6 +29,9 @@ export type MenuType = {
   permissionIds: number[];
 }
 
-export type MenuResponseDto = MenuType & {
-  children?: MenuResponseDto[];
-};
+// 一般用于表单初始化
+export type MenuDto = Omit<MenuType, 'id'> & { id: number | null, permissionIds: number[] };
+// menu 详情
+export type MenuInfoDto = MenuType & { id: number, permissionIds: number[], permissions?: PermissionDto[] };
+
+export type MenuTreeDto = MenuType & { id: number, children?: MenuTreeDto[], label?: string };

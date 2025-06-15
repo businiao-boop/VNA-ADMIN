@@ -41,6 +41,7 @@ export const columns = [
 ]
 
 export const presetFields = {
+  id: null,
   menuName: "",
   routerName: "",
   path: "",
@@ -55,6 +56,6 @@ export const presetFields = {
   permission: "",
   isExternal: false,
   externalLink: "",
-  permissionIds: [],
+  permissionIds: []
 
 }

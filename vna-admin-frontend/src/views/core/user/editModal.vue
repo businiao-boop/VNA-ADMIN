@@ -3,11 +3,11 @@ defineOptions({
   name: "EditModal",
 });
 import { computed, reactive, toRefs, watch } from "vue";
-import { RoleType } from "@/types/modules/role.type";
+import { RoleTypeDto } from "@/types/modules/role.type";
 import type {UserType} from "@/types/modules/user.type";
 const props = withDefaults(defineProps<{
   modalValue: UserType
-  roleList:RoleType[]
+  roleList:RoleTypeDto[]
 }>(), {
   roleList:()=>([])
 });

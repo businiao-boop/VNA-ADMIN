@@ -17,7 +17,14 @@ withDefaults(defineProps<{
       </div>
     </div>
     <div class="page-layout-right">
-      <slot></slot>
+      <div class="page-layout-right-toolbar">
+        <div class="page-layout-right-toolbar-content">
+          <slot name="toolbar"></slot>
+        </div>
+      </div>
+      <div class="page-layout-right-content">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -28,16 +35,11 @@ withDefaults(defineProps<{
   height: 100%;
   @mixin layout-theme(){
     border: 1px solid var(--color-secondary);
-    border-radius: 10px;
-    padding: 20px;
+    border-radius: 12px;
     background-color: #fff;
   }
   .page-layout-left{
     display: none;
-  }
-  .page-layout-right{
-    width: 100%;
-    @include layout-theme;
   }
   &.horizontal{
     .page-layout-left{
@@ -47,25 +49,31 @@ withDefaults(defineProps<{
       &-content{
         @include layout-theme();
         height: 100%;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       }
     }
     .page-layout-right{
       @include layout-theme();
+      display: flex;
+      flex-direction: column;
       width: 80%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      &-toolbar{
+        text-align: right;
+        padding: 12px 20px;
+        border-bottom: 1px solid #eee;
+        // background-color: red;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+      }
+      &-content{
+        padding:  20px;
+        flex: 1;
+        overflow: hidden;
+        overflow-y: auto;
+      }
     }
   }
-  // .page-layout-left{
-  //   max-width: 20%;
-  //   padding-right: 30px;
-  //   &-content{
-  //     height: 100%;
-  //     @include  layout-theme;
-
-  //   }
-  // }
-  // .page-layout-right{
-  //   @include  layout-theme;
-  //   width: 80%;
-  // }
 }
 </style>

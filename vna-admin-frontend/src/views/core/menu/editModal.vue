@@ -124,7 +124,6 @@ const rules = {
   path: [{ required: true, message: "请输入菜单路径", trigger: "blur" }],
   routerName: [{ required: true, message: "请输入菜单路由名称", trigger: "blur" }],
   component: [{ required: isMenuType, message: "请输入菜单组件", trigger: "blur" }]
-
 }
 const formRef = ref();
 function ok() {

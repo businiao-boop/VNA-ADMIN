@@ -19,6 +19,8 @@ export class MenuService extends BaseService<MenuEntity> {
     super(menuRepository);
   }
 
+
+
   async save(entity: SaveMenuDto): Promise<MenuEntity | MenuEntity[]> {
     const { permissionIds, ...rest } = entity;
     const menu = this.menuRepository.create(rest);

@@ -17,4 +17,14 @@ export class MenuController {
     return await this.menuService.list();
   }
 
+  @Post("listRelations")
+  async listRelations() {
+    return await this.menuService.listRelations();
+  }
+
+  @Post("info")
+  info(@Body() body: { id: number }) {
+    return this.menuService.info(body.id);
+  }
+
 }

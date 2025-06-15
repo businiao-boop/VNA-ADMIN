@@ -3,6 +3,7 @@ defineOptions({
   name: "YTree",
 });
 import type { TreeProps } from 'ant-design-vue';
+import { DataNode } from 'ant-design-vue/es/tree';
 
 import type { Key } from 'ant-design-vue/es/_util/type'
 import type { AntTreeNodeSelectedEvent } from 'ant-design-vue/es/tree';
@@ -13,12 +14,12 @@ const props = withDefaults(defineProps<{
   defaultExpandAll?: boolean,
   modelValue?: string | string[],
   rowKey?:string,
-  title?: string,
+  titleKey?: string,
   children?: string,
 }>(), {
   expandLayer: 0,
   rowKey:"key",
-  title: 'title',
+  titleKey: 'title',
   children: 'children',
 })
 const emit = defineEmits(['select'])
@@ -37,8 +38,8 @@ function getExpandedKeysByLayer(tree: any[], maxLayer: number, currentLayer = 1)
   if(!tree)return keys;
   if (maxLayer < currentLayer) return keys;
   for (const node of tree) {
-    if (node.key != null && currentLayer <= maxLayer) {
-      keys.push(node.key);
+    if (node[props.rowKey] != null && currentLayer <= maxLayer) {
+      keys.push(node[props.rowKey]);
     }
     if (node.children && currentLayer < maxLayer) {
       keys.push(...getExpandedKeysByLayer(node.children, maxLayer, currentLayer + 1));
@@ -50,7 +51,7 @@ function getExpandedKeysByLayer(tree: any[], maxLayer: number, currentLayer = 1)
 
 const expandedKeys = ref<(string | number)[]>([]);
 // 设置层级
-watch(() => [props.expandLayer, props.defaultExpandAll], ([expandLayer, defaultExpandAll]) => {
+watch(() => [props.expandLayer, props.defaultExpandAll,props.treeData], ([expandLayer, defaultExpandAll]) => {
   if(!props.treeData)return;
   if (defaultExpandAll) {
     expandedKeys.value = getAllKeys(props.treeData);
@@ -58,34 +59,48 @@ watch(() => [props.expandLayer, props.defaultExpandAll], ([expandLayer, defaultE
     expandedKeys.value = getExpandedKeysByLayer(props.treeData, +expandLayer)
   }
 }, { immediate: true })
+const selectedTree = ref<DataNode[]>([]);
+const selectedKey = computed({
+  get(){
+    const item = selectedTree.value[0];
+    return item ? [item[props.rowKey]] : [];
+  },
+  set(val){
+    selectedTree.value = val[0];
+  }
+})
 function onSelectTree(tree:Key[],e:AntTreeNodeSelectedEvent){
-  if(e){
-    const node = e.node;
-    emit("select",node.dataRef)
+  if(e.node.dataRef){
+    const node = e.node.dataRef;
+    selectedTree.value = [node];
+    emit("select",node)
   }
 }
 const fieldNames = computed(()=>{
   return {
     key: props.rowKey,
-    title: props.title,
+    title: props.titleKey,
     children: props.children
   }
 })
  function buildTree(trees: any[]): any[] {
-  const treeMap = new Map<number, any>();
+  console.log(trees,"trees");
+  
+  const treeMap = new Map<string | number, any>();
   const tree: any[] = [];
   trees.forEach((t) => {
     const x = {
       ...t,
-      children:[]
+      [props.children]:[]
     };
-    treeMap.set(t.id, x);
+    treeMap.set(t[props.rowKey], x);
   });
-
+  console.log(treeMap,"treeMap");
+  
   trees.forEach((t) => {
-    const current = treeMap.get(t.id);
+    const current = treeMap.get(t[props.rowKey]);
     if (t.parentId && treeMap.has(t.parentId)) {
-      treeMap.get(t.parentId).children.push(current);
+      treeMap.get(t.parentId)[props.children].push(current);
     } else {
       tree.push(current);
     }
@@ -94,6 +109,7 @@ const fieldNames = computed(()=>{
   return tree;
 }
 
+
 const value = computed(() => {
   return buildTree(props.treeData);
 });
@@ -101,18 +117,20 @@ const value = computed(() => {
 </script>
 
 <template>
-  <div class="y-tree-wrapper">
-    <a-tree v-model:expandedKeys="expandedKeys" :treeData="value" v-bind="$attrs" :fieldNames="fieldNames" @select="onSelectTree">
+  <div class="y-tree-wrapper y-tree">
+    <a-tree v-model:expandedKeys="expandedKeys" :selectedKeys="selectedKey" :treeData="value" v-bind="$attrs" :fieldNames="fieldNames" @select="onSelectTree">
       <template #title="item">
-        <slot :item="item">
-          <span>{{ item[fieldNames.title] }}</span>
-        </slot>
+        <slot name="title" :item="item"></slot>
       </template>
     </a-tree>
-    
   </div>
 </template>
 
 <style scoped lang="scss">
-.y-tree-wrapper {}
+.y-tree-wrapper {
+  .ant-tree-node-selected{
+    background-color: #e6f4ff;
+  }
+  // #e6f4ff
+}
 </style>

@@ -7,12 +7,12 @@ import { useFormModal } from "@/hooks/modal";
 import editModal from "./editModal.vue";
 import type { UserType } from "@/types/modules/user.type"
 import { listRole } from "@/api/role";
-import { RoleType } from "@/types/modules/role.type";
+import { RoleTypeDto } from "@/types/modules/role.type";
 import { saveUser,listUser,deleteUser } from "@/api/user";
 import { message } from "ant-design-vue";
 
 const userList = ref<UserType[]>([]);
-const roleList = ref<RoleType[]>([]);
+const roleList = ref<RoleTypeDto[]>([]);
 function openModal(modalForm: UserType) {
   const showModal = useFormModal();
   showModal<UserType>(editModal, { modalValue: modalForm, roleList: roleList.value }).then((data: UserType) => {

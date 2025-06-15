@@ -25,6 +25,29 @@ export class RoleService {
     });
   }
   async list() {
+    return await this.roleRepo.find()
+  }
+  async info(roleId: number) {
+    const role = await this.roleRepo.findOne({
+      where: { id: roleId },
+      relations: ['menus'],
+    });
+    if (!role) throw new NotFoundException('角色不存在');
+    const menuIds = role.menus.map(menu => menu.id);
+    const rmpList = await this.rmpRepo.find({
+      where: { roleId: roleId, menuId: In(menuIds) },
+      relations: ['permission'],
+    });
+
+
+
+    return {
+      ...role,
+      menuIds,
+      rmpList
+    }
+  }
+  async listAll() {
     // 1. 查询所有角色及其菜单
     const roles = await this.roleRepo.find({
       relations: ['menus'],

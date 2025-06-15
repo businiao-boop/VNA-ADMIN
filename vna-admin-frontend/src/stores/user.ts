@@ -21,7 +21,7 @@ export const useUserStore = defineStore("user", {
       this.userInfo = info;
     },
     setRoutes(routes: BackendRoute[]) {
-      this.routes = [...routes, ...constantRoutes];
+      this.routes = [...constantRoutes, ...routes];
     },
     generateRoutes(routes: BackendRoute[]): Promise<BackendRoute[]> {
       return new Promise((resolve, reject) => {

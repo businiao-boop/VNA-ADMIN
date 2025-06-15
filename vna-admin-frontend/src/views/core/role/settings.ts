@@ -26,5 +26,6 @@ export const presetFields = {
   name: "",
   code: "",
   status: true,
-  remark: ""
+  remark: "",
+  menuIds: []
 }
