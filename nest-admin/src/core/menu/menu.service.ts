@@ -1,57 +1,60 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { MenuDto } from './dto/index.dto';
-import { MenuEntity } from "./entities/menu.entity";
-import { Repository, DataSource } from 'typeorm';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PermissionService } from "@/core/permission/permission.service"
+import { Repository, In } from 'typeorm';
 
+import { PermissionService } from '@/core/permission/permission.service';
+import { BaseService } from '@/common/base/base.service';
+import { MenuEntity } from './entities/menu.entity';
+
+import { MenuDto, QueryMenuDto, PaginationDto } from './dto/index.dto';
 @Injectable()
-export class MenuService {
-
+export class MenuService extends BaseService<MenuEntity> {
   constructor(
-    @InjectRepository(MenuEntity) private readonly menuRepo: Repository<MenuEntity>,
-    private readonly permService: PermissionService
-  ) {
+    @InjectRepository(MenuEntity)
+    private readonly menuRepo: Repository<MenuEntity>,
+    private readonly permissionService: PermissionService
+  ) { super(menuRepo) }
+
+  async list(body?: QueryMenuDto, page?: PaginationDto) {
+    const filter = {
+      where: { ...body }
+    }
+    return this.findAllAndCount(filter, page)
   }
-  async save(dto: MenuDto) {
-    // ✅ 更新普通字段
-    const { id, routerName, ...rest } = dto;
-    const existing = await this.menuRepo.findOne({
-      where: [{ id: dto.id }, { routerName: dto.routerName }]
-    });
-    const menu = this.menuRepo.create(existing || dto);
+
+  async listRelationRequestPermission(body?: QueryMenuDto, page?: PaginationDto) {
+    const filter = {
+      where: { ...body },
+      relations: ['permissions']
+    }
+    return this.findAll(filter);
+  }
+
+  async save(menuDto: MenuDto) {
+    const { id, routerName, permissionIds, ...rest } = menuDto;
+    const existing = await this.menuRepo.findOne({ where: [{ id }, { routerName }] })
+    const menu = this.menuRepo.create(existing || {});
     if (existing) {
-      Object.assign(menu, rest);
+      Object.assign(menu, rest)
+    } else {
+      Object.assign(menu, menuDto)
     }
-    if (dto.permissionIds) {
-      menu.permissions = await this.permService.findByIds(dto.permissionIds);
+
+    if (permissionIds) {
+      menu.permissions = await this.permissionService.findAll({
+        where: { id: In(permissionIds) }
+      })
+    } else {
+      menu.permissions = [];
     }
-    console.log(menu.permissions);
-
-    return await this.menuRepo.save(menu);
-
+    return this.menuRepo.save(menu)
   }
-  async info(menuId: number) {
-    const menu = await this.menuRepo.findOne({
-      where: { id: menuId },
+
+  async info(id: number) {
+    const menu = await this.findOne({
+      where: { id },
       relations: ['permissions']
-    });
-    if (!menu) throw new NotFoundException('菜单不存在');
-    return {
-      ...menu,
-      permissionIds: menu.permissions.map(role => role.id)
-    };
-  }
-
-  async list() {
-    return await this.menuRepo.find();
-  }
-
-  async listRelations() {
-    const menu = await this.menuRepo.find({
-      relations: ['permissions']
-    });
-    if (!menu) throw new NotFoundException('菜单不存在');
+    })
     return menu;
   }
 }

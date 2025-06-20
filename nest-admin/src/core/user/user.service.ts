@@ -1,121 +1,104 @@
-import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
-import { Repository, DataSource, In } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { Repository, In } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BaseService } from "@/common/services/base.service";
 
-import { UserDto } from "./dto";
+import { UserDto, QueryUserDto, PaginationDto } from "./dto/index.dto";
 
 import { UserEntity } from './entities/user.entity';
-import { RoleService } from '@/core/role/role.service';
-import { RoleMenuPermissionService } from "@/core/role-menu-permission/role-menu-permission.service"
-import { RoleMenuPermissionEntity } from "@/core/role-menu-permission/entities/role-menu-permission.entity"
 
 import * as bcrypt from "bcryptjs";
 
+import { BaseService } from "@/common/base/base.service";
+import { RoleService } from '@/core/role/role.service';
+
 @Injectable()
-export class UserService {
+export class UserService extends BaseService<UserEntity> {
   constructor(
     @InjectRepository(UserEntity) private readonly userRepo: Repository<UserEntity>,
-    @InjectRepository(RoleMenuPermissionEntity) private readonly rmpRepo: Repository<RoleMenuPermissionEntity>,
-    private readonly roleService: RoleService,
-    private readonly dataSource: DataSource,
-    private readonly rmpService: RoleMenuPermissionService,
+    private readonly roleService: RoleService
   ) {
-  }
-  async findOne(identifier: string | number) {
-    const where = typeof identifier === 'string' ? { username: identifier } : { id: identifier };
-    return this.userRepo.findOne({ where, relations: ['roles', 'roles.menus'] });
+    super(userRepo);
   }
 
-  async softDeleteWithRelations(id: number) {
-    // const user = await this.userRepo.softDelete(id);
-    await this.dataSource.transaction(async manager => {
-      // 删除中间表关联记录
-      await manager
-        .createQueryBuilder()
-        .delete()
-        .from('user_role') // ⚠️ 中间表名称，可能是 user_roles_role 或你 @JoinTable 指定的 name
-        .where('userId = :id', { id })
-        .execute();
-
-    });
-
-    return true
-  }
-
-
-  async findByUsername(username: string) {
-    return this.userRepo.findOne({ where: { username } });
-  }
-  async findById(id?: number) {
-    if (!id) return null;
-    return this.userRepo.findOne({ where: { id } });
-  }
-  async list() {
-    const users = await this.userRepo.find({
-      relations: ['roles'],
-    });
-    return users.map(user => ({
-      ...user,
-      roleIds: user.roles.map(role => role.id),
-    }));
-  }
-  async save(dto: UserDto) {
-    // ✅ 更新普通字段（排除 id, username, roleIds, password）
-    const { id, username, roleIds, password, ...rest } = dto;
+  async save(userDto: UserDto) {
+    const { password, id, username, roleIds, ...rest } = userDto;
     const existing = await this.userRepo.findOne({
-      where: [{ id: dto.id }, { username }]
+      where: [{ id: userDto.id }, { username }]
     });
 
     const user = this.userRepo.create(existing || {});
-    if (!existing) {
-      Object.assign(user, dto);
-    } else {
-      // ✅ 更新字段
+    if (existing) {
       Object.assign(user, rest);
-    }
-
-    // ✅ 加密密码
-    if (user.password) {
-      const saltRounds = 15;
-      user.password = await bcrypt.hash(user.password, saltRounds);
-    }
-
-    // ✅ 加载角色实体
-    if (roleIds && roleIds.length > 0) {
-      user.roles = await this.roleService.findByIds(roleIds);
     } else {
-      user.roles = [];
+      Object.assign(user, userDto);
+    }
+
+    if (password) {
+      user.password = await bcrypt.hash(password, 10);
+    }
+    if (roleIds && roleIds.length) {
+      user.roles = await this.roleService.list({ id: roleIds });
     }
     return this.userRepo.save(user);
   }
-  async getUserProfile(userId: number) {
-    const user = await this.userRepo.findOne({
-      where: { id: userId },
-      relations: ['roles'],
+
+  async list(body?: QueryUserDto, page?: PaginationDto) {
+    const filter = {
+      where: { ...body }
+    }
+    return this.findAllAndCount(filter, page)
+  }
+
+  async info(id: number, username?: string) {
+    return await this.findOne({ where: [{ id }, { username: username }] });
+  }
+
+  async infoUserProfile(id?: number, username?: string) {
+    const user = await this.findOne({
+      where: [{ id }, { username: username }],
+      relations: ['roles', "roles.roleMenuPermissions", 'roles.roleMenuPermissions.menu',
+        'roles.roleMenuPermissions.permission']
     });
-    if (!user) throw new UnauthorizedException("用户不存在");
-    const roleIds = user.roles.map(r => r.id);
-    // 加载菜单
-    const role = await this.roleService.findByIdsWithRelations(roleIds);
 
-    // const menuIds = role.flatMap(rm => rm.menus.map(m => m.id));
-    const menus = role.flatMap(rm => rm.menus)
-    const menuIds = menus.map(t => t.id)
+    const menuMap = new Map<number, any>();
+    const roles: object[] = [];
+    const permissionKeys: string[] = [];
 
-    // 加载权限
-    const rmp = await this.rmpRepo.find({
-      where: { roleId: In(roleIds), menuId: In(menuIds) },
-      relations: ['permission'],
-    });
+    for (const role of user.roles) {
+      const { roleMenuPermissions, ...roleInfo } = role
+      for (const rmp of role.roleMenuPermissions || []) {
+        const menu = rmp.menu;
+        const permission = rmp.permission;
 
+        // 合并多个角色的菜单权限，按菜单 ID 聚合
+        if (!menuMap.has(menu.id)) {
+          menuMap.set(menu.id, {
+            ...menu,
+            permissions: [],
+          });
+        }
 
-    const permissions = rmp.map(p => p.permission);
+        const permissionList = menuMap.get(menu.id).permissions;
+
+        // 检查是否已存在相同权限
+        const exists = permissionList.some(p => p.id === permission.id);
+        if (!exists) {
+          permissionList.push({
+            ...permission,
+            menuPermissionKey: `${menu.routerName}:${permission.code}`,
+          });
+          permissionKeys.push(`${menu.routerName}:${permission.code}`)
+        }
+      }
+      roles.push(roleInfo)
+    }
 
     return {
       ...user,
-      menus: menus,
-      permissions: permissions,
+      roles,
+      permissionKeys,
+      menuList: Array.from(menuMap.values())
     };
   }
+
 }

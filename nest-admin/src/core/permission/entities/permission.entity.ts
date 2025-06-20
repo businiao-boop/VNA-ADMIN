@@ -1,19 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinColumn } from 'typeorm';
-import { MenuEntity } from '@/core/menu/entities/menu.entity';
+import { Column, Entity, ManyToMany, OneToMany } from "typeorm";
 import { BaseEntity } from "@/common/entities/base.entity";
-
-@Entity('permission')
+import { MenuEntity } from "@/core/menu/entities/menu.entity";
+import { RoleMenuPermissionEntity } from "@/core/role-menu-permissions/entities/role-menu-permission.entity";
+@Entity("permissions")
 export class PermissionEntity extends BaseEntity {
-
-  @Column()
-  code: string; // 如 user:create, user:delete
-
-  @Column()
-  name: string; // 如 创建、删除、导入等
-
-  @Column({ nullable: true })
+  @Column({ unique: true, comment: "权限编码,唯一" })
+  code: string;
+  @Column({ comment: "权限名称" })
+  name: string;
+  @Column({ comment: "权限描述", nullable: true })
   description: string;
 
-  @ManyToMany(() => MenuEntity, menu => menu.permissions)
+  @ManyToMany(type => MenuEntity, menu => menu.permissions)
   menus: MenuEntity[];
+
+  @OneToMany(() => RoleMenuPermissionEntity, (rmp) => rmp.permission)
+  roleMenuPermissions: RoleMenuPermissionEntity[];
 }

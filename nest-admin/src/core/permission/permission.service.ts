@@ -1,20 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { Repository, In } from 'typeorm';
-
 import { InjectRepository } from '@nestjs/typeorm';
+import { In, Repository } from 'typeorm';
 import { PermissionEntity } from './entities/permission.entity';
-
-
+import { PermissionDto, QueryPermissionDto, PaginationDto } from './dto/index.dto';
+import { BaseService } from '@/common/base/base.service';
 @Injectable()
-export class PermissionService {
+export class PermissionService extends BaseService<PermissionEntity> {
   constructor(
     @InjectRepository(PermissionEntity)
-    private readonly permRepo: Repository<PermissionEntity>
-  ) { }
-  async list() {
-    return await this.permRepo.find()
+    private readonly permissionRepo: Repository<PermissionEntity>
+  ) {
+    super(permissionRepo);
   }
-  async findByIds(ids: number[]) {
-    return await this.permRepo.findBy({ id: In(ids) })
+
+  async list(body?: QueryPermissionDto, page?: PaginationDto) {
+    const filter = {
+      where: { ...body }
+    }
+    return this.findAllAndCount(filter, page);
+  }
+
+  async save(dto: PermissionDto) {
+    const { id, code, ...rest } = dto;
+    const existing = await this.findOne({
+      where: [{ code }, { id }]
+    });
+    const permission = this.permissionRepo.create(existing || {})
+    if (existing) {
+      Object.assign(permission, rest);
+    } else {
+      Object.assign(permission, dto);
+    }
+    return this.permissionRepo.save(permission);
   }
 }

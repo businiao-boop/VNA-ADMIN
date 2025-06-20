@@ -1,0 +1,12 @@
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { PermissionService } from './permission.service';
+
+@Controller('permission')
+export class PermissionController {
+  constructor(private readonly permissionService: PermissionService) {}
+
+  @Post("list")
+  async list() {
+    return await this.permissionService.list();
+  }
+}

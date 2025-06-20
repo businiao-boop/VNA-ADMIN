@@ -1,30 +1,28 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { MenuService } from './menu.service';
-import { MenuDto } from './dto/index.dto';
-
+import { MenuDto, QueryMenuDto, PaginationDto } from './dto/index.dto';
 
 @Controller('menu')
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}
 
   @Post("save")
-  async save(@Body() dto: MenuDto) {
-    return await this.menuService.save(dto);
+  save(@Body() menuDto: MenuDto) {
+    return this.menuService.save(menuDto);
   }
-
   @Post("list")
-  async list() {
-    return await this.menuService.list();
+  list(@Body() body: QueryMenuDto, @Query() page: PaginationDto) {
+    return this.menuService.list(body, page);
   }
 
-  @Post("listRelations")
-  async listRelations() {
-    return await this.menuService.listRelations();
+  @Post("listRelationRequestPermission")
+  listRelationRequestPermission(@Body() body: QueryMenuDto, @Query() page: PaginationDto) {
+    return this.menuService.listRelationRequestPermission(body, page);
   }
+
 
   @Post("info")
   info(@Body() body: { id: number }) {
     return this.menuService.info(body.id);
   }
-
 }

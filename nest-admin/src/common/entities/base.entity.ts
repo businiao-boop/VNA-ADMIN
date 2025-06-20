@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  Column,
 } from "typeorm";
 
 export abstract class BaseEntity {

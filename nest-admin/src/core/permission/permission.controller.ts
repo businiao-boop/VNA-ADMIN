@@ -1,12 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { PermissionService } from './permission.service';
+import { PermissionDto, QueryPermissionDto, PaginationDto } from './dto/index.dto';
 
 @Controller('permission')
 export class PermissionController {
-  constructor(private readonly permissionService: PermissionService) {}
-
+  constructor(private readonly permissionService: PermissionService) { }
   @Post("list")
-  async list() {
-    return await this.permissionService.list();
+  list(@Body() body: QueryPermissionDto, @Query() query?: PaginationDto) {
+    return this.permissionService.list(body, query);
+  }
+
+  @Post("save")
+  save(@Body() body: PermissionDto) {
+    return this.permissionService.save(body);
+  }
+
+  @Post("delete")
+  remove(@Body("id") id: number) {
+    return this.permissionService.softDeleteWithRelations(id);
   }
 }

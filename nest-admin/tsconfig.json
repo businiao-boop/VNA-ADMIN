@@ -18,5 +18,9 @@
     },
     "skipLibCheck": true,
     "incremental": true
-  }
+  },
+  "include": [
+    "src", // 确保 global.d.ts 在 src 下
+    "global.d.ts" // 如果不在 src 下，需要手动加进来
+  ]
 }

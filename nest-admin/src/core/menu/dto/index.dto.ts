@@ -1,57 +1,88 @@
 import { PartialType } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsEnum, IsInt, IsNumber, IsOptional, IsString } from "class-validator";
-
-import { TypeEnum, LayoutEnum } from "../enum/menu.enum";
+import { PaginationDto } from "@/common/dto";
+import {
+  IsString,
+  IsOptional,
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  Min,
+  MaxLength,
+  IsArray,
+} from 'class-validator';
+import { MenuTypeEnum, MenuLayoutEnum } from "@/common/enums/menu.enum";
 
 export class MenuDto {
-  @IsInt()
   @IsOptional()
-  id?: number;
+  @IsInt()
+  id: number;
+
   @IsString()
+  @MaxLength(100)
   menuName: string;
+
   @IsString()
+  @MaxLength(100)
   path: string;
+
   @IsString()
+  @MaxLength(100)
   routerName: string;
+
   @IsString()
+  @MaxLength(100)
+  @IsOptional()
   component: string;
+
   @IsInt()
   @IsOptional()
   parentId: number;
+
+  @IsOptional()
   @IsInt()
-  @IsOptional()
+  @Min(0)
   sort: number;
-  @IsString()
+
   @IsOptional()
+  @IsString()
+  @MaxLength(50)
   icon?: string;
-  @IsEnum(LayoutEnum)
-  @IsOptional()
-  layout?: LayoutEnum;
 
-  @IsEnum(TypeEnum)
   @IsOptional()
-  type?: TypeEnum;
+  @IsEnum(MenuLayoutEnum)
+  layout: MenuLayoutEnum;
+
+  @IsOptional()
+  @IsEnum(MenuTypeEnum)
+  type: MenuTypeEnum;
+
   @IsBoolean()
   @IsOptional()
-  show?: boolean;
+  show: boolean;
+
   @IsBoolean()
   @IsOptional()
-  keepAlive?: boolean;
+  keepAlive: boolean;
+
+
   @IsBoolean()
   @IsOptional()
-  isExternal?: boolean;
+  isExternal: boolean;
+
+  @IsOptional()
   @IsString()
-  @IsOptional()
   externalLink?: string;
+
   @IsBoolean()
   @IsOptional()
-  isPublic?: boolean;
-  @IsArray()
-  @IsOptional()
-  roleIds: number[];
-  @IsArray()
-  @IsOptional()
-  permissionIds: number[];
+  isPublic: boolean;
 
+  @IsArray()
+  permissionIds: number[];
+}
+
+export class QueryMenuDto extends PartialType(MenuDto) {
 
 }
+
+export { PaginationDto }

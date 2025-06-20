@@ -1,32 +1,24 @@
-import { Entity, Column, ManyToMany, JoinTable, OneToMany } from "typeorm";
-
+import { Column, Entity, ManyToMany, OneToMany } from "typeorm";
 import { BaseEntity } from "@/common/entities/base.entity";
-import { MenuEntity } from "@/core/menu/entities/menu.entity";
+
 import { UserEntity } from "@/core/user/entities/user.entity";
-import { RoleMenuPermissionEntity } from "@/core/role-menu-permission/entities/role-menu-permission.entity";
-
-@Entity("role")
+import { RoleMenuPermissionEntity } from "@/core/role-menu-permissions/entities/role-menu-permission.entity";
+@Entity('role')
 export class RoleEntity extends BaseEntity {
-
-  @Column({ unique: true })
-  name: string;
-
-  @Column({ unique: true })
+  @Column({ unique: true, comment: '角色编码,唯一标识' })
   code: string;
 
-  @Column({ nullable: true })
-  description: string;
+  @Column({ comment: '角色名称' })
+  name: string;
 
-  // 多对多：一个角色可以分配给多个用户
+  @Column({ comment: '角色说明', nullable: true })
+  description?: string;
+
+
   @ManyToMany(() => UserEntity, (user) => user.roles)
-  @JoinTable({ name: 'user_role' })
-  users: UserEntity[];
+  users?: UserEntity[];
 
-  @ManyToMany(() => MenuEntity)
-  @JoinTable({ name: 'role_menu' })
-  menus: MenuEntity[];
+  @OneToMany(() => RoleMenuPermissionEntity, (rmp) => rmp.role)
+  roleMenuPermissions: RoleMenuPermissionEntity[];
 
-  @OneToMany(() => RoleMenuPermissionEntity, rmp => rmp.roleId)
-  @JoinTable({ name: 'role_menu_permission' })
-  menuPermissions: RoleMenuPermissionEntity[];
 }
