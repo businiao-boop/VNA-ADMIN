@@ -9,7 +9,7 @@ import { saveRole,listRole,infoRole} from "@/api/role"
 import { message } from "ant-design-vue";
 import type { RoleTypeDto,RoleInfoDto,RoleListDto } from "@/types/modules/role.type";
 import type { MenuInfoDto,MenuTreeDto } from "@/types/modules/menu.type";
-import {listRelationsMenu} from "@/api/menu"
+import {listRelationRequestPermission} from "@/api/menu"
 
 const roleList = ref<RoleListDto[]>([]);
 
@@ -17,7 +17,7 @@ const menuTreeList  = ref<MenuInfoDto[]>([]);
 const formRef = ref();
 
 (function loadData() { 
-  listRelationsMenu().then(data=>{
+  listRelationRequestPermission().then(data=>{
     if(data){
       menuTreeList.value = data
     }

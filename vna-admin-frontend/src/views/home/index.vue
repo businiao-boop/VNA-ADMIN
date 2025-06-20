@@ -1,40 +1,87 @@
 <script setup lang="ts">
-import Dialog from "@/views/core/menu/editModal.vue"
-import {useFormModal} from "@/hooks/modal";
-const form = {a:1,b:2}
-import { applyTheme } from "@/utils/theme";
+import Treeselect from 'vue3-treeselect-ts'
+ import 'vue3-treeselect-ts/dist/style.css'
+ import {listRelationRequestPermission} from "@/api/menu"
+ import {MenuDto,MenuInfoDto,MenuTypeEnum,MenuTreeDto} from "@/types/modules/menu.type";
+ const value = ref();
+ const options = ref([
+  {
+    label: 'Option 1',
+    value: 1,
+  },
+  {
+    label: 'Option 2',
+    value: 2,
+  },
+  {
+    label: 'Option 3',
+    value: 3,
+  },
+]);
+const menuList = ref<MenuTreeDto[]>([])
 
-const theme = reactive({
-  primary: "red",
-  background: "#f9f871",
-  text: "#2e2e2e",
-});
-const openModal = () => {
-  const showModal = useFormModal({title:"提示",width:1500})
-  showModal(Dialog,{modalValue:form}).then(data=>{
-    console.log(data,"data");
+ function listToTree<T>(list:any[]):T[] {
+  const idKey =  'id'
+  const parentKey =  'parentId'
+  const childrenKey =  'children'
+
+  const nodeMap = new Map()
+  const tree:T[] = [];
+
+  list.forEach(node => {
+    // node[childrenKey] = []
+    nodeMap.set(node[idKey], node)
   })
+
+  list.forEach(node => {
+    const parent = nodeMap.get(node[parentKey])
+    if (parent) {
+      if (!parent[childrenKey]) {
+        parent[childrenKey] = []
+      }
+      parent[childrenKey].push(node)
+    } else {
+      tree.push(node)
+    }
+  })
+
+  return tree
 }
 
-  
+function getList() {
+  listRelationRequestPermission().then(res => {
+    // menuList.value = listToTree<MenuTreeDto>(res)
+    menuList.value = res;
+  })
+}
+// const normalizer = (node)=>{
+//   return {
+//     id: node.id,
+//     label: node.menuName,
+//     // children: node.children
+//   }
+// }
+getList()
 </script>
 <template>
   <div class="home">
-    <div class="btn-wrapper">
-      <a-button @click="openModal">tishi</a-button>
-    </div>
-
+    <a-row :gutter="20">
+      <a-col :span="12">
+        <!-- :alwaysOpen="true" -->
+        <!-- <Treeselect v-model="value" :options='menuList'  :multiple="true" :defaultExpandLevel="Infinity" :normalizer="normalizer" valueFormat="value">
+    
+        </Treeselect> -->
+      </a-col>
+      <a-col :span="12">
+        <y-tree :options="menuList" rowKey="id" :transform="true" :expandLayer="1" checkable labelField="menuName" blockNode></y-tree>
+      </a-col>
+    </a-row>
   </div>
 </template>
 
 <style scoped lang="scss">
 .home{
-  height:100%;
-.btn-wrapper{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
-}
+  width:500px;
+  margin:100px auto;
 }
 </style>

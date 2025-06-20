@@ -7,7 +7,7 @@ export const constantRoutes = [
   {
     path:"/",
     name:"/",
-    component:Layout,
+    // component:Layout,
     children:[
       {
         path: "/",

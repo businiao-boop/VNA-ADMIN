@@ -25,7 +25,10 @@ export class MenuService extends BaseService<MenuEntity> {
   async listRelationRequestPermission(body?: QueryMenuDto, page?: PaginationDto) {
     const filter = {
       where: { ...body },
-      relations: ['permissions']
+      relations: ['permissions'],
+      order: {
+        sort: 'ASC'
+      }
     }
     return this.findAll(filter);
   }

@@ -11,9 +11,9 @@ export function listMenu() {
     url: "/menu/list",
   });
 }
-export function listRelationsMenu() {
+export function listRelationRequestPermission() {
   return axios<MenuInfoDto[]>({
-    url: "/menu/listRelations",
+    url: "/menu/listRelationRequestPermission",
   });
 }
 export function infoMenu(id: number, routerName?: string) {

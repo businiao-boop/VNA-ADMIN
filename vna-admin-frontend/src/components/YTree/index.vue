@@ -2,135 +2,112 @@
 defineOptions({
   name: "YTree",
 });
-import type { TreeProps } from 'ant-design-vue';
-import { DataNode } from 'ant-design-vue/es/tree';
-
-import type { Key } from 'ant-design-vue/es/_util/type'
-import type { AntTreeNodeSelectedEvent } from 'ant-design-vue/es/tree';
-type TreeNode = NonNullable<TreeProps['treeData']>[number];//NonNullable去除undefined和null，[number]固定写法	从数组中提取出单个元素类型
+import {buildTree} from "@/utils/buildTree";
 const props = withDefaults(defineProps<{
-  treeData: any[],
-  expandLayer?: number,//展开层数
-  defaultExpandAll?: boolean,
-  modelValue?: string | string[],
-  rowKey?:string,
-  titleKey?: string,
-  children?: string,
-}>(), {
-  expandLayer: 0,
-  rowKey:"key",
-  titleKey: 'title',
-  children: 'children',
+  options:Object[];
+  transform?:boolean;//是否转换成树结构
+  expandLayer?:number;//展开层级,Infinity为展开所有
+  blockNode?:boolean;//是否节点占据一行
+  rowField?:string;//节点id字段
+  labelField?:string;//节点名称字段
+  childrenField?:string;//子节点字段
+  parentField?:string;//父节点字段
+  checkable?:boolean;
+  modelValue?:string[] | number[];
+}>(),{
+  transform:false,
+  blockNode:true,
+  rowField:'id',
+  labelField:'name',
+  childrenField:'children',
+  parentField:'parentId',
+  checkable:false,
+  expandLayer:0,
 })
-const emit = defineEmits(['select'])
-// 获取所有层级key
-function getAllKeys(tree: any[]): (string | number)[] {
-  if (!tree) return [];
 
-  return tree.flatMap(t => [
-    t.key,
-    ...(t.children ? getAllKeys(t.children) : [])
-  ]);
-}
-// 递归获取指定层级内的 key
-function getExpandedKeysByLayer(tree: any[], maxLayer: number, currentLayer = 1): (string | number)[] {
-  const keys: (string | number)[] = [];
-  if(!tree)return keys;
-  if (maxLayer < currentLayer) return keys;
-  for (const node of tree) {
-    if (node[props.rowKey] != null && currentLayer <= maxLayer) {
-      keys.push(node[props.rowKey]);
+const emit = defineEmits(["check","select"])
+
+
+const fieldNames = {
+  key: props.rowField,
+  title: props.labelField,
+  children: props.childrenField,
+};
+
+const treeData = computed(() => {
+  if(props.transform){
+    return buildTree(props.options);
+  }else{
+    return props.options;
+  }
+});
+function getExpandedKeysByLayer(
+  nodes: any[],
+  expandLayer: number,
+  currentLayer: number = 0,
+): (string | number)[] {
+  const expandedKeys: (string | number)[] = [];
+  
+  if (!Array.isArray(nodes)) return expandedKeys;
+  if(expandLayer <= 0)return expandedKeys;
+
+  for (const node of nodes) {
+    if (currentLayer < expandLayer) {
+      expandedKeys.push(node[props.rowField]);
     }
-    if (node.children && currentLayer < maxLayer) {
-      keys.push(...getExpandedKeysByLayer(node.children, maxLayer, currentLayer + 1));
+
+    const children = node[props.childrenField];
+    if (Array.isArray(children) && children.length > 0) {
+      const childExpanded = getExpandedKeysByLayer(
+        children,
+        expandLayer,
+        currentLayer + 1,
+      );
+      expandedKeys.push(...childExpanded);
     }
   }
 
-  return keys;
+  return expandedKeys;
 }
 
 const expandedKeys = ref<(string | number)[]>([]);
-// 设置层级
-watch(() => [props.expandLayer, props.defaultExpandAll,props.treeData], ([expandLayer, defaultExpandAll]) => {
-  if(!props.treeData)return;
-  if (defaultExpandAll) {
-    expandedKeys.value = getAllKeys(props.treeData);
-  } else if (+expandLayer > 0) {
-    expandedKeys.value = getExpandedKeysByLayer(props.treeData, +expandLayer)
-  }
-}, { immediate: true })
-const selectedTree = ref<DataNode[]>([]);
-const selectedKey = computed({
-  get(){
-    const item = selectedTree.value[0];
-    return item ? [item[props.rowKey]] : [];
-  },
-  set(val){
-    selectedTree.value = val[0];
-  }
-})
-function onSelectTree(tree:Key[],e:AntTreeNodeSelectedEvent){
-  if(e.node.dataRef){
-    const node = e.node.dataRef;
-    selectedTree.value = [node];
-    emit("select",node)
-  }
-}
-const fieldNames = computed(()=>{
-  return {
-    key: props.rowKey,
-    title: props.titleKey,
-    children: props.children
-  }
-})
- function buildTree(trees: any[]): any[] {
-  console.log(trees,"trees");
-  
-  const treeMap = new Map<string | number, any>();
-  const tree: any[] = [];
-  trees.forEach((t) => {
-    const x = {
-      ...t,
-      [props.children]:[]
-    };
-    treeMap.set(t[props.rowKey], x);
-  });
-  console.log(treeMap,"treeMap");
-  
-  trees.forEach((t) => {
-    const current = treeMap.get(t[props.rowKey]);
-    if (t.parentId && treeMap.has(t.parentId)) {
-      treeMap.get(t.parentId)[props.children].push(current);
-    } else {
-      tree.push(current);
+const checkedKeys = ref<(string | number)[]>([]);
+
+// 初始化设定
+watch(
+  () => treeData.value,
+  (val) => {
+    if (props.expandLayer !== 0) {
+      expandedKeys.value = getExpandedKeysByLayer(val, props.expandLayer);
     }
-  });
+  },
+  { immediate: true }
+);
 
-  return tree;
+const onCheck = (keys:(string | number)[],info:any)=>{
+    const node = info.checkedNodes.at(-1);
+    const key = keys.at(-1);
+    emit("check",{
+      key,
+      node,
+      keys:checkedKeys,
+      nodes:info.checkedNodes
+    })
+  }
+const onClickNode = (keys:(string | number)[],info:any)=>{
+    const node = info.selectedNodes.at(-1);
+    const key = keys.at(-1);
+    emit("select",{
+      key,
+      node,
+      keys:checkedKeys,
+      nodes:info.selectedNodes
+    })
 }
-
-
-const value = computed(() => {
-  return buildTree(props.treeData);
-});
-
 </script>
 
 <template>
-  <div class="y-tree-wrapper y-tree">
-    <a-tree v-model:expandedKeys="expandedKeys" :selectedKeys="selectedKey" :treeData="value" v-bind="$attrs" :fieldNames="fieldNames" @select="onSelectTree">
-      <template #title="item">
-        <slot name="title" :item="item"></slot>
-      </template>
-    </a-tree>
+  <div class="y-tree">
+    <a-tree :treeData="treeData" v-model:expandedKeys="expandedKeys" @check="onCheck" @select="onClickNode" v-model:checkedKeys="checkedKeys" :checkable="checkable" :fieldNames="fieldNames"></a-tree>
   </div>
 </template>
-
-<style scoped lang="scss">
-.y-tree-wrapper {
-  .ant-tree-node-selected{
-    background-color: #e6f4ff;
-  }
-  // #e6f4ff
-}
-</style>
