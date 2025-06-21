@@ -39,6 +39,7 @@ export class RoleService extends BaseService<RoleEntity> {
     const existing = await this.findOne({
       where: [{ id }, { code }]
     });
+    console.log('existing', existing);
 
     const role = this.roleRepo.create(existing || {});
     if (existing) {
@@ -46,25 +47,37 @@ export class RoleService extends BaseService<RoleEntity> {
     } else {
       Object.assign(role, { ...roleDto, code });
     }
+    console.log(role, "role");
+
 
     const roleRes = await this.roleRepo.save(role);
+    console.log(roleRes, "roleRes");
 
 
     const insert: RoleMenuPermissionDto[] = []
 
     if (menuList) {
       for (const menu of menuList) {
-        for (const permission of menu.permissionIds) {
+        if (Array.isArray(menu.permissions) && menu.permissions.length) {
+          for (const permission of menu.permissions) {
+            insert.push({
+              roleId: roleRes.id,
+              menuId: menu.id,
+              permissionId: permission.id,
+            })
+          }
+        } else {
           insert.push({
             roleId: roleRes.id,
-            menuId: menu.id,
-            permissionId: permission,
+            menuId: menu.id
           })
         }
       }
     }
+    console.log("delete before", insert);
+
     // 先删除中间表关联的旧数据，再重新保存
-    this.rmpService.deleteByRoleId(roleRes.id);
+    await this.rmpService.deleteByRoleId(roleRes.id);
     await this.rmpService.saveBatch(insert)
     return roleRes;
   }
@@ -108,7 +121,9 @@ export class RoleService extends BaseService<RoleEntity> {
 
       // 添加 permission 到对应菜单下
       const menuRes = menuMap.get(menu.id);
-      menuRes.permissions.push(permission);
+      if (permission) {
+        menuRes.permissions.push(permission);
+      }
     }
     // 构造最终返回
     return {

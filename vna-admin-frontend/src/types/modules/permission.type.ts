@@ -1,11 +1,6 @@
-export type PermissionType = {
-  id: number;
-  code: string;
-  name: string;
-}
-
 export type PermissionDto = {
-  id: number;
+  id: number | null;
   code: string;
   name: string;
+  description?: string;
 }

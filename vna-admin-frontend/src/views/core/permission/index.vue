@@ -1,14 +1,76 @@
 <script setup lang="ts">
 defineOptions({
-  name: "permission-settings",
+  name: "Permission",
+});
+import {savePermission,listPermission} from "@/api/permission";
+import { PermissionDto } from "@/types/modules/permission.type";
+import {initForm} from "./settings"
+import { message } from "ant-design-vue";
+
+const options = ref<PermissionDto[]>([]);
+const formData = ref<PermissionDto>({...initForm});
+const formRef = ref();
+const rules = ref({
+  code: [
+    {
+      required: true,
+      message: "请输入权限标识",
+    },
+  ],
+  name: [
+    {
+      required: true,
+      message: "请输入权限名称",
+    },
+  ],
 });
 
+function list(){
+  listPermission().then(res=>{
+    console.log(res,"res");
+    
+    options.value = res;
+  })
+}
+list()
+function _reset(){
+  formData.value = {...initForm};
+  formRef.value.resetFields();
+}
+const onAdd = ()=>{
+  formRef.value.validate().then(()=>{
+    savePermission(formData.value).then((res)=>{
+      console.log(res,"res");
+      message.success('保存成功');
+      list();
+      _reset()
+    })
+  })
+}
 </script>
 
 <template>
-  <div class="permission-wrapper">
-    
-  </div>
+  <y-page-layout mode="horizontal" class="permission-wrapper">
+    <template #left>
+      <y-tree :options="options"></y-tree>
+    </template>
+    <template #toolbar>
+      <a-space>
+        <y-button type="primary" @click="onAdd">添加</y-button>
+      </a-space>
+    </template>
+    <a-form ref="formRef" :model="formData" layout="vertical" :rules="rules">
+      <a-form-item name="code" label="权限标识">
+        <a-input v-model:value="formData.code" :disabled="!!formData.id"></a-input>
+      </a-form-item>
+      <a-form-item name="name" label="权限名称">
+        <a-input v-model:value="formData.name"></a-input>
+      </a-form-item>
+      <a-form-item name="description" label="权限描述">
+        <a-input v-model:value="formData.description"></a-input>
+      </a-form-item>
+    </a-form>
+  </y-page-layout>
 </template>
 
 <style scoped lang="scss">

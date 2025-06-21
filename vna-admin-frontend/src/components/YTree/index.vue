@@ -1,32 +1,38 @@
 <script setup lang="ts">
-defineOptions({
-  name: "YTree",
-});
-import {buildTree} from "@/utils/buildTree";
-const props = withDefaults(defineProps<{
-  options:Object[];
-  transform?:boolean;//是否转换成树结构
-  expandLayer?:number;//展开层级,Infinity为展开所有
-  blockNode?:boolean;//是否节点占据一行
-  rowField?:string;//节点id字段
-  labelField?:string;//节点名称字段
-  childrenField?:string;//子节点字段
-  parentField?:string;//父节点字段
-  checkable?:boolean;
-  modelValue?:string[] | number[];
-}>(),{
-  transform:false,
-  blockNode:true,
-  rowField:'id',
-  labelField:'name',
-  childrenField:'children',
-  parentField:'parentId',
-  checkable:false,
-  expandLayer:0,
-})
+defineOptions({ name: "YTree" });
 
-const emit = defineEmits(["check","select"])
+import { ref, watch, computed } from "vue";
+import { buildTree } from "@/utils/buildTree";
+import { TreeEventType } from "@/types/components/yTree";
 
+const props = withDefaults(
+  defineProps<{
+    options: Object[];
+    transform?: boolean;
+    expandLayer?: number;
+    blockNode?: boolean;
+    rowField?: string;
+    labelField?: string;
+    childrenField?: string;
+    parentField?: string;
+    checkable?: boolean;
+    height?: number;
+    modelValue?: (string | number)[];
+  }>(),
+  {
+    transform: false,
+    blockNode: true,
+    rowField: "id",
+    labelField: "name",
+    childrenField: "children",
+    parentField: "parentId",
+    height: 300,
+    checkable: false,
+    expandLayer: 0,
+  }
+);
+
+const emit = defineEmits(["check", "select", "update:modelValue"]);
 
 const fieldNames = {
   key: props.rowField,
@@ -35,45 +41,49 @@ const fieldNames = {
 };
 
 const treeData = computed(() => {
-  if(props.transform){
-    return buildTree(props.options);
-  }else{
-    return props.options;
-  }
+  return props.transform
+    ? buildTree(props.options, {
+        rowKey: props.rowField,
+        parentKey: props.parentField,
+        childrenKey: props.childrenField,
+      })
+    : props.options;
 });
+
+/** 根据展开层级获取默认展开的节点 key */
 function getExpandedKeysByLayer(
   nodes: any[],
   expandLayer: number,
-  currentLayer: number = 0,
+  currentLayer: number = 0
 ): (string | number)[] {
   const expandedKeys: (string | number)[] = [];
-  
-  if (!Array.isArray(nodes)) return expandedKeys;
-  if(expandLayer <= 0)return expandedKeys;
-
+  if (!Array.isArray(nodes) || expandLayer <= 0) return expandedKeys;
   for (const node of nodes) {
     if (currentLayer < expandLayer) {
       expandedKeys.push(node[props.rowField]);
     }
-
     const children = node[props.childrenField];
-    if (Array.isArray(children) && children.length > 0) {
-      const childExpanded = getExpandedKeysByLayer(
-        children,
-        expandLayer,
-        currentLayer + 1,
+    if (Array.isArray(children)) {
+      expandedKeys.push(
+        ...getExpandedKeysByLayer(children, expandLayer, currentLayer + 1)
       );
-      expandedKeys.push(...childExpanded);
     }
   }
-
   return expandedKeys;
 }
 
 const expandedKeys = ref<(string | number)[]>([]);
-const checkedKeys = ref<(string | number)[]>([]);
 
-// 初始化设定
+const checkedKeysValue = computed({
+  get() {
+    return props.modelValue ?? [];
+  },
+  set(val) {
+    emit("update:modelValue", val);
+  },
+});
+
+// 树数据变化时自动展开节点
 watch(
   () => treeData.value,
   (val) => {
@@ -84,30 +94,34 @@ watch(
   { immediate: true }
 );
 
-const onCheck = (keys:(string | number)[],info:any)=>{
-    const node = info.checkedNodes.at(-1);
-    const key = keys.at(-1);
-    emit("check",{
-      key,
-      node,
-      keys:checkedKeys,
-      nodes:info.checkedNodes
-    })
-  }
-const onClickNode = (keys:(string | number)[],info:any)=>{
-    const node = info.selectedNodes.at(-1);
-    const key = keys.at(-1);
-    emit("select",{
-      key,
-      node,
-      keys:checkedKeys,
-      nodes:info.selectedNodes
-    })
+function onCheck(checkedKeys: (string | number)[], info: TreeEventType) {
+  emit("check", info);
+}
+
+function onSelect(selectedKeys: (string | number)[], info: TreeEventType) {
+  emit("select", info);
 }
 </script>
 
 <template>
-  <div class="y-tree">
-    <a-tree :treeData="treeData" v-model:expandedKeys="expandedKeys" @check="onCheck" @select="onClickNode" v-model:checkedKeys="checkedKeys" :checkable="checkable" :fieldNames="fieldNames"></a-tree>
+  <!-- :style="{ height: height, overflowY: 'auto' }" -->
+  <div class="y-tree" >
+    <a-tree
+      :height="height"
+      :treeData="treeData"
+      v-model:expandedKeys="expandedKeys"
+      v-model:checkedKeys="checkedKeysValue"
+      :checkable="checkable"
+      :fieldNames="fieldNames"
+      :blockNode="blockNode"
+      @check="onCheck"
+      @select="onSelect"
+    />
   </div>
 </template>
+
+<style scoped>
+.y-tree {
+  overflow: hidden;
+}
+</style>

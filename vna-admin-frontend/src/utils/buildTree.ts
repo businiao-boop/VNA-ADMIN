@@ -6,7 +6,7 @@ const defaultOption = {
 }
 
 type OptionsType = typeof defaultOption;
-export function buildTree(trees: Object[], options: OptionsType = defaultOption): any[] {
+export function buildTree(trees: any[], options: OptionsType = defaultOption): any[] {
 
   const { rowKey, parentKey, childrenKey } = options;
 

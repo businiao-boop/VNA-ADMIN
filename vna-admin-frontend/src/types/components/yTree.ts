@@ -7,3 +7,11 @@ export type TreeDto = {
   children?: TreeDto[];
   [key: string]: any;
 }
+
+
+export type TreeEventType = {
+  node: any;
+  checked: boolean;
+  checkedNodes: any[];
+  halfCheckedKeys: (string | number)[]
+}

@@ -7,7 +7,7 @@ export const constantRoutes = [
   {
     path:"/",
     name:"/",
-    // component:Layout,
+    component: Layout,
     children:[
       {
         path: "/",
@@ -47,6 +47,13 @@ export const constantRoutes = [
         meta: { title: "用户管理" },
         component: () => import("@/views/core/user/index.vue"),
       },
+      {
+        path: "permission",
+        name: "Permission",
+        meta: { title: "权限管理" },
+        component: () => import("@/views/core/permission/index.vue"),
+      },
+
 
     ]
   },

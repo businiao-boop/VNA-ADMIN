@@ -13,11 +13,18 @@ export class PermissionService extends BaseService<PermissionEntity> {
     super(permissionRepo);
   }
 
-  async list(body?: QueryPermissionDto, page?: PaginationDto) {
+  async list(body?: QueryPermissionDto) {
     const filter = {
       where: { ...body }
     }
-    return this.findAllAndCount(filter, page);
+    return this.findAll(filter);
+  }
+
+  async listAndCount(body?: QueryPermissionDto, page?: PaginationDto) {
+    const filter = {
+      where: body
+    }
+    return await this.findAllAndCount(filter, page);
   }
 
   async save(dto: PermissionDto) {
@@ -25,6 +32,8 @@ export class PermissionService extends BaseService<PermissionEntity> {
     const existing = await this.findOne({
       where: [{ code }, { id }]
     });
+    console.log('existing', existing);
+
     const permission = this.permissionRepo.create(existing || {})
     if (existing) {
       Object.assign(permission, rest);

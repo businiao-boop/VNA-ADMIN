@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { Repository, In } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Repository, In, } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { UserDto, QueryUserDto, PaginationDto } from "./dto/index.dto";
@@ -59,6 +59,10 @@ export class UserService extends BaseService<UserEntity> {
       relations: ['roles', "roles.roleMenuPermissions", 'roles.roleMenuPermissions.menu',
         'roles.roleMenuPermissions.permission']
     });
+
+    if (!user) {
+      throw new NotFoundException('用户不存在');
+    }
 
     const menuMap = new Map<number, any>();
     const roles: object[] = [];

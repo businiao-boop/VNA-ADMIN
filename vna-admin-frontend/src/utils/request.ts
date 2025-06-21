@@ -16,7 +16,6 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   (response) => {
-    console.log(response, "response");
 
     const res = response.data;
     if (res.code == 200) {
@@ -27,7 +26,6 @@ service.interceptors.response.use(
     }
   },
   (error) => {
-    console.log(error, "request error");
 
     const response = error.response;
     const data = response.data;

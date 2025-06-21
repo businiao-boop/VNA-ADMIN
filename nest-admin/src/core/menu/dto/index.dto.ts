@@ -11,6 +11,7 @@ import {
   IsArray,
 } from 'class-validator';
 import { MenuTypeEnum, MenuLayoutEnum } from "@/common/enums/menu.enum";
+import { PermissionDto } from "@/core/permission/dto/index.dto";
 
 export class MenuDto {
   @IsOptional()
@@ -78,7 +79,7 @@ export class MenuDto {
   isPublic: boolean;
 
   @IsArray()
-  permissionIds: number[];
+  permissions: PermissionDto[];
 }
 
 export class QueryMenuDto extends PartialType(MenuDto) {

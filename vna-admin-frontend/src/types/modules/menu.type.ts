@@ -16,14 +16,14 @@ type MenuType = {
   routerName: string;
   path: string;
   component: string;
-  parentId?: number | null;
+  parentId: number;
   layout: LayoutEnum;
   type: MenuTypeEnum;
   show: boolean;
   keepAlive: boolean;
   sort?: number;
   icon?: string;
-  permission?: string;
+  permission?: PermissionDto[];
   isExternal: boolean;
   externalLink?: string;
   permissionIds: number[];

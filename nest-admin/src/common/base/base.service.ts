@@ -53,13 +53,13 @@ export class BaseService<T extends {}> {
     return data;
   }
 
-  async findOne(options?: FindManyOptions<any>): Promise<T> {
+  async findOne(options?: FindManyOptions<any>): Promise<T | null> {
     if (options && options.where) {
       options.where = buildWhere(options.where);
     }
     const qb = this.prepareFilter(options);
     const res = await qb.getOne();
-    if (!res) throw new NotFoundException('数据不存在');
+    if (!res) return null;
     return res;
   }
 

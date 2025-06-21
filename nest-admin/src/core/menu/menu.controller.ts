@@ -11,8 +11,13 @@ export class MenuController {
     return this.menuService.save(menuDto);
   }
   @Post("list")
-  list(@Body() body: QueryMenuDto, @Query() page: PaginationDto) {
-    return this.menuService.list(body, page);
+  list(@Body() body: QueryMenuDto) {
+    return this.menuService.list(body);
+  }
+
+  @Post("listAndCount")
+  listAndCount(@Body() body: QueryMenuDto, @Query() page: PaginationDto) {
+    return this.menuService.listAndCount(body, page);
   }
 
   @Post("listRelationRequestPermission")

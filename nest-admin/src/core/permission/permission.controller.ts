@@ -6,8 +6,12 @@ import { PermissionDto, QueryPermissionDto, PaginationDto } from './dto/index.dt
 export class PermissionController {
   constructor(private readonly permissionService: PermissionService) { }
   @Post("list")
-  list(@Body() body: QueryPermissionDto, @Query() query?: PaginationDto) {
-    return this.permissionService.list(body, query);
+  list(@Body() body: QueryPermissionDto) {
+    return this.permissionService.list(body);
+  }
+  @Post("listAndCount")
+  listAndCount(@Body() body: QueryPermissionDto, @Query() query?: PaginationDto) {
+    return this.permissionService.listAndCount(body, query);
   }
 
   @Post("save")

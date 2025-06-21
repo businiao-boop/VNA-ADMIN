@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { message } from 'ant-design-vue';
-import {presetFields} from "./settings";
+import {initForm} from "./settings";
 import {useFormModal} from "@/hooks/modal";
 import editModal from './editModal.vue';
 import {saveMenu,listMenu,infoMenu} from "@/api/menu"
 import {MenuDto,MenuInfoDto,MenuTypeEnum,MenuTreeDto} from "@/types/modules/menu.type";
+import {TreeEventType} from "@/types/components/yTree";
 import { Modal } from 'ant-design-vue';
 const menuTree = ref<MenuInfoDto[]>([])
 const formRef = ref();
 
-const formData = ref<MenuDto>({...presetFields});
+const formData = ref<MenuDto>({...initForm});
 
   const isMenuType = computed(() => formData.value.type === MenuTypeEnum.MENU);
   const rules = {
@@ -18,14 +19,16 @@ const formData = ref<MenuDto>({...presetFields});
   routerName: [{ required: true, message: "请输入菜单路由名称", trigger: "blur" }],
   component: [{ required: isMenuType, message: "请输入菜单组件", trigger: "blur" }]
 }
-function init(){
+function _init(){
   listMenu().then(res=>{
     if(res){
       menuTree.value = res
     }
   })
 }
-init();
+_init();
+
+
 
 function openModal(row?:MenuDto){
   const modalForm = row || {}
@@ -57,20 +60,22 @@ function onAdd(){
   formRef.value.validate().then(() => {
     saveMenu(formData.value).then(()=>{
       message.success('创建成功');
+      _reset()
+      _init();
     })
   })
 }
-function reset(){
-  formRef.value.resetFields()
+function _reset(){
+  formRef.value.resetFields();
+  formData.value = {...initForm};
 }
-function onClickTree(tree:MenuTreeDto){
-  if(tree.parentId === null){
-    formData.value.parentId = tree.id;
-    return;
-  }
-  if(tree.children && tree.children.length > 0)return;
+function onClickTree({node}:TreeEventType){
+  console.log(node);
+  
+  if(!node)return;
 
-  infoMenu(tree.id).then(res=>{
+
+  infoMenu(node.id).then(res=>{
     if(res){
       formData.value = res;
     }
@@ -80,11 +85,11 @@ function onClickTree(tree:MenuTreeDto){
 <template>
   <y-page-layout mode="horizontal" class="menu-wrapper">
     <template #left>
-      <y-tree :treeData="menuTree" @select="onClickTree" rowKey="id" titleKey="menuName" blockNode></y-tree>
+      <y-tree :options="menuTree" @select="onClickTree" :transform="true" rowField="id" labelField="menuName" blockNode></y-tree>
     </template>
     <template #toolbar>
       <a-space warp>
-        <a-button type="primary" @click="reset">清空</a-button>
+        <a-button type="primary" @click="_reset">清空</a-button>
         <a-button type="primary" @click="onAdd">创建</a-button>
         <a-button type="danger" @click="onDelMenu">删除</a-button>
       </a-space>
@@ -106,7 +111,7 @@ function onClickTree(tree:MenuTreeDto){
         </a-col>
         <a-col :span="12">
           <a-form-item label="路由名称" name="routerName">
-            <a-input :disabled="formData.id" v-model:value="formData.routerName" placeholder="路由名称，必须要和组件name一致" style="width: 100%" />
+            <a-input :disabled="!!formData.id" v-model:value="formData.routerName" placeholder="路由名称，必须要和组件name一致" style="width: 100%" />
           </a-form-item>
         </a-col>
       </a-row>

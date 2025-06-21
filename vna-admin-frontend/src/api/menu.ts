@@ -17,6 +17,8 @@ export function listRelationRequestPermission() {
   });
 }
 export function infoMenu(id: number, routerName?: string) {
+  console.log(id, "id");
+
   return axios<MenuInfoDto>({
     url: "/menu/info",
     data: { id, routerName },

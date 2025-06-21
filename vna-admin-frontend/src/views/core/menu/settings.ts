@@ -40,7 +40,7 @@ export const columns = [
   }
 ]
 
-export const presetFields = {
+export const initForm = {
   id: null,
   menuName: "",
   routerName: "",

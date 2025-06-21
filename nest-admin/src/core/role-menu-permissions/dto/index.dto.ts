@@ -13,5 +13,5 @@ export class RoleMenuPermissionDto {
 
   @IsInt()
   @IsOptional()
-  permissionId: number;
+  permissionId?: number;
 }

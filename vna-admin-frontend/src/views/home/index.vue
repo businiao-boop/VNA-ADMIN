@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import Treeselect from 'vue3-treeselect-ts'
- import 'vue3-treeselect-ts/dist/style.css'
  import {listRelationRequestPermission} from "@/api/menu"
  import {MenuDto,MenuInfoDto,MenuTypeEnum,MenuTreeDto} from "@/types/modules/menu.type";
  const value = ref();
@@ -67,10 +65,6 @@ getList()
   <div class="home">
     <a-row :gutter="20">
       <a-col :span="12">
-        <!-- :alwaysOpen="true" -->
-        <!-- <Treeselect v-model="value" :options='menuList'  :multiple="true" :defaultExpandLevel="Infinity" :normalizer="normalizer" valueFormat="value">
-    
-        </Treeselect> -->
       </a-col>
       <a-col :span="12">
         <y-tree :options="menuList" rowKey="id" :transform="true" :expandLayer="1" checkable labelField="menuName" blockNode></y-tree>
