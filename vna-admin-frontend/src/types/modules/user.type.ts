@@ -1,4 +1,5 @@
 import { RoleInfoDto } from './role.type';
+
 type UserType = {
   id?: number | null;
   username: string;

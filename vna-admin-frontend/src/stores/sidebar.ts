@@ -12,7 +12,7 @@ export const useTabsStore = defineStore('tabs', {
         fullPath: "/",
         name: "/",
         meta: {
-          title: "首页"
+          menuName: "首页"
         },
       }
     ] as TabType[],
@@ -33,12 +33,14 @@ export const useTabsStore = defineStore('tabs', {
     },
 
     removeTab(fullPath: string) {
+
       const idx = this.tabs.findIndex(tab => tab.fullPath === fullPath);
+
       if (idx !== -1) {
         this.tabs.splice(idx, 1);
       }
-      const tab = this.tabs[idx - 1] || this.tabs[idx + 1];
-      return tab;
+      // const tab = this.tabs[idx - 1] || this.tabs[idx + 1];
+      // return tab;
     },
 
 

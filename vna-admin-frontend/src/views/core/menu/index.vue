@@ -8,6 +8,7 @@ import {TreeEventType} from "@/types/components/yTree";
 import { Modal } from 'ant-design-vue';
 const menuTree = ref<MenuInfoDto[]>([])
 const formRef = ref();
+const menuIconWrapperRef = ref()
 
 const formData = ref<MenuDto>({...initForm});
 
@@ -65,6 +66,11 @@ function onClickTree({node}:TreeEventType){
       formData.value = res;
     }
   })
+}
+const onSelectIcon = (fontClass:string)=>formData.value.icon = fontClass;
+const onChangeIcon = (e:InputEvent)=>{
+  const value = (e.target as HTMLInputElement).value;
+  
 }
 </script>
 <template>
@@ -124,8 +130,18 @@ function onClickTree({node}:TreeEventType){
       <!-- 🥉 中优先级：sort、icon、layout -->
       <a-row :gutter="16">
         <a-col :span="12">
-          <a-form-item label="图标" name="icon">
-            <a-input v-model:value="formData.icon" placeholder="Ant Icon 名称" />
+          <a-form-item label="图标" name="icon" class="icon-form-item">
+            <a-popover :destroyTooltipOnHide="true" placement="bottom" style="width: 100%;" trigger="click" :getPopupContainer="(trigger:HTMLElement) => trigger.parentNode">
+              <template #content>
+                <YIconView @click="onSelectIcon" :showFilter="true">
+                </YIconView>
+              </template>
+              <a-input v-model:value="formData.icon" @change="onChangeIcon" autocomplete="off" placeholder="Ant Icon 名称">
+                <template #prefix>
+                  <y-icon :icon="formData.icon"></y-icon>
+                </template>
+              </a-input>
+            </a-popover>
           </a-form-item>
         </a-col>
         <a-col :span="12">
@@ -181,6 +197,20 @@ function onClickTree({node}:TreeEventType){
   .action-wrapper { 
     .y-button{
       margin-right: 5px;
+    }
+  }
+  .icon-form-item{
+    :deep(.ant-popover){
+      width: 100%;
+      .ant-popover-inner{
+        height: 300px;
+        overflow: hidden;
+        .icon-list{
+          height:calc(300px - 12px - 16px - 50px);
+          overflow: hidden;
+          overflow-y: auto;
+        }
+      }
     }
   }
 }

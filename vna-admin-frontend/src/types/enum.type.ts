@@ -17,3 +17,9 @@ export enum PermissionTypeEnum {
   IMPORT = 0b0000000000001000, // 导入
   EXPORT = 0b0000000000010000, // 下载、导出
 }
+
+export enum GenderEnum {
+  MALE = 'male', // 男
+  FEMALE = 'female', // 女
+  SECRET = 'secret',
+}

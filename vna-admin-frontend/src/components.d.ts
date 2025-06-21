@@ -15,6 +15,7 @@ declare module 'vue' {
     YColorPalette: typeof import('./components/YColorPalette/index.vue')['default']
     YConfigTable: typeof import('./components/YConfigTable/index.vue')['default']
     YIcon: typeof import('./components/YIcon/index.vue')['default']
+    YIconView: typeof import('./components/YIconView/index.vue')['default']
     YModal: typeof import('./components/YModal/index.vue')['default']
     YPageLayout: typeof import('./components/YPageLayout/index.vue')['default']
     YSelect: typeof import('./components/YSelect/index.vue')['default']

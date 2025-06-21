@@ -22,6 +22,12 @@ const copy = async (text: string) => {
   }
 }
 
+const onClick=(fontClass: string)=>{
+  if(!fontClass)return;
+  copy(fontClass)
+}
+
+
 </script>
 
 <template>
@@ -34,18 +40,7 @@ const copy = async (text: string) => {
         style=" max-width: 300px"
       />
     </template>
-    <ul>
-      <li v-for="icon in filteredIcons"
-        :key="icon.font_class"
-        :span="4"
-        class="text-center mb-4"
-        @click="copy('icon-'+icon.font_class)">
-        <i :class="['iconfont', 'icon-' + icon.font_class]" style="font-size: 24px;" />
-        <div class="mt-1 text-sm text-gray-500">{{ icon.name }}
-        </div>
-      </li>
-    </ul>
-    
+    <YIconView @click="onClick" :filterText="keyword"></YIconView>
   </y-page-layout>
 </template>
 

@@ -94,10 +94,19 @@ $footer-height: 40px;
   .ant-menu {
     .ant-menu-item-selected,
     .ant-menu-submenu-selected {
+      .iconfont{
+        color: $color !important;
+      }
       span {
         color: $color;
       }
       &::after {
+        border-color: $color !important;
+      }
+    }
+
+    .ant-menu-submenu-open{
+      &::after{
         border-color: $color !important;
       }
     }

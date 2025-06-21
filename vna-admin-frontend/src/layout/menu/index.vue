@@ -26,6 +26,7 @@ const props = defineProps<{
 const router = useRouter();
 const route = useRoute();
 
+
 const sidebar = computed<RouteRecordRaw[]>(() => {
   return props.menus.map(t=>{
     if(t.path=="/"){
@@ -38,7 +39,7 @@ const sidebar = computed<RouteRecordRaw[]>(() => {
 });
 
 const activeKey = ref([route.path.split("/").at(-1)]);// 当前激活的菜单
-watchEffect(() => { 
+watchEffect(() => {  
   if(route.path=="/"){
     activeKey.value = [route.path];
   }else{
@@ -50,13 +51,9 @@ watchEffect(() => {
 const openKeys = ref<string[]>([]);//  当前展开的 SubMenu 菜单项 key 数组
 
 function handleClick(item:MenuInfo) {
-  console.log(item,"item");
   if(!item.keyPath)return;
   
   const keyPath = item.keyPath.join("/");
-  console.log(keyPath,"keyPath");
-  console.log(route.path,"route.path");
-  
   
   if (keyPath !== route.path) {
     router.push(keyPath);

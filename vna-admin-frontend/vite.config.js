@@ -4,10 +4,12 @@ import AutoImport from 'unplugin-auto-import/vite';
 import { resolve } from 'path'
 import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
+import svgLoader from 'vite-svg-loader'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
+    svgLoader(),
     AutoImport({
       imports: ['vue', 'vue-router', 'pinia'],
       dts: 'src/auto-imports.d.ts',

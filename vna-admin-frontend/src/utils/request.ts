@@ -52,7 +52,6 @@ const request: RequestFun = (config) => {
     data: {},
   };
   const mergeConfig = merge(defaultConfig, config);
-  console.log(mergeConfig, "mergeConfig");
 
   return service(mergeConfig);
 };

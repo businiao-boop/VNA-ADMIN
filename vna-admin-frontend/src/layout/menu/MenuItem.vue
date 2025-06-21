@@ -3,7 +3,10 @@
     <template v-if="!item.meta?.hidden">
       <template v-if="item.children?.length">
         <a-sub-menu :key="`${item.path}`">
-          <template #title>
+          <template #icon>
+            <y-icon v-if="item.meta?.icon" :icon="''+item.meta.icon" />
+            </template>
+            <template #title>
             <span>{{ item.meta?.menuName }}</span>
           </template>
           <menu-item :menus="item.children"  />
@@ -13,9 +16,11 @@
         <a-menu-item
           :key="`${item.path}`"
         >
+        <template #icon>
+            <y-icon v-if="item.meta?.icon" :icon="''+item.meta.icon" />
+          </template>
           <span>{{ item.meta?.menuName }}</span>
         </a-menu-item>
-
       </template>
 
     </template>
@@ -23,13 +28,11 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter, useRoute } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 defineOptions({
   name: "MenuItem",
 });
-defineProps<{
+ defineProps<{
   menus: RouteRecordRaw[];
 }>();
-
 </script>
