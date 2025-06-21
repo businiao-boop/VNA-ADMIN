@@ -1,6 +1,6 @@
 import axios from "@/utils/request";
-import type { RoleTypeDto, RoleInfoDto, RoleListDto } from "@/types/modules/role.type";
-export function saveRole(data: RoleTypeDto) {
+import type { RoleDto, RoleInfoDto, RoleListDto } from "@/types/modules/role.type";
+export function saveRole(data: RoleDto) {
   return axios<RoleInfoDto>({
     url: "/role/save",
     data,

@@ -15,13 +15,11 @@ export class RoleMenuPermissionsService extends BaseService<RoleMenuPermissionEn
   }
 
   async deleteByRoleId(roleId: number) {
-    console.log(roleId, "roleId");
 
     if (!roleId) return
     await this.roleMenuPermissionsRepo.delete({ roleId })
   }
   async saveBatch(dto: RoleMenuPermissionDto[]) {
-    console.log(dto, "dto");
 
     return await this.roleMenuPermissionsRepo.save(dto);
   }

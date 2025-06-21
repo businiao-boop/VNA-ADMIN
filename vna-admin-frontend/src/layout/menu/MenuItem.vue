@@ -4,7 +4,7 @@
       <template v-if="item.children?.length">
         <a-sub-menu :key="`${item.path}`">
           <template #title>
-            <span>{{ item.meta?.title }}</span>
+            <span>{{ item.meta?.menuName }}</span>
           </template>
           <menu-item :menus="item.children"  />
         </a-sub-menu>
@@ -13,7 +13,7 @@
         <a-menu-item
           :key="`${item.path}`"
         >
-          <span>{{ item.meta?.title }}</span>
+          <span>{{ item.meta?.menuName }}</span>
         </a-menu-item>
 
       </template>

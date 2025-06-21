@@ -8,7 +8,7 @@ import { saveRole, listRole, infoRole } from "@/api/role";
 import { listRelationRequestPermission } from "@/api/menu";
 import {TreeEventType} from "@/types/components/yTree";
 import type {
-  RoleTypeDto,
+  RoleDto,
   RoleInfoDto,
   RoleListDto
 } from "@/types/modules/role.type";
@@ -21,7 +21,7 @@ const menuList = ref<(MenuInfoDto & { key: number })[]>([]);
 const selectedNodes = ref<any[]>([]);
 const checkedKeys = ref<any[]>([]);
 const formRef = ref();
-const formData = ref<RoleInfoDto>({ ...presetFields });
+const formData = ref<RoleDto>({ ...presetFields });
 
 const rules = {
   name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
@@ -66,7 +66,7 @@ async function initData() {
 };
 initData();
 // 选中角色时加载详细信息
-async function handleSelectRole(role: RoleTypeDto) {
+async function handleSelectRole(role: RoleDto) {
   if (!role.id) return;
   const detail = await infoRole(role.id);
   if (!detail) return;

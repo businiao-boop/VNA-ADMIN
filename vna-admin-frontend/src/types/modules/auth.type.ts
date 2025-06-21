@@ -10,7 +10,7 @@ export type UserResponseDto = {
   email: string;
   phone: string;
   address: string;
-  routes: BackendRoute[];
+  menuList: BackendRoute[];
 };
 
 export type LoginDto = {

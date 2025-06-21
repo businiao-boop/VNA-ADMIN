@@ -21,6 +21,7 @@ export class AuthService {
     if (!user) {
       throw new NotFoundException("用户不存在");
     }
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException("密码错误");
@@ -31,7 +32,6 @@ export class AuthService {
     const { username, password, rememberMe } = loginDto;
   // 验证用户
     const user = await this.validateUser(username, password);
-    console.log(user);
 
     const payload = {
       username: user.username,

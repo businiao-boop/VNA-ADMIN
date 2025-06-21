@@ -16,7 +16,6 @@ export function buildWhere<T extends Record<string, any>>(
     for (const key in dto) {
       const value = dto[key];
       if (value == null) continue;
-      console.log(value, "value");
 
       if (Array.isArray(value)) {
         (where as any)[key] = In(value);

@@ -5,6 +5,7 @@ import axios, { type AxiosRequestConfig } from "axios";
 import { merge } from "lodash";
 const service = axios.create();
 
+
 service.interceptors.request.use(
   (config) => {
     return config;
@@ -51,6 +52,8 @@ const request: RequestFun = (config) => {
     data: {},
   };
   const mergeConfig = merge(defaultConfig, config);
+  console.log(mergeConfig, "mergeConfig");
+
   return service(mergeConfig);
 };
 

@@ -41,7 +41,7 @@ export class MenuService extends BaseService<MenuEntity> {
   }
 
   async save(menuDto: MenuDto) {
-    const { id, routerName, permissions, ...rest } = menuDto;
+    const { id, routerName, permissionIds, ...rest } = menuDto;
     const existing = await this.menuRepo.findOne({ where: [{ id }, { routerName }] })
     const menu = this.menuRepo.create(existing || {});
     if (existing) {
@@ -50,9 +50,9 @@ export class MenuService extends BaseService<MenuEntity> {
       Object.assign(menu, menuDto)
     }
 
-    if (permissions) {
+    if (permissionIds && permissionIds.length) {
       menu.permissions = await this.permissionService.findAll({
-        where: { id: In(permissions.map(permission => permission.id)) }
+        where: { id: In(permissionIds.map(permissionId => permissionId)) }
       })
     } else {
       menu.permissions = [];

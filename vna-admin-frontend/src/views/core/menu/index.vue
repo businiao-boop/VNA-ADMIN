@@ -2,7 +2,6 @@
 import { message } from 'ant-design-vue';
 import {initForm} from "./settings";
 import {useFormModal} from "@/hooks/modal";
-import editModal from './editModal.vue';
 import {saveMenu,listMenu,infoMenu} from "@/api/menu"
 import {MenuDto,MenuInfoDto,MenuTypeEnum,MenuTreeDto} from "@/types/modules/menu.type";
 import {TreeEventType} from "@/types/components/yTree";
@@ -28,20 +27,6 @@ function _init(){
 }
 _init();
 
-
-
-function openModal(row?:MenuDto){
-  const modalForm = row || {}
-  const showModal = useFormModal()
-  showModal<MenuDto>(editModal,{modalValue:modalForm}).then((data)=>{
-    saveMenu(data).then(res=>{
-      message.success('保存成功')
-    })
-  })
-}
-function handleEdit(row:MenuInfoDto){
-  openModal(row)
-}
 function onDelMenu(row:any){
   const confirm = () => {
     Modal.confirm({

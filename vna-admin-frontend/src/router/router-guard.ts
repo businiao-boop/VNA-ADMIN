@@ -20,8 +20,10 @@ export function routerGuard(router: Router) {
     // ✅ 生成动态路由（如未添加）
     if (userStore.routes.length === 0) {
       const accessedRoutes = await userStore.generateRoutes(
-        userStore.userInfo!.routes
+        userStore.userInfo!.menuList
       );
+      console.log(accessedRoutes, "accessedRoutes");
+
       accessedRoutes.map((route) => {
         router.addRoute(route);
       });

@@ -1,16 +1,18 @@
 import { defineStore } from "pinia";
-import { login, getUserProfile } from "@/api/auth";
+import { login } from "@/api/auth";
+import { getUserProfile } from "@/api/user"
 import { UserResponseDto, LoginDto } from "@/types/modules/auth.type";
 import { setToken } from "@/utils/auth";
 import { transformAsyncRoutes } from "@/utils/transformRoutes";
 import { BackendRoute } from "@/types/router";
 import { constantRoutes } from "@/router"
+import { buildTree } from "@/utils/buildTree";
 export const useUserStore = defineStore("user", {
   state: () => ({
     token: "",
     userInfo: null as UserResponseDto | null,
     roles: [], // 用户角色
-    routes: [...constantRoutes] as BackendRoute[],
+    routes: [] as BackendRoute[],
   }),
   actions: {
     setToken(token: string) {
@@ -21,13 +23,15 @@ export const useUserStore = defineStore("user", {
       this.userInfo = info;
     },
     setRoutes(routes: BackendRoute[]) {
-      this.routes = [...constantRoutes, ...routes];
+      // ...constantRoutes,
+      this.routes = [...routes];
     },
     generateRoutes(routes: BackendRoute[]): Promise<BackendRoute[]> {
       return new Promise((resolve, reject) => {
         try {
-          const res = transformAsyncRoutes(routes);
+          const res = transformAsyncRoutes(buildTree(routes));
           this.setRoutes(res);
+
           resolve(res);
         } catch (error) {
           reject(error);

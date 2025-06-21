@@ -39,7 +39,6 @@ export class RoleService extends BaseService<RoleEntity> {
     const existing = await this.findOne({
       where: [{ id }, { code }]
     });
-    console.log('existing', existing);
 
     const role = this.roleRepo.create(existing || {});
     if (existing) {
@@ -47,11 +46,9 @@ export class RoleService extends BaseService<RoleEntity> {
     } else {
       Object.assign(role, { ...roleDto, code });
     }
-    console.log(role, "role");
 
 
     const roleRes = await this.roleRepo.save(role);
-    console.log(roleRes, "roleRes");
 
 
     const insert: RoleMenuPermissionDto[] = []
@@ -74,7 +71,6 @@ export class RoleService extends BaseService<RoleEntity> {
         }
       }
     }
-    console.log("delete before", insert);
 
     // 先删除中间表关联的旧数据，再重新保存
     await this.rmpService.deleteByRoleId(roleRes.id);
@@ -94,13 +90,6 @@ export class RoleService extends BaseService<RoleEntity> {
         'roleMenuPermissions.permission'
       ]
     })
-    // console.log(res);
-    // const role = await this.roleRepo.createQueryBuilder('role')
-    //   .leftJoinAndSelect('role.roleMenuPermissions', 'rmp')
-    //   .leftJoinAndSelect('rmp.menu', 'menu')
-    //   .leftJoinAndSelect('rmp.permission', 'permission')
-    //   .where('role.id = :id', { id })
-    //   .getOne();
 
     if (!role) throw new NotFoundException('角色不存在');
     // 转换为目标结构

@@ -46,20 +46,6 @@ const menuList = ref<MenuTreeDto[]>([])
   return tree
 }
 
-function getList() {
-  listRelationRequestPermission().then(res => {
-    // menuList.value = listToTree<MenuTreeDto>(res)
-    menuList.value = res;
-  })
-}
-// const normalizer = (node)=>{
-//   return {
-//     id: node.id,
-//     label: node.menuName,
-//     // children: node.children
-//   }
-// }
-getList()
 </script>
 <template>
   <div class="home">

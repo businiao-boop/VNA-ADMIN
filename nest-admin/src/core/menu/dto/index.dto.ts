@@ -79,7 +79,12 @@ export class MenuDto {
   isPublic: boolean;
 
   @IsArray()
-  permissions: PermissionDto[];
+  @IsOptional()
+  permissions?: PermissionDto[];
+
+  @IsArray()
+  @IsOptional()
+  permissionIds?: number[];
 }
 
 export class QueryMenuDto extends PartialType(MenuDto) {

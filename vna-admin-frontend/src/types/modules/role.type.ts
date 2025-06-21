@@ -10,6 +10,8 @@ export type RoleTypeDto = {
   checkedKeys?: (number | string)[];
 };
 
+export type RoleDto = RoleTypeDto;
+
 export type RoleListDto = RoleTypeDto & { id: number };
 
-export type RoleInfoDto = RoleTypeDto;
+export type RoleInfoDto = RoleTypeDto & { id: number };

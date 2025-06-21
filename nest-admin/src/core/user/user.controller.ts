@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Query } from '@nestjs/common';
+import { Controller, Post, Body, Query, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto, QueryUserDto, PaginationDto } from "./dto/index.dto";
 
@@ -11,9 +11,13 @@ export class UserController {
     return this.userService.save(userDto);
   }
 
+  @Post("listAndCount")
+  listAndCount(@Body() body?: QueryUserDto, @Query() query?: PaginationDto) {
+    return this.userService.listAndCount(body, query);
+  }
   @Post("list")
-  list(@Body() body?: QueryUserDto, @Query() query?: PaginationDto) {
-    return this.userService.list(body, query);
+  list(@Body() body?: QueryUserDto) {
+    return this.userService.list(body);
   }
   @Post("info")
   info(@Body("id") id: number) {
@@ -21,8 +25,11 @@ export class UserController {
   }
 
   @Post("getUserProfile")
-  infoUserProfile(@Body() body: { id: number, username: string }) {
-    return this.userService.infoUserProfile(body.id, body.username);
+  infoUserProfile(@Req() req: any) {
+    console.log(req.user);
+
+    return this.userService.infoUserProfile(req.user.userId);
+
   }
 
   @Post("delete")

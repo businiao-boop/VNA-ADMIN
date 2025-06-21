@@ -32,7 +32,6 @@ export class PermissionService extends BaseService<PermissionEntity> {
     const existing = await this.findOne({
       where: [{ code }, { id }]
     });
-    console.log('existing', existing);
 
     const permission = this.permissionRepo.create(existing || {})
     if (existing) {

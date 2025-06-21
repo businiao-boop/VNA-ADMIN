@@ -29,7 +29,14 @@ const value = computed({
 })
 
 function onChange(val: any) {
-  emit("change")
+  const item = options.value.find(item => item[props.valueField] === val) || null;
+  const label = item ? item[props.labelField] : "";
+  emit("change",{
+    value:val,
+    label:label,
+    row:item
+  })
+  emit("update:modelValue", val)
 }
 import axios from "@/utils/request";
 

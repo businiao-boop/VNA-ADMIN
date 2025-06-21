@@ -30,7 +30,7 @@ type MenuType = {
 }
 
 // 一般用于表单初始化
-export type MenuDto = Omit<MenuType, 'id'> & { id: number | null, permissionIds: number[] };
+export type MenuDto = MenuType & { id: number | null, permissionIds: number[] };
 // menu 详情
 export type MenuInfoDto = MenuType & { id: number, permissionIds: number[], permissions?: PermissionDto[] };
 

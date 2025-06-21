@@ -42,23 +42,48 @@ export class UserService extends BaseService<UserEntity> {
     return this.userRepo.save(user);
   }
 
-  async list(body?: QueryUserDto, page?: PaginationDto) {
+  async list(body?: QueryUserDto) {
     const filter = {
-      where: { ...body }
+      where: { ...body },
+    }
+    return this.findAll(filter)
+  }
+  async listAndCount(body?: QueryUserDto, page?: PaginationDto) {
+    const filter = {
+      where: { ...body },
     }
     return this.findAllAndCount(filter, page)
   }
 
   async info(id: number, username?: string) {
-    return await this.findOne({ where: [{ id }, { username: username }] });
+    const user = await this.findOne({ where: [{ id }, { username: username }], relations: ['roles'] });
+    if (!user) {
+      throw new NotFoundException('用户不存在')
+    }
+    const { roles, ...rest } = user;
+    return {
+      ...rest,
+      roleIds: roles.map(role => role.id)
+    }
   }
 
   async infoUserProfile(id?: number, username?: string) {
-    const user = await this.findOne({
-      where: [{ id }, { username: username }],
-      relations: ['roles', "roles.roleMenuPermissions", 'roles.roleMenuPermissions.menu',
-        'roles.roleMenuPermissions.permission']
-    });
+    // const user = await this.findOne({
+    //   where: [{ id }, { username: username }],
+    //   relations: ['roles', "roles.roleMenuPermissions", 'roles.roleMenuPermissions.menu',
+    //     'roles.roleMenuPermissions.permission'],
+    // });
+    console.log(id);
+
+
+    const user = await this.userRepo.createQueryBuilder('user')
+      .leftJoinAndSelect('user.roles', 'role')
+      .leftJoinAndSelect('role.roleMenuPermissions', 'rmp')
+      .leftJoinAndSelect('rmp.menu', 'menu')
+      .leftJoinAndSelect('rmp.permission', 'permission')
+      .where('user.id = :id OR user.username = :username', { id, username })
+      .orderBy('menu.sort', 'ASC')
+      .getOne();
 
     if (!user) {
       throw new NotFoundException('用户不存在');
@@ -69,7 +94,8 @@ export class UserService extends BaseService<UserEntity> {
     const permissionKeys: string[] = [];
 
     for (const role of user.roles) {
-      const { roleMenuPermissions, ...roleInfo } = role
+      const { roleMenuPermissions, ...roleInfo } = role;
+
       for (const rmp of role.roleMenuPermissions || []) {
         const menu = rmp.menu;
         const permission = rmp.permission;
@@ -86,16 +112,20 @@ export class UserService extends BaseService<UserEntity> {
 
         // 检查是否已存在相同权限
         const exists = permissionList.some(p => p.id === permission.id);
+
         if (!exists) {
-          permissionList.push({
-            ...permission,
-            menuPermissionKey: `${menu.routerName}:${permission.code}`,
-          });
-          permissionKeys.push(`${menu.routerName}:${permission.code}`)
+          if (permission) {
+            permissionList.push({
+              ...permission,
+              menuPermissionKey: `${menu.routerName}:${permission.code}`,
+            });
+            permissionKeys.push(`${menu.routerName}:${permission.code}`)
+          }
         }
       }
       roles.push(roleInfo)
     }
+
 
     return {
       ...user,

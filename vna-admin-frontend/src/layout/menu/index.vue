@@ -55,6 +55,8 @@ function handleClick(item:MenuInfo) {
   
   const keyPath = item.keyPath.join("/");
   console.log(keyPath,"keyPath");
+  console.log(route.path,"route.path");
+  
   
   if (keyPath !== route.path) {
     router.push(keyPath);

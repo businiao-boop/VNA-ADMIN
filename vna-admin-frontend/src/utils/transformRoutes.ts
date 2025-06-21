@@ -1,4 +1,5 @@
 import { BackendRoute } from "@/types/router";
+import { LayoutEnum } from "@/types/enum.type";
 
 // 动态导入组件
 const modules = import.meta.glob("@/views/**/*.vue");
@@ -21,14 +22,25 @@ const loadComponent = (view: string) => {
 // 递归转换 component
 export function transformAsyncRoutes(routes: BackendRoute[]) {
   return routes.map((route) => {
-    const r = { ...route };
-    if (r.component === "Layout") {
+    const { path, routerName, children, component, ...rest } = route;
+    const r = {
+      path: path,
+      name: routerName,
+      component: component,
+      children: children,
+      meta: {
+        ...rest
+      }
+    } as any as BackendRoute;
+
+    if (r.component && typeof r.component === 'string') {
+
+      r.component = loadComponent(r.component);
+    } else if (r.meta.layout === LayoutEnum.DEFAULT) {
       // Layout 特殊处理（你项目的 layout 组件）
       r.component = () => import("@/layout/index.vue");
-    } else if (r.component === "ParentLayout") {
+    } else if (r.meta.layout === LayoutEnum.FULLPAGE) {
       r.component = () => import("@/parentLayout/index.vue");
-    } else if (typeof r.component === "string") {
-      r.component = loadComponent(r.component);
     }
 
     if (r.children && r.children.length) {
