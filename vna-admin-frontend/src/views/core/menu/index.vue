@@ -56,8 +56,6 @@ function _reset(){
   formData.value = {...initForm};
 }
 function onClickTree({node}:TreeEventType){
-  console.log(node);
-  
   if(!node)return;
 
 

@@ -1,6 +1,6 @@
 <template>
   <template v-for="item in menus" :key="item.path">
-    <template v-if="!item.meta?.hidden">
+    <template v-if="item.meta?.show">
       <template v-if="item.children?.length">
         <a-sub-menu :key="`${item.path}`">
           <template #icon>

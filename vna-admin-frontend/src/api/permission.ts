@@ -14,3 +14,10 @@ export function savePermission(dto: PermissionDto) {
     data: dto,
   });
 }
+export function infoPermission(id: number) {
+  return axios<PermissionDto>({
+    url: "/permission/info",
+    method: "POST",
+    data: { id },
+  });
+}

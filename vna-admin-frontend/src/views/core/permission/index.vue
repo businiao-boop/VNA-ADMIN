@@ -2,7 +2,7 @@
 defineOptions({
   name: "Permission",
 });
-import {savePermission,listPermission} from "@/api/permission";
+import {savePermission,listPermission,infoPermission} from "@/api/permission";
 import { PermissionDto } from "@/types/modules/permission.type";
 import {initForm} from "./settings"
 import { message } from "ant-design-vue";
@@ -27,8 +27,6 @@ const rules = ref({
 
 function list(){
   listPermission().then(res=>{
-    console.log(res,"res");
-    
     options.value = res;
   })
 }
@@ -47,15 +45,32 @@ const onAdd = ()=>{
     })
   })
 }
+const onEdit = (item:PermissionDto)=>{
+  if(item && item.id){
+    infoPermission(item.id).then(res=>{
+      formData.value = res;
+    })
+  }
+}
 </script>
 
 <template>
   <y-page-layout mode="horizontal" class="permission-wrapper">
     <template #left>
-      <y-tree :options="options"></y-tree>
+      <a-list  size="small" :data-source="options">
+          <template #renderItem="{ item }">
+            <a-list-item style="cursor: pointer;" @click="onEdit(item)">
+              <p>
+                <span>{{ item.name }}</span>
+              </p>
+            </a-list-item>
+          </template>
+        </a-list>
+      <!-- <y-tree :options="options"></y-tree> -->
     </template>
     <template #toolbar>
       <a-space>
+        <y-button type="primary" @click="_reset">重置</y-button>
         <y-button type="primary" @click="onAdd">添加</y-button>
       </a-space>
     </template>

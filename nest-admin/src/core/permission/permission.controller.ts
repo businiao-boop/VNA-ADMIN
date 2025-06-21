@@ -9,6 +9,11 @@ export class PermissionController {
   list(@Body() body: QueryPermissionDto) {
     return this.permissionService.list(body);
   }
+
+  @Post("info")
+  info(@Body("id") id: number) {
+    return this.permissionService.findOne({ where: { id } });
+  }
   @Post("listAndCount")
   listAndCount(@Body() body: QueryPermissionDto, @Query() query?: PaginationDto) {
     return this.permissionService.listAndCount(body, query);
