@@ -1,10 +1,11 @@
 import { getToken } from "./auth";
 import { message } from "ant-design-vue";
-
 import axios, { type AxiosRequestConfig } from "axios";
 import { merge } from "lodash";
-const service = axios.create();
+import { useRouter } from "vue-router";
+import router from "@/router"
 
+const service = axios.create();
 
 service.interceptors.request.use(
   (config) => {
@@ -17,7 +18,6 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   (response) => {
-
     const res = response.data;
     if (res.code == 200) {
       return res.data;
@@ -27,13 +27,20 @@ service.interceptors.response.use(
     }
   },
   (error) => {
+    console.log(error);
 
     const response = error.response;
-    const data = response.data;
+    const status = response.status;
+    // const router = useRouter();
+    switch (status) {
+      case 401:
+        router.push("/401");
+        break;
 
-    const tipMessage = data.message?.message?.join();
-    message.error(tipMessage);
-    return data.message;
+      default:
+        break;
+    }
+    return error.message;
   }
 );
 

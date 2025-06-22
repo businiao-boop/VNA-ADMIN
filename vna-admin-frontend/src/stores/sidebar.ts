@@ -16,8 +16,13 @@ export const useTabsStore = defineStore('tabs', {
         },
       }
     ] as TabType[],
+    reloadKey: new Date().getTime(),
   }),
   actions: {
+
+    refreshView() {
+      this.reloadKey = new Date().getTime()
+    },
 
     addTab(route: RouteLocationNormalized) {
       const tab: TabType = {
@@ -39,8 +44,8 @@ export const useTabsStore = defineStore('tabs', {
       if (idx !== -1) {
         this.tabs.splice(idx, 1);
       }
-      // const tab = this.tabs[idx - 1] || this.tabs[idx + 1];
-      // return tab;
+      const tab = this.tabs[idx - 1] || this.tabs[idx + 1];
+      return tab;
     },
 
 

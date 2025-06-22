@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "14341974",
+      "name": "full-screen-cancel",
+      "font_class": "full-screen-cancel",
+      "unicode": "e7bc",
+      "unicode_decimal": 59324
+    },
+    {
+      "icon_id": "40070435",
+      "name": "full-screen-one",
+      "font_class": "full-screen-one",
+      "unicode": "eaa1",
+      "unicode_decimal": 60065
+    },
+    {
       "icon_id": "24736978",
       "name": "关闭",
       "font_class": "guanbi",

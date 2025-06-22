@@ -1,13 +1,13 @@
 const TOKEN_KEY = "vna-token";
-
+import Cookies from "js-cookie";
 export function setToken(token: string) {
-  localStorage.setItem(TOKEN_KEY, token);
+  Cookies.set(TOKEN_KEY, token, { expires: 7 });
 }
 
 export function getToken() {
-  return localStorage.getItem(TOKEN_KEY);
+  return Cookies.get(TOKEN_KEY);
 }
 
 export function removeToken() {
-  localStorage.removeItem(TOKEN_KEY);
+  Cookies.remove(TOKEN_KEY);
 }

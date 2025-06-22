@@ -12,8 +12,31 @@ export const useUserStore = defineStore("user", {
     token: "",
     userInfo: null as UserResponseDto | null,
     routes: [] as BackendRoute[],
+    isLocked: false,
+    lockPassword: ""
   }),
   actions: {
+    unlockScreen(pass: string) {
+      if (pass && pass == this.lockPassword) {
+        this.isLocked = false
+        this.lockPassword = ""
+        localStorage.removeItem("isLocked");
+      }
+    },
+    lockScreen(pass: string) {
+      this.isLocked = true;
+      this.lockPassword = pass;
+      localStorage.setItem('isLocked', JSON.stringify({ isLocked: true, password: pass }));
+    },
+    checkLockStatus() {
+      const lockInfo = localStorage.getItem('isLocked'); // 恢复状态
+      if (lockInfo) {
+        const { isLocked, password } = JSON.parse(lockInfo);
+        this.isLocked = isLocked;
+        this.lockPassword = password;
+      }
+
+    },
     setToken(token: string) {
       this.token = token;
       setToken(token);

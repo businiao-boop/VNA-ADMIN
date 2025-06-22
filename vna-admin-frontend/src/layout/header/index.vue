@@ -3,14 +3,19 @@ defineOptions({
   name: "Header",
 });
 import Menu from "../menu/index.vue";
+import LockPasswordModal from "@/layout/lockScreen/lockPasswordModal.vue"
 
 import { useUserStore } from "@/stores/user";
+import { useTabsStore } from "@/stores/sidebar";
 import { useRouter } from "vue-router";
+import { useFormModal } from "@/hooks/modal";
 import ThemeDrawer from "@/layout/themeDrawer/index.vue"
+import {useFullscreen} from "@/hooks/useFullScreen"
 import type { MenuProps } from 'ant-design-vue';
 import  {GenderEnum} from '@/types/enum.type'
 
 const userStore = useUserStore();
+const tabsStore = useTabsStore();
 const router = useRouter();
 const open = ref(false);
 
@@ -20,6 +25,7 @@ const onMenuClick: MenuProps['onClick'] = ({key})=>{
       open.value = true;
       break;
     case 'personal':
+    router.push('/settings/personal')
       break;
     case 'logout':
       userStore.logout().then(()=>{
@@ -36,11 +42,40 @@ const userInfo = computed(() => {
   return userStore.userInfo;
 });
 
+const onRefreshView = ()=>{
+  tabsStore.refreshView();
+}
+
+
+const {isFullscreen, toggle} = useFullscreen();
+
+const onLocak = ()=>{
+  const showModal = useFormModal();
+  showModal(LockPasswordModal).then((data:any)=>{
+    console.log(data,"data");
+    
+    if(data && data.lockPassword){
+      userStore.lockScreen(data.lockPassword);
+    }
+  })
+
+}
+
 </script>
 <template>
   <div class="header">
     <Menu :menus="userStore.routes" />
     <ul class="header-right">
+      <li class="right-item">
+        <y-icon class="shakeHover" icon="icon-mima" :size="18" @click="onLocak"></y-icon>
+      </li>
+      <li class="right-item">
+        <y-icon class="full-screen scaleHover   " :icon="isFullscreen ? 'icon-full-screen-cancel' : 'icon-full-screen-one'" @click="toggle" :size="18"></y-icon>
+      </li>
+      <li class="right-item">
+        <y-icon class="hover-spin-once" @click="onRefreshView" icon="icon-shuaxin" :size="18"></y-icon>
+      </li>
+      
       <li class="right-item">
         <a-dropdown placement="bottomRight" arrow>
           <template v-if="userInfo?.avatar">
@@ -90,7 +125,13 @@ const userInfo = computed(() => {
         display: flex;
         align-items: center;
         .right-item{
-          margin-left: 10px;
+          margin-left: 20px;
+          .refresh{
+            transition: all .8s;
+            &:hover{
+              transform: rotate(180deg);
+            }
+          }
           .avatar{
             cursor: pointer;
           }

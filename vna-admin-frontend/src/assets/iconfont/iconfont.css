@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4492982 */
-  src: url('iconfont.woff2?t=1750511066056') format('woff2'),
-       url('iconfont.woff?t=1750511066056') format('woff'),
-       url('iconfont.ttf?t=1750511066056') format('truetype');
+  src: url('iconfont.woff2?t=1750564310680') format('woff2'),
+       url('iconfont.woff?t=1750564310680') format('woff'),
+       url('iconfont.ttf?t=1750564310680') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,14 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-full-screen-cancel:before {
+  content: "\e7bc";
+}
+
+.icon-full-screen-one:before {
+  content: "\eaa1";
 }
 
 .icon-guanbi:before {

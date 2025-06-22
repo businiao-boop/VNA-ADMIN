@@ -13,7 +13,6 @@ const tabsStore = useTabsStore();
 
 watch(() => router.currentRoute.value,
   route => {
-
     if (route.meta?.menuName) {
       tabsStore.addTab({...route});
     }
@@ -21,22 +20,17 @@ watch(() => router.currentRoute.value,
   { immediate: true }
 );
 function handleClick(route:TabType){
+  console.log(111);
+  
   if(route.path !== router.currentRoute.value.path){
     router.push(route.path);
   }
 }
 function handleClose(route:TabType){
-  // const tab = tabsStore.removeTab(route.fullPath);
-  const tabs = tabsStore.tabs;
-  const idx = tabs.findIndex(t => t.fullPath === route.fullPath);
-  
-  // 优先跳到左边 tab，没有就右边，再没有就回首页
-  const nextTab = tabs[idx - 1] || tabs[idx + 1] || tabs[0];
-
+  const nextTab = tabsStore.removeTab(route.fullPath);
   if(nextTab){
-    router.push({...nextTab,replace:true});
+    router.push({...nextTab,replace:true})
   }
-  tabsStore.removeTab(route.fullPath);
   
 }
 </script>
@@ -48,7 +42,7 @@ function handleClose(route:TabType){
       <span class="title">
         {{ item.meta.menuName }}
       </span>
-      <y-icon v-show="item.fullPath!='/'" icon="icon-close" @click="handleClose(item)"></y-icon>
+      <y-icon v-show="item.fullPath!='/'" icon="icon-close" @click.stop="handleClose(item)"></y-icon>
     </div>
   </div>
 </template>

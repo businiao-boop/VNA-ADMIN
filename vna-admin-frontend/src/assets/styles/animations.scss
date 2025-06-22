@@ -1,0 +1,48 @@
+// 旋转
+.rotate,.rotateHover:hover {
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// 旋转一周
+.hover-spin-once {
+  display: inline-block;
+  transition: transform 0.8s ease;
+  transform: rotate(0deg);
+
+  &:hover {
+    transform: rotate(360deg);
+  }
+}
+// 左右抖动
+.shake,.shakeHover:hover {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-1px); }
+  40%, 80% { transform: translateX(1px); }
+}
+// 放大缩小
+.scale,.scaleHover:hover {
+  animation: scale 0.6s ease-in-out;
+}
+
+@keyframes scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+// 轻微上下浮动
+.float,.floatHover:hover {
+  animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}

@@ -18,6 +18,7 @@
     v-else-if="isSvg"
     :is="component"
     class="svg-icon"
+    :viewBox="viewBox"
     :style="{ width: width, height: height }"
   />
 </template>
@@ -36,11 +37,13 @@ const props = withDefaults(
     size?: number     // 图标大小
     width?: string;
     height?: string;
+    viewBox?:string;
   }>(),
   {
     size: 16,
     width: '100%',
-    height: '100%'
+    height: '100%',
+    viewBox: '0 0 1024 1024'
   }
 )
 
