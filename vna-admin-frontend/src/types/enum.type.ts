@@ -1,11 +1,13 @@
 export enum LayoutEnum {
   DEFAULT = 'default', // 默认
   FULLPAGE = 'fullpage', // 全屏
+  MOBILE = 'mobile',
 }
 
 export enum MenuTypeEnum {
   DIRECTORY = 'dir', // 目录
   MENU = 'menu', // 菜单
+  MOBILE = 'mobile',
   BUTTON = 'button', // 按钮
   PERMISSION = "permission", // 权限
 }
