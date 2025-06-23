@@ -1,7 +1,7 @@
 import { BackendRoute } from "@/types/router";
 import type { MenuInfoDto } from "@/types/modules/menu.type";
 import { LayoutEnum, MenuTypeEnum } from "@/types/enum.type";
-import Layout from "@/layouts/index.vue";
+import Layout from "@/layout/index.vue";
 import MobileLayout from "@/mobileLayout/index.vue"
 import FullLayout from "@/fullLayout/index.vue";
 // 动态导入组件
