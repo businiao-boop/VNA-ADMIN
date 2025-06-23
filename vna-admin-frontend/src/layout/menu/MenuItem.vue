@@ -1,13 +1,13 @@
 <template>
   <template v-for="item in menus" :key="item.path">
-    <template v-if="item.meta?.show">
+    <template v-if="!item.meta?.hidden">
       <template v-if="item.children?.length">
         <a-sub-menu :key="`${item.path}`">
           <template #icon>
             <y-icon v-if="item.meta?.icon" :icon="''+item.meta.icon" />
             </template>
             <template #title>
-            <span>{{ item.meta?.menuName }}</span>
+            <span>{{ item.meta?.title }}</span>
           </template>
           <menu-item :menus="item.children"  />
         </a-sub-menu>
@@ -19,7 +19,7 @@
         <template #icon>
             <y-icon v-if="item.meta?.icon" :icon="''+item.meta.icon" />
           </template>
-          <span>{{ item.meta?.menuName }}</span>
+          <span>{{ item.meta?.title }}</span>
         </a-menu-item>
       </template>
 

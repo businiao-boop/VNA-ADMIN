@@ -60,6 +60,8 @@ const onLocak = ()=>{
   })
 
 }
+console.log(userStore.routes,"userStore.routes");
+
 
 </script>
 <template>

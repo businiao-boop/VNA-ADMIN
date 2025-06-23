@@ -4,8 +4,11 @@ import { LayoutEnum, MenuTypeEnum } from "@/types/enum.type";
 import Layout from "@/layout/index.vue";
 import MobileLayout from "@/mobileLayout/index.vue"
 import FullLayout from "@/fullLayout/index.vue";
+import router from "@/router";
 // 动态导入组件
 const modules = import.meta.glob("@/views/**/*.vue");
+console.log(modules);
+
 const loadComponent = (view: string) => {
   // 根据后端返回的组件路径，使用 import.meta.glob() 来懒加载
   const matchedModule = Object.entries(modules).find(([path]) => {
@@ -56,8 +59,8 @@ const loadComponent = (view: string) => {
 export function transformAsyncRoutes(routes: MenuInfoDto[]) {
   if (!routes || !routes.length) return;
   const routeMap = new Map<string | number, any>();
+  const allRoutes: any[] = [];
   routes.map(route => {
-
     if (route.type === MenuTypeEnum.MENU) {
       if (!route.parentId) {
         const parent = {
@@ -66,7 +69,11 @@ export function transformAsyncRoutes(routes: MenuInfoDto[]) {
           component: Layout,
           type: MenuTypeEnum.DIRECTORY,
           layout: route.layout,
-          children: []
+          children: [],
+          show: true,
+          parentId: 0,
+          menuName: "默认菜单",
+          routerName: route.layout
         }
         switch (route.layout) {
           case LayoutEnum.FULLPAGE:
@@ -79,6 +86,7 @@ export function transformAsyncRoutes(routes: MenuInfoDto[]) {
             parent.component = Layout
             break;
         }
+        allRoutes.push(parent)
         routeMap.set(route.layout, parent)
       }
     }
@@ -86,18 +94,18 @@ export function transformAsyncRoutes(routes: MenuInfoDto[]) {
       ...route,
       children: []
     }
-    if (route.type === MenuTypeEnum.MENU && route.component) {
-      r.component = loadComponent(route.component) as any as string
-    }
+
+    allRoutes.push({ ...r })
     routeMap.set(route.id, { ...route, children: [] })
   })
   const tree: any[] = [];
-  routes.map(route => {
-    const current = routeMap.get(route.id);
+  allRoutes.map(route => {
+    const current = routeMap.get(route.id) || route;
     let r = {
       path: current.path,
       name: current.routerName,
       component: current.component,
+      children: current.children,
       meta: {
         title: current.menuName,
         icon: current.icon,
@@ -108,6 +116,10 @@ export function transformAsyncRoutes(routes: MenuInfoDto[]) {
         parentId: current.parentId,
       }
     }
+    if (!!(route.type === MenuTypeEnum.MENU && route.component)) {
+      r.component = loadComponent(route.component) as any as string
+    }
+
     if (r.meta.type === MenuTypeEnum.DIRECTORY) {
       switch (r.meta.layout) {
         case LayoutEnum.FULLPAGE:
@@ -120,9 +132,8 @@ export function transformAsyncRoutes(routes: MenuInfoDto[]) {
           r.component = Layout
           break;
       }
-    } else if (r.meta.type === MenuTypeEnum.MENU) {
-      r.component = loadComponent(r.component)
     }
+
     if (r.meta.type === MenuTypeEnum.MENU && !r.meta.parentId) {
       routeMap.get(r.meta.layout).children.push(r)
     } else if (r.meta.parentId && routeMap.has(r.meta.parentId)) {

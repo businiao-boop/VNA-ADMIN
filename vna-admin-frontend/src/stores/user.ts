@@ -51,7 +51,8 @@ export const useUserStore = defineStore("user", {
     generateRoutes(routes: BackendRoute[]): Promise<BackendRoute[]> {
       return new Promise((resolve, reject) => {
         try {
-          const res = transformAsyncRoutes(buildTree(routes));
+          // const res = transformAsyncRoutes(buildTree(routes));
+          const res = transformAsyncRoutes((routes));
           this.setRoutes(res);
 
           resolve(res);
