@@ -8,6 +8,7 @@ import { RoleModule } from './core/role/role.module';
 import { MenuModule } from './core/menu/menu.module';
 import { PermissionModule } from './core/permission/permission.module';
 import { RoleMenuPermissionsModule } from './core/role-menu-permissions/role-menu-permissions.module';
+import { UploadModule } from './modules/upload/upload.module';
 
 import configuration from "./config/configuration";
 
@@ -26,7 +27,8 @@ import configuration from "./config/configuration";
     RoleModule,
     MenuModule,
     PermissionModule,
-    RoleMenuPermissionsModule
+    RoleMenuPermissionsModule,
+    UploadModule
   ],
 })
 export class AppModule {}

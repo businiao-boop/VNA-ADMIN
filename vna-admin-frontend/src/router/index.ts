@@ -19,6 +19,15 @@ export const constantRoutes = [
     ]
   },
   {
+    path: "/novel",
+    name: "Novel",
+    component: () => import("@/views/novel/index.vue"),
+    meta: {
+      title: "小说",
+      public: true
+    }
+  },
+  {
     path: "/login",
     name: "Login",
     meta: { hidden: true },

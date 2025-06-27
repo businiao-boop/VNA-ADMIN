@@ -7,7 +7,6 @@ import FullLayout from "@/fullLayout/index.vue";
 import router from "@/router";
 // 动态导入组件
 const modules = import.meta.glob("@/views/**/*.vue");
-console.log(modules);
 
 const loadComponent = (view: string) => {
   // 根据后端返回的组件路径，使用 import.meta.glob() 来懒加载

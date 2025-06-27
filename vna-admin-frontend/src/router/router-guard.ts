@@ -8,6 +8,7 @@ export function routerGuard(router: Router) {
     const userStore = useUserStore();
     // ✅ 白名单放行
     if (WhiteList.includes(to.path)) return next();
+    if (to.meta.public) return next();
 
     // ❌ 无 token，跳转登录页
     if (!token) return next("/login");
@@ -22,7 +23,6 @@ export function routerGuard(router: Router) {
       const accessedRoutes = await userStore.generateRoutes(
         userStore.userInfo!.menuList
       );
-      console.log(accessedRoutes, "accessedRoutes");
 
       accessedRoutes.map((route) => {
         router.addRoute(route);

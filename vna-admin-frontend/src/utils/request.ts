@@ -2,7 +2,6 @@ import { getToken } from "./auth";
 import { message } from "ant-design-vue";
 import axios, { type AxiosRequestConfig } from "axios";
 import { merge } from "lodash";
-import { useRouter } from "vue-router";
 import router from "@/router"
 
 const service = axios.create();
@@ -53,7 +52,7 @@ const request: RequestFun = (config) => {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
-    timeout: 5000,
+    // timeout: 12000,
     baseURL: import.meta.env.VITE_API_BASE_URL || "/api",
     method: "post",
     data: {},
