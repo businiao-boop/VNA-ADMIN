@@ -3,13 +3,14 @@ import { Repository, In, } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { UserDto, QueryUserDto, PaginationDto } from "./dto/index.dto";
+import { MenuLayoutEnum } from '@/common/enums/menu.enum';
 
 import { UserEntity } from './entities/user.entity';
 
 import * as bcrypt from "bcryptjs";
 
 import { BaseService } from "@/common/base/base.service";
-import { RoleService } from '@/core/role/role.service';
+import { RoleService } from '@/core-copy/role/role.service';
 
 @Injectable()
 export class UserService extends BaseService<UserEntity> {
@@ -73,21 +74,20 @@ export class UserService extends BaseService<UserEntity> {
     //   relations: ['roles', "roles.roleMenuPermissions", 'roles.roleMenuPermissions.menu',
     //     'roles.roleMenuPermissions.permission'],
     // });
-    console.log(id);
-
 
     const user = await this.userRepo.createQueryBuilder('user')
       .leftJoinAndSelect('user.roles', 'role')
       .leftJoinAndSelect('role.roleMenuPermissions', 'rmp')
       .leftJoinAndSelect('rmp.menu', 'menu')
       .leftJoinAndSelect('rmp.permission', 'permission')
-      .where('user.id = :id OR user.username = :username', { id, username })
+      .where('user.id = :id OR user.username = :username', { id, username, })
       .orderBy('menu.sort', 'ASC')
       .getOne();
 
     if (!user) {
       throw new NotFoundException('用户不存在');
     }
+    console.log('user', user);
 
     const menuMap = new Map<number, any>();
     const roles: object[] = [];
@@ -99,7 +99,9 @@ export class UserService extends BaseService<UserEntity> {
       for (const rmp of role.roleMenuPermissions || []) {
         const menu = rmp.menu;
         const permission = rmp.permission;
-
+        if (menu.layout === MenuLayoutEnum.MOBILE) {
+          continue;
+        }
         // 合并多个角色的菜单权限，按菜单 ID 聚合
         if (!menuMap.has(menu.id)) {
           menuMap.set(menu.id, {

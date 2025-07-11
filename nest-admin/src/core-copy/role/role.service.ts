@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In, FindOptionsWhere } from 'typeorm';
 
 import { RoleDto, QueryRoleDto, PaginationDto } from './dto/index.dto';
-import { RoleMenuPermissionDto } from "@/core/role-menu-permissions/dto/index.dto"
-import { RoleMenuPermissionsService } from '@/core/role-menu-permissions/role-menu-permissions.service';
+import { RoleMenuPermissionDto } from "@/core-copy/role-menu-permissions/dto/index.dto"
+import { RoleMenuPermissionsService } from '@/core-copy/role-menu-permissions/role-menu-permissions.service';
 
 import { BaseService } from '@/common/base/base.service';
 import { RoleEntity } from './entities/role.entity';

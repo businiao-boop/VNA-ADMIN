@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToMany, OneToMany } from "typeorm";
 import { BaseEntity } from "@/common/entities/base.entity";
-import { MenuEntity } from "@/core/menu/entities/menu.entity";
-import { RoleMenuPermissionEntity } from "@/core/role-menu-permissions/entities/role-menu-permission.entity";
+import { MenuEntity } from "@/core-copy/menu/entities/menu.entity";
+import { RoleMenuPermissionEntity } from "@/core-copy/role-menu-permissions/entities/role-menu-permission.entity";
 @Entity("permissions")
 export class PermissionEntity extends BaseEntity {
   @Column({ unique: true, comment: "权限编码,唯一" })

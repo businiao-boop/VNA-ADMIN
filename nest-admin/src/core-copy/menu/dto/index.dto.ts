@@ -11,7 +11,8 @@ import {
   IsArray,
 } from 'class-validator';
 import { MenuTypeEnum, MenuLayoutEnum } from "@/common/enums/menu.enum";
-import { PermissionDto } from "@/core/permission/dto/index.dto";
+import { PermissionDto } from "@/core-copy/permission/dto/index.dto";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class MenuDto {
   @IsOptional()

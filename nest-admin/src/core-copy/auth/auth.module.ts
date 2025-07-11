@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { jwtConfig } from '@/config/jwt.config';
 import { JwtStrategy } from './jwt.strategy';
-import { UserModule } from '@/core/user/user.module';
+import { UserModule } from '@/core-copy/user/user.module';
 
 @Module({
   imports: [UserModule, JwtModule.registerAsync({

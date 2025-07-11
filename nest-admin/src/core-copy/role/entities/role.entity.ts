@@ -1,8 +1,8 @@
 import { Column, Entity, ManyToMany, OneToMany } from "typeorm";
 import { BaseEntity } from "@/common/entities/base.entity";
 
-import { UserEntity } from "@/core/user/entities/user.entity";
-import { RoleMenuPermissionEntity } from "@/core/role-menu-permissions/entities/role-menu-permission.entity";
+import { UserEntity } from "@/core-copy/user/entities/user.entity";
+import { RoleMenuPermissionEntity } from "@/core-copy/role-menu-permissions/entities/role-menu-permission.entity";
 @Entity('role')
 export class RoleEntity extends BaseEntity {
   @Column({ unique: true, comment: '角色编码,唯一标识' })

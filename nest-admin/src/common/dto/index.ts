@@ -1,5 +1,6 @@
-import { IsInt, IsOptional, IsArray } from "class-validator";
+import { IsInt, IsOptional, IsArray, IsNumber } from "class-validator";
 import { Transform } from "class-transformer";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 class PaginationDto {
   @IsInt()
   @IsOptional()
@@ -11,10 +12,11 @@ class PaginationDto {
 }
 
 class BaseDto {
+  @ApiPropertyOptional({ description: '菜单 ID,存在表示更新' })
   @IsOptional()
-  @IsArray()
-  @Transform(({ value }) => Array.isArray(value) ? value.map(Number) : [Number(value)])
-  id?: number[];
+  @IsNumber()
+  // @Transform(({ value }) => Array.isArray(value) ? value.map(Number) : [Number(value)])
+  id?: number;
   @IsOptional()
   createdAt: Date;
   @IsOptional()

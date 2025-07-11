@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinTable, JoinColumn, Column } from "typeorm";
-import { RoleEntity } from "@/core/role/entities/role.entity";
-import { MenuEntity } from "@/core/menu/entities/menu.entity";
-import { PermissionEntity } from "@/core/permission/entities/permission.entity";
+import { RoleEntity } from "@/core-copy/role/entities/role.entity";
+import { MenuEntity } from "@/core-copy/menu/entities/menu.entity";
+import { PermissionEntity } from "@/core-copy/permission/entities/permission.entity";
 @Entity("role_menu_permission")
 export class RoleMenuPermissionEntity {
   @PrimaryGeneratedColumn()

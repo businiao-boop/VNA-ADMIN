@@ -6,7 +6,7 @@ import { UserEntity } from "./entities/user.entity";
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 
-import { RoleModule } from "@/core/role/role.module";
+import { RoleModule } from "@/core-copy/role/role.module";
 
 
 @Module({

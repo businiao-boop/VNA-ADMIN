@@ -6,7 +6,7 @@ import { RoleController } from './role.controller';
 
 import { RoleEntity } from './entities/role.entity';
 
-import { RoleMenuPermissionsModule } from '@/core/role-menu-permissions/role-menu-permissions.module';
+import { RoleMenuPermissionsModule } from '@/core-copy/role-menu-permissions/role-menu-permissions.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([RoleEntity]), RoleMenuPermissionsModule],

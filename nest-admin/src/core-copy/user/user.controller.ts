@@ -1,11 +1,13 @@
 import { Controller, Post, Body, Query, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto, QueryUserDto, PaginationDto } from "./dto/index.dto";
+import { Public } from '@/common/decorators';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Public()
   @Post("save")
   create(@Body() userDto: UserDto) {
     return this.userService.save(userDto);

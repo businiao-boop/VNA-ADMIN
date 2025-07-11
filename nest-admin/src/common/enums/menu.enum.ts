@@ -3,6 +3,7 @@ export enum MenuTypeEnum {
   MENU = 'menu', // 菜单
   BUTTON = 'button', // 按钮
   PERMISSION = "permission", // 权限
+  IDE = 'ide',
 }
 
 export enum MenuLayoutEnum {

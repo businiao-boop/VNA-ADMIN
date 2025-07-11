@@ -3,7 +3,7 @@ import { Transform } from "class-transformer";
 import { IsArray, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { PaginationDto, BaseDto } from "@/common/dto"
 
-import { MenuDto } from "@/core/menu/dto/index.dto";
+import { MenuDto } from "@/core-copy/menu/dto/index.dto";
 
 export class RoleDto extends BaseDto {
   @IsString()

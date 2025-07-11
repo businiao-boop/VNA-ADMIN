@@ -10,10 +10,10 @@ export abstract class BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn({ name: "created_at" })
+  @CreateDateColumn({ name: "created_at", comment: "创建时间" })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at" })
+  @UpdateDateColumn({ name: "updated_at", comment: "更新时间" })
   updatedAt: Date;
 
   // ❓为什么不是 isDeleted: boolean？
@@ -21,6 +21,6 @@ export abstract class BaseEntity {
   // 没有被删除时为 null；
   // 删除时自动赋值为删除时间；
   // 查询时可以默认排除已删除记录（需配置）。
-  @DeleteDateColumn({ name: "deleted_at", nullable: true })
+  @DeleteDateColumn({ name: "deleted_at", nullable: true, comment: "删除时间" })
   deletedAt?: Date;
 }

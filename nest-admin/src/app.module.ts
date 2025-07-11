@@ -2,13 +2,9 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { DatabaseModule } from './database/database.module';
 import { RedisModule } from './redis/redis.module';
-import { AuthModule } from './core/auth/auth.module';
-import { UserModule } from "./core/user/user.module";
-import { RoleModule } from './core/role/role.module';
-import { MenuModule } from './core/menu/menu.module';
-import { PermissionModule } from './core/permission/permission.module';
-import { RoleMenuPermissionsModule } from './core/role-menu-permissions/role-menu-permissions.module';
+import { JwtStrategy } from "@/common/guards/jwt.strategy"
 import { UploadModule } from './modules/upload/upload.module';
+import { MenuModule } from './core/menu/menu.module';
 
 import configuration from "./config/configuration";
 
@@ -22,13 +18,9 @@ import configuration from "./config/configuration";
     }),
     DatabaseModule,
     RedisModule,
-    AuthModule,
-    UserModule,
-    RoleModule,
-    MenuModule,
-    PermissionModule,
-    RoleMenuPermissionsModule,
-    UploadModule
+    UploadModule,
+    MenuModule
   ],
+  providers: [JwtStrategy],
 })
 export class AppModule {}
