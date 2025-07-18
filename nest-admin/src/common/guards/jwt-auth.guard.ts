@@ -33,9 +33,6 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
 
     // if (!can) return false;
     const { user } = context.switchToHttp().getRequest();
-    console.log('user', user);
-
-
     if (!user || !requiredAuth.includes(user.role)) {
       throw new ForbiddenException('无权限访问');
     }

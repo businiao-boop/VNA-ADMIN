@@ -1,5 +1,5 @@
-import { BaseDto } from '@/common/dto';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { BaseDto, PaginationDto } from '@/common/dto';
+import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import {
   IsNumber,
   IsOptional,
@@ -22,16 +22,16 @@ export class SaveMenuDto extends BaseDto {
   })
   @IsOptional()
   @IsNumber()
-  parentId?: number = 0;
+  parentId?: number;
 
   @ApiPropertyOptional({
     description: '菜单类型: dir（目录）、menu（菜单）、ide（按钮）',
-    default: MenuTypeEnum.MENU,
+    default: MenuTypeEnum.DIRECTORY,
     enum: MenuTypeEnum,
   })
   @IsOptional()
   @IsEnum(MenuTypeEnum)
-  type?: MenuTypeEnum = MenuTypeEnum.MENU;
+  type?: MenuTypeEnum;
 
   @ApiProperty({ description: '菜单路径' })
   @IsString()
@@ -43,7 +43,7 @@ export class SaveMenuDto extends BaseDto {
   })
   @IsOptional()
   @IsString()
-  component?: string = 'Layout';
+  component?: string;
 
   @ApiPropertyOptional({ description: '菜单权限 id 集合' })
   @IsOptional()
@@ -59,20 +59,32 @@ export class SaveMenuDto extends BaseDto {
   @ApiPropertyOptional({ description: '菜单排序', default: 0 })
   @IsOptional()
   @IsNumber()
-  order?: number = 0;
+  order?: number;
 
   @ApiPropertyOptional({ description: '是否可见', default: true })
   @IsOptional()
   @IsBoolean()
-  visible?: boolean = true;
+  visible?: boolean;
 
   @ApiPropertyOptional({ description: '是否启用', default: true })
   @IsOptional()
   @IsBoolean()
-  status?: boolean = true;
+  status?: boolean;
 
   @ApiPropertyOptional({ description: '是否缓存页面', default: true })
   @IsOptional()
   @IsBoolean()
-  keepAlive?: boolean = true;
+  keepAlive?: boolean;
 }
+
+export class QueryMenuDto extends PartialType(SaveMenuDto) {
+  // @IsNumber()
+  // id: number;
+}
+
+export class InfoMenuDto {
+  @IsNumber()
+  id: number;
+}
+
+export { PaginationDto }

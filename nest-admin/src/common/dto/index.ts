@@ -2,11 +2,11 @@ import { IsInt, IsOptional, IsArray, IsNumber } from "class-validator";
 import { Transform } from "class-transformer";
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 class PaginationDto {
-  @IsInt()
+  @IsNumber()
   @IsOptional()
-  @Transform(({ value }) => Array.isArray(value) ? value.map(Number) : [Number(value)])
+    // @Transform(({ value }) => Array.isArray(value) ? value.map(Number) : [Number(value)])
   pageNum: number;
-  @IsInt()
+  @IsNumber()
   @IsOptional()
   limit: number;
 }

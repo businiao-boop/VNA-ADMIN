@@ -5,6 +5,9 @@ import { RedisModule } from './redis/redis.module';
 import { JwtStrategy } from "@/common/guards/jwt.strategy"
 import { UploadModule } from './modules/upload/upload.module';
 import { MenuModule } from './core/menu/menu.module';
+import { RoleModule } from './core/role/role.module';
+import { PermissionModule } from './core/permission/permission.module';
+import { RoleMenuPermissionModule } from './core/role-menu-permission/role-menu-permission.module';
 
 import configuration from "./config/configuration";
 
@@ -19,7 +22,10 @@ import configuration from "./config/configuration";
     DatabaseModule,
     RedisModule,
     UploadModule,
-    MenuModule
+    MenuModule,
+    RoleModule,
+    PermissionModule,
+    RoleMenuPermissionModule
   ],
   providers: [JwtStrategy],
 })
