@@ -34,38 +34,23 @@ export class BaseService<T extends {}> {
   async findAllAndCount(
     options?: FindManyOptions<any>,
     pagination?: PaginationDto,
-  ): Promise<{ data: T[]; total: number } | T[]> {
+  ): Promise<{ data: T[]; total: number }> {
     if (options && options.where) {
       options.where = buildWhere(options.where);
     }
     const qb = this.prepareFilter(options, pagination);
     const [data, total] = await qb.getManyAndCount();
     return { data, total };
-
-
   }
   async findAll(
-    options?: FindManyOptions<any>,
-    pagination?: PaginationDto,
-  ): Promise<{ list: T[]; total: number } | T[]> {
+    options?: FindManyOptions<any>
+  ): Promise<T[]> {
     if (options && options.where && Object.keys(options.where).length > 0) {
       options.where = buildWhere(options.where);
-    }
-    if (pagination && pagination.limit > 0 && pagination.pageNum > 0) {
-      const qb = this.prepareFilter(options, pagination);
-      const [data, total] = await qb.getManyAndCount();
-      return { list: data, total } as { list: T[]; total: number };
-    } else {
+    } 
       const qb = this.prepareFilter(options);
       const data = await qb.getMany();
-      return data as T[];
-    }
-    // if (options && options.where) {
-    //   options.where = buildWhere(options.where);
-    // }
-    // const qb = this.prepareFilter(options);
-    // const data = await qb.getMany();
-    // return data;
+    return data as T[];
   }
 
   async findOne(options?: FindManyOptions<any>): Promise<T | null> {
@@ -82,4 +67,4 @@ export class BaseService<T extends {}> {
     return await this.repo.softDelete(id);
   }
 
-}
+}  

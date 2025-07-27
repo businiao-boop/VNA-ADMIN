@@ -3,6 +3,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigService } from "@nestjs/config";
 import { typeOrmConfig } from "@/config/typeorm.config";
 import { DataSource, DataSourceOptions } from "typeorm";
+
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -16,7 +17,7 @@ import { DataSource, DataSourceOptions } from "typeorm";
         const dataSource = await new DataSource(options).initialize()
         return dataSource
       },
-    }),
+    })
   ],
 })
 export class DatabaseModule { }

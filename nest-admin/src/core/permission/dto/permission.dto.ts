@@ -1,29 +1,52 @@
-import { BaseDto, PaginationDto } from "@/common/dto";
-import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional, IsString, IsNumber } from "class-validator";
-import { PartialType } from "@nestjs/swagger"
+import { IsString, IsOptional, IsNumber, IsArray } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { BaseDto } from "@/common/dto";
 
-export class SavePermissionDto extends BaseDto {
-  @ApiProperty({ description: '唯一标识' })
-  @IsString()
-  code: string;
-  @ApiProperty({ description: '权限名称' })
-  @IsString()
-  name: string;
-
-  @ApiProperty({ description: '权限描述' })
-  @IsString()
-  @IsOptional()
-  description: string;
-}
-export class QueryPermissionDto extends PartialType(SavePermissionDto) {
-}
-export class InfoPermissionDto {
-  @ApiProperty({ description: '权限id' })
+/**
+ * 创建/更新权限DTO
+ */
+export class CreatePermissionDto extends BaseDto {
+  @ApiProperty({ description: "角色ID" })
   @IsNumber()
-  id: number;
+  roleId: number;
+
+  @ApiProperty({ description: "菜单ID" })
+  @IsNumber()
+  menuId: number;
+
+  @ApiProperty({ description: "权限操作数组", example: ["add", "edit", "view", "delete"] })
+  @IsArray()
+  @IsString({ each: true })
+  actions: string[];
 }
 
-export {
-  PaginationDto
+/**
+ * 查询权限DTO
+ */
+export class QueryPermissionDto {
+  @ApiPropertyOptional({ description: "角色ID" })
+  @IsOptional()
+  @IsNumber()
+  roleId?: number;
+
+  @ApiPropertyOptional({ description: "菜单ID" })
+  @IsOptional()
+  @IsNumber()
+  menuId?: number;
+}
+
+/**
+ * 分配权限DTO
+ */
+export class AssignPermissionDto {
+  @ApiProperty({ description: "角色ID" })
+  @IsNumber()
+  roleId: number;
+
+  @ApiProperty({ description: "权限配置数组" })
+  @IsArray()
+  permissions: Array<{
+    menuId: number;
+    actions: string[];
+  }>;
 }

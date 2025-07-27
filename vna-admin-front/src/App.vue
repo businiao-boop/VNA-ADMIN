@@ -1,7 +1,29 @@
-<script setup>
-import Role from "@/views/role/index.vue"
-</script>
 <template>
-    <Role></Role>
+  <router-view />
 </template>
+
+<script setup>
+import { onMounted } from 'vue';
+
+onMounted(() => {
+  console.log('VNA-Admin 启动成功');
+});
+</script>
+
+<style lang="scss">
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  background-color: #f0f2f5;
+}
+
+#app {
+  height: 100vh;
+}
+</style>
 

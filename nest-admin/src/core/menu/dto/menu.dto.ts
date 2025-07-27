@@ -1,90 +1,64 @@
-import { BaseDto, PaginationDto } from '@/common/dto';
-import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
-import {
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsBoolean,
-  IsEnum,
-  IsArray
-} from 'class-validator';
-import { MenuTypeEnum } from '@/common/enums/menu.enum';
+import { IsString, IsOptional, IsNumber } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { Transform } from "class-transformer";
+import { BaseDto } from "@/common/dto";
 
-export class SaveMenuDto extends BaseDto {
-
-  @ApiProperty({ description: '菜单名称' })
+/**
+ * 创建/更新菜单DTO
+ */
+export class CreateMenuDto extends BaseDto {
+  @ApiProperty({ description: "菜单名称" })
   @IsString()
-  menuName: string;
+  name: string;
 
-  @ApiPropertyOptional({
-    description: '父级菜单 ID',
-    default: 0,
-  })
+  @ApiPropertyOptional({ description: "路由路径" })
   @IsOptional()
-  @IsNumber()
-  parentId?: number;
-
-  @ApiPropertyOptional({
-    description: '菜单类型: dir（目录）、menu（菜单）、ide（按钮）',
-    default: MenuTypeEnum.DIRECTORY,
-    enum: MenuTypeEnum,
-  })
-  @IsOptional()
-  @IsEnum(MenuTypeEnum)
-  type?: MenuTypeEnum;
-
-  @ApiProperty({ description: '菜单路径' })
   @IsString()
-  path: string;
+  path?: string;
 
-  @ApiPropertyOptional({
-    description: '前端组件路径',
-    default: 'Layout',
-  })
+  @ApiPropertyOptional({ description: "组件路径" })
   @IsOptional()
   @IsString()
   component?: string;
 
-  @ApiPropertyOptional({ description: '菜单权限 id 集合' })
-  @IsOptional()
-  @IsArray()
-  @IsNumber({}, { each: true })
-  permissionIds?: number[];
-
-  @ApiPropertyOptional({ description: '菜单图标' })
+  @ApiPropertyOptional({ description: "图标" })
   @IsOptional()
   @IsString()
   icon?: string;
 
-  @ApiPropertyOptional({ description: '菜单排序', default: 0 })
+  @ApiPropertyOptional({ description: "父菜单ID" })
   @IsOptional()
   @IsNumber()
-  order?: number;
+  parentId?: number;
 
-  @ApiPropertyOptional({ description: '是否可见', default: true })
+  @ApiPropertyOptional({ description: "排序", default: 0 })
   @IsOptional()
-  @IsBoolean()
-  visible?: boolean;
-
-  @ApiPropertyOptional({ description: '是否启用', default: true })
-  @IsOptional()
-  @IsBoolean()
-  status?: boolean;
-
-  @ApiPropertyOptional({ description: '是否缓存页面', default: true })
-  @IsOptional()
-  @IsBoolean()
-  keepAlive?: boolean;
-}
-
-export class QueryMenuDto extends PartialType(SaveMenuDto) {
-  // @IsNumber()
-  // id: number;
-}
-
-export class InfoMenuDto {
   @IsNumber()
-  id: number;
+  sort?: number;
+
+  @ApiPropertyOptional({ description: "状态：1正常 0禁用", default: 1 })
+  @IsOptional()
+  @IsNumber()
+  status?: number;
 }
 
-export { PaginationDto }
+/**
+ * 查询菜单DTO
+ */
+export class QueryMenuDto {
+  @ApiPropertyOptional({ description: "菜单名称" })
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => value === "" ? undefined : value)
+  name?: string;
+
+  @ApiPropertyOptional({ description: "父菜单ID" })
+  @IsOptional()
+  @IsNumber()
+  parentId?: number;
+
+  @ApiPropertyOptional({ description: "状态：1正常 0禁用" })
+  @IsOptional()
+  @IsNumber()
+  status?: number;
+}

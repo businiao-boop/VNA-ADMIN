@@ -12,11 +12,14 @@ export function buildWhere<T extends Record<string, any>>(
 
   const buildSingle = (dto: T): FindOptionsWhere<T> => {
     const where = {} as FindOptionsWhere<T>;
+    let hasValidCondition = false;
 
     for (const key in dto) {
       const value = dto[key];
-      if (value == null) continue;
+      // 过滤掉 null、undefined 和空字符串
+      if (value == null || value === '') continue;
 
+      hasValidCondition = true;
       if (Array.isArray(value)) {
         (where as any)[key] = In(value);
       } else if (typeof value === 'string' && fuzzyFields.includes(key)) {
@@ -26,7 +29,8 @@ export function buildWhere<T extends Record<string, any>>(
       }
     }
 
-    return where;
+    // 如果没有有效条件，返回空对象
+    return hasValidCondition ? where : {};
   };
 
   return Array.isArray(input) ? input.map(buildSingle) : buildSingle(input);

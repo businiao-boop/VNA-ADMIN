@@ -1,9 +1,11 @@
 import GlobalComponents from './global-components'
 import antdV from './antdV'
+import setupVxeTable from './vxeTable'
 
 const plugins = [
   GlobalComponents,
-  antdV
+  antdV,
+  setupVxeTable
 ]
 
 export default {

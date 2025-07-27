@@ -1,14 +1,28 @@
+import { Entity, Column, ManyToOne, JoinColumn } from "typeorm";
 import { BaseEntity } from "@/common/entities/base.entity";
-import { RoleMenuPermissionEntity } from "@/core/role-menu-permission/entities/role-menu-permission.entity";
-import { Column, Entity, OneToMany } from "typeorm";
+import { Role } from "@/core/role/entities/role.entity";
+import { Menu } from "@/core/menu/entities/menu.entity";
 
-@Entity("permission")
-export class PermissionEntity extends BaseEntity {
-  @Column({ type: "varchar", length: 50, comment: "权限标识" })
-  code: string;
-  @Column({ type: "varchar", length: 50, comment: "权限名称" })
-  name: string;
-  @Column({ type: "varchar", nullable: true, length: 255, comment: "权限描述" })
-  description: string;
+/**
+ * 权限实体
+ * 角色与菜单的中间表，存储角色对菜单的操作权限
+ */
+@Entity("permissions")
+export class Permission extends BaseEntity {
+  @Column({ comment: "角色ID" })
+  roleId: number;
 
+  @Column({ comment: "菜单ID" })
+  menuId: number;
+
+  @Column({ type: "simple-json", comment: "权限操作，JSON数组：[add,edit,view,delete]" })
+  actions: string[];
+
+  @ManyToOne(() => Role, (role) => role.permissions)
+  @JoinColumn({ name: "roleId" })
+  role: Role;
+
+  @ManyToOne(() => Menu, (menu) => menu.permissions)
+  @JoinColumn({ name: "menuId" })
+  menu: Menu;
 }

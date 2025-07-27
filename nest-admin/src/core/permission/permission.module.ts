@@ -1,13 +1,16 @@
-import { Module } from '@nestjs/common';
-import { PermissionService } from './permission.service';
-import { PermissionController } from './permission.controller';
-import { PermissionEntity } from './entities/permission.entity';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { RoleMenuPermissionModule } from "@/core/role-menu-permission/role-menu-permission.module"
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { PermissionController } from "./permission.controller";
+import { PermissionService } from "./permission.service";
+import { Permission } from "./entities/permission.entity";
 
+/**
+ * 权限模块
+ */
 @Module({
-  imports: [TypeOrmModule.forFeature([PermissionEntity]), RoleMenuPermissionModule],
+  imports: [TypeOrmModule.forFeature([Permission])],
   controllers: [PermissionController],
   providers: [PermissionService],
+  exports: [PermissionService],
 })
-export class PermissionModule { }
+export class PermissionModule {}

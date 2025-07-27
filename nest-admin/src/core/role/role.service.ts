@@ -1,56 +1,85 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
-import { BaseService } from '@/common/base/base.service';
-import { QueryRoleDto, SaveRoleDto, PaginationDto } from './dto/role.dto';
-import { RoleEntity } from './entities/role.entity';
+import { Injectable, NotFoundException, ConflictException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { BaseService } from "@/common/base/base.service";
+import { Role } from "./entities/role.entity";
+import { CreateRoleDto } from "./dto/role.dto";
 
+/**
+ * 角色服务
+ */
 @Injectable()
-export class RoleService extends BaseService<RoleEntity> {
+export class RoleService extends BaseService<Role> {
   constructor(
-    @InjectRepository(RoleEntity)
-    private readonly roleRepo: Repository<RoleEntity>,
+    @InjectRepository(Role)
+    private readonly roleRepository: Repository<Role>
   ) {
-    super(roleRepo);
+    super(roleRepository);
   }
 
-  async save(role: SaveRoleDto) {
-    const { id, code, ...rest } = role;
-    const existing = await this.findOne({
-      where: [{ code }, { id }]
+  /**
+   * 创建角色
+   */
+  async createRole(dto: CreateRoleDto): Promise<Role> {
+    const existingRole = await this.roleRepository.findOne({
+      where: [{ name: dto.name }, { code: dto.code }],
     });
-    const roleEntity = this.roleRepo.create(existing || role);
-    if (existing) {
-      Object.assign(roleEntity, rest);
+
+    if (existingRole) {
+      throw new ConflictException("角色名称或编码已存在");
     }
-    return this.roleRepo.save(roleEntity);
+
+    const role = this.roleRepository.create(dto);
+    return await this.roleRepository.save(role);
   }
 
-  async list(query?: QueryRoleDto, page?: PaginationDto) {
-    const filter = {
-    };
-    if (query) {
-      Object.assign(filter, query);
-    }
-    return await this.findAll(filter, page);
-  }
-
-  async info(id: number) {
-    // const user = await this.findOne({
-    //   where: [{ id }, { username: username }],
-    //   relations: ['roles', "roles.roleMenuPermissions", 'roles.roleMenuPermissions.menu',
-    //     'roles.roleMenuPermissions.permission'],
-    // });
-    return this.findOne({
+  /**
+   * 更新角色
+   */
+  async updateRole(id: number, dto: CreateRoleDto): Promise<Role> {
+    const role = await this.roleRepository.findOne({
       where: { id },
-      relations: [
-        'rmp'
-      ]
-    })
-    return await this.findOne({ where: { id } });
+    });
+
+    if (!role) {
+      throw new NotFoundException("角色不存在");
+    }
+
+    if (dto.name && dto.name !== role.name) {
+      const existingRole = await this.roleRepository.findOne({
+        where: { name: dto.name },
+      });
+      if (existingRole) {
+        throw new ConflictException("角色名称已存在");
+      }
+    }
+
+    if (dto.code && dto.code !== role.code) {
+      const existingRole = await this.roleRepository.findOne({
+        where: { code: dto.code },
+      });
+      if (existingRole) {
+        throw new ConflictException("角色编码已存在");
+      }
+    }
+
+    Object.assign(role, dto);
+    return await this.roleRepository.save(role);
   }
 
-  async remove(id: number) {
-    return await this.softDeleteWithRelations(id);
+  /**
+   * 获取角色详情
+   */
+  async getRoleDetail(id: number): Promise<Role> {
+    const role = await this.roleRepository.findOne({
+      where: { id },
+      relations: ["permissions", "permissions.menu"],
+    });
+
+    if (!role) {
+      throw new NotFoundException("角色不存在");
+    }
+
+    return role;
   }
 }

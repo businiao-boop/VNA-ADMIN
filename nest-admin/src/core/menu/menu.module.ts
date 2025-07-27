@@ -1,15 +1,16 @@
-import { Module } from '@nestjs/common';
-import { MenuService } from './menu.service';
-import { MenuController } from './menu.controller';
-import { MenuEntity } from "./entities/menu.entity";
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { RoleMenuPermissionModule } from "@/core/role-menu-permission/role-menu-permission.module"
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { MenuController } from "./menu.controller";
+import { MenuService } from "./menu.service";
+import { Menu } from "./entities/menu.entity";
+
+/**
+ * 菜单模块
+ */
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([MenuEntity]),
-    RoleMenuPermissionModule
-  ],
+  imports: [TypeOrmModule.forFeature([Menu])],
   controllers: [MenuController],
   providers: [MenuService],
+  exports: [MenuService],
 })
 export class MenuModule {}

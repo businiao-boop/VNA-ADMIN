@@ -1,20 +1,28 @@
-import { Column, Entity, OneToMany } from "typeorm";
+import { Entity, Column, ManyToMany, OneToMany } from "typeorm";
 import { BaseEntity } from "@/common/entities/base.entity";
-import { IsOptional } from "class-validator";
-import { RoleMenuPermissionEntity } from "@/core/role-menu-permission/entities/role-menu-permission.entity";
+import { User } from "@/core/user/entities/user.entity";
+import { Permission } from "@/core/permission/entities/permission.entity";
 
-@Entity("role")
-export class RoleEntity extends BaseEntity {
-  @Column({ type: 'varchar', length: 50, comment: '权限唯一标识' })
-  code: string;
-  @Column({ type: 'varchar', length: 50, comment: '权限名称' })
+/**
+ * 角色实体
+ */
+@Entity("roles")
+export class Role extends BaseEntity {
+  @Column({ unique: true, comment: "角色名称" })
   name: string;
-  @Column({ type: 'varchar', length: 255, nullable: true, comment: '权限描述' })
-  description?: string;
 
-  @OneToMany(
-    () => RoleMenuPermissionEntity,
-    (roleMenuPermissionEntity) => roleMenuPermissionEntity.role
-  )
-  rmp: RoleMenuPermissionEntity[];
+  @Column({ unique: true, comment: "角色编码" })
+  code: string;
+
+  @Column({ comment: "描述", nullable: true })
+  description: string;
+
+  @Column({ default: 1, comment: "状态：1正常 0禁用" })
+  status: number;
+
+  @ManyToMany(() => User, (user) => user.roles)
+  users: User[];
+
+  @OneToMany(() => Permission, (permission) => permission.role)
+  permissions: Permission[];
 }
