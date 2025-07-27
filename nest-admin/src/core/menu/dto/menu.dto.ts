@@ -26,6 +26,21 @@ export class CreateMenuDto extends BaseDto {
   @IsString()
   icon?: string;
 
+  @ApiPropertyOptional({ description: "菜单标题" })
+  @IsOptional()
+  @IsString()
+  title?: string;
+
+  @ApiPropertyOptional({ description: "是否显示", default: true })
+  @IsOptional()
+  @IsNumber()
+  show?: boolean;
+
+  @ApiPropertyOptional({ description: "菜单类型" })
+  @IsOptional()
+  @IsString()
+  type?: string;
+
   @ApiPropertyOptional({ description: "父菜单ID" })
   @IsOptional()
   @IsNumber()

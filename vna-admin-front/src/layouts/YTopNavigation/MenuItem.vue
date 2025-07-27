@@ -4,7 +4,7 @@
       <template #title>
         <span>
           <component v-if="menuItem.icon" :is="getIcon(menuItem.icon)" />
-          <span>{{ menuItem.name }}</span>
+          <span>{{ menuItem.title }}</span>
         </span>
       </template>
       <MenuItem v-for="child in menuItem.children" :key="child.key || child.path" :menu-item="child" />
@@ -14,7 +14,7 @@
     <template #icon>
       <component v-if="menuItem.icon" :is="getIcon(menuItem.icon)" />
     </template>
-    {{ menuItem.name }}
+    {{ menuItem.title }}
   </a-menu-item>
 </template>
 

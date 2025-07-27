@@ -19,6 +19,15 @@ export class Menu extends BaseEntity {
   @Column({ comment: "图标", nullable: true })
   icon: string;
 
+  @Column({ comment: "菜单标题", nullable: true })
+  title: string;
+
+  @Column({ default: true, comment: "是否显示：true显示 false隐藏" })
+  show: boolean;
+
+  @Column({ comment: "菜单类型", nullable: true })
+  type: string;
+
   @Column({ comment: "父菜单ID", nullable: true })
   parentId: number;
 
