@@ -2,6 +2,7 @@ import { Controller, Post, Body, HttpCode, HttpStatus, Req } from "@nestjs/commo
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
 import { LoginDto, LoginResponseDto } from "./dto/login.dto";
+import { RegisterDto, RegisterResponseDto } from "./dto/register.dto";
 import { Public } from "@/common/decorators";
 
 @ApiTags("认证")
@@ -43,5 +44,25 @@ export class AuthController {
   async getUserProfile(@Req() req: any) {
     const userId = req.user.userId;
     return this.authService.getUserProfile(userId);
+  }
+
+  /**
+   * 用户注册
+   * @param registerDto 注册信息
+   * @returns 注册结果
+   */
+  @Public()
+  @Post("register")
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: "用户注册" })
+  @ApiResponse({
+    status: 201,
+    description: "注册成功",
+    type: RegisterResponseDto
+  })
+  @ApiResponse({ status: 400, description: "注册失败" })
+  @ApiResponse({ status: 409, description: "用户名已存在" })
+  async register(@Body() registerDto: RegisterDto) {
+    return this.authService.register(registerDto.username, registerDto.password);
   }
 }

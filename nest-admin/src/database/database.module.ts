@@ -3,6 +3,10 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigService } from "@nestjs/config";
 import { typeOrmConfig } from "@/config/typeorm.config";
 import { DataSource, DataSourceOptions } from "typeorm";
+import { RoleSeedService } from "./seeds/role.seed";
+import { UserSeedService } from "./seeds/user.seed";
+import { Role } from "@/core/role/entities/role.entity";
+import { User } from "@/core/user/entities/user.entity";
 
 @Module({
   imports: [
@@ -17,7 +21,10 @@ import { DataSource, DataSourceOptions } from "typeorm";
         const dataSource = await new DataSource(options).initialize()
         return dataSource
       },
-    })
+    }),
+    TypeOrmModule.forFeature([Role, User])
   ],
+  providers: [RoleSeedService, UserSeedService],
+  exports: [RoleSeedService, UserSeedService],
 })
 export class DatabaseModule { }

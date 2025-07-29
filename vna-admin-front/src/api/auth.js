@@ -27,3 +27,18 @@ export const getUserProfile = (params = {}) => {
     params
   });
 };
+
+/**
+ * 用户注册
+ * @param {Object} data 注册数据
+ * @param {String} data.username 用户名
+ * @param {String} data.password 密码
+ * @returns {Promise} 返回注册结果
+ */
+export const register = (data) => {
+  return request({
+    url: '/auth/register',
+    method: 'post',
+    data
+  });
+};

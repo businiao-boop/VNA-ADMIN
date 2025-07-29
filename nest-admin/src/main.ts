@@ -8,6 +8,8 @@ import { setupSwagger } from "@/config/swagger.config"
 import { setupFilters } from "@/common/exceptions"
 import { setupInterceptors } from "@/common/interceptors";
 import { JwtAuthGuard } from "@/common/guards"
+import { RoleSeedService } from "@/database/seeds/role.seed"
+import { UserSeedService } from "@/database/seeds/user.seed"
 
 async function bootstrap() {
 
@@ -39,6 +41,24 @@ async function bootstrap() {
   const host = configService.get("app.host") || "localhost";
   const globalPrefix = configService.get("app.prefix");
   app.setGlobalPrefix(globalPrefix); //设置路由全局前缀
+
+  // 初始化默认角色
+  try {
+    const roleSeedService = app.get(RoleSeedService);
+    await roleSeedService.seedDefaultRoles();
+    console.log('✅ Default roles initialized successfully');
+  } catch (error) {
+    console.error('❌ Failed to initialize default roles:', error.message);
+  }
+
+  // 初始化默认超级管理员用户
+   try {
+     const userSeedService = app.get(UserSeedService);
+     await userSeedService.seedDefaultUsers();
+     console.log('✅ Default users initialized successfully');
+   } catch (error) {
+     console.error('❌ Failed to initialize default users:', error.message);
+   }
 
   await app.listen(port || 3000);
   console.log(`✅ Application is running on: http://${host}:${port || 3000}`);

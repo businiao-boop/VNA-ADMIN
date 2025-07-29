@@ -9,6 +9,12 @@ const routes = [
     meta: { title: '登录' }
   },
   {
+    path: '/register',
+    name: 'register',
+    component: () => import('@/views/register/index.vue'),
+    meta: { title: '注册' }
+  },
+  {
     path: '/',
     redirect: '/dashboard'
   }
@@ -30,7 +36,7 @@ router.beforeEach(async (to, from, next) => {
   const token = localStorage.getItem('token');
 
   // 不需要登录的页面
-  if (to.path === '/login') {
+  if (to.path === '/login' || to.path === '/register') {
     if (token && userStore.isLoggedIn) {
       // 已登录，跳转到首页
       next('/dashboard');

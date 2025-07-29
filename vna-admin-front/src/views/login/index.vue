@@ -21,6 +21,11 @@
             登录
           </a-button>
         </a-form-item>
+
+        <div class="login-footer">
+          <span>还没有账户？</span>
+          <a-button type="link" @click="goToRegister">立即注册</a-button>
+        </div>
       </a-form>
     </div>
   </div>
@@ -86,6 +91,10 @@ const handleLogin = async (values) => {
     loading.value = false;
   }
 };
+
+const goToRegister = () => {
+  router.push('/register');
+};
 </script>
 
 <style scoped lang="scss">
@@ -130,6 +139,12 @@ const handleLogin = async (values) => {
         height: 40px;
         font-size: 16px;
       }
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 16px;
+      color: #8c8c8c;
     }
   }
 }

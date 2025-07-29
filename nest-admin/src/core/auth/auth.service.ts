@@ -132,4 +132,46 @@ export class AuthService {
 
     return user;
   }
+
+  /**
+   * 用户注册
+   * @param username 用户名
+   * @param password 密码
+   * @returns 注册成功的用户信息
+   */
+  async register(username: string, password: string) {
+    // 检查用户名是否已存在
+    const existingUser = await this.userRepository.findOne({
+      where: { username }
+    });
+
+    if (existingUser) {
+      throw new UnauthorizedException("用户名已存在");
+    }
+
+    // 创建新用户，分配默认角色
+    const defaultRole = await this.roleRepository.findOne({
+      where: { code: 'user' }
+    });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    const user = this.userRepository.create({
+      username,
+      password: hashedPassword,
+      nickname: username, // 默认昵称为用户名
+      status: 1, // 默认启用
+      roles: defaultRole ? [defaultRole] : []
+    });
+
+    const savedUser = await this.userRepository.save(user);
+
+    // 返回注册信息，不包含密码
+    return {
+      id: savedUser.id,
+      username: savedUser.username,
+      nickname: savedUser.nickname,
+      createdAt: savedUser.createdAt
+    };
+  }
 }
