@@ -17,7 +17,27 @@ const routes = [
   {
     path: '/',
     redirect: '/dashboard'
-  }
+  },
+  // {
+  //   path: "/system",
+  //   name: "System",
+  //   component: () => import("@/layouts/BasicLayout.vue"),
+  //   meta: { title: "系统管理" },
+  //   children: [
+  //     {
+  //       path: "user",
+  //       name: "User",
+  //       component: () => import("@/views/system/user/index.vue"),
+  //       meta: { title: "用户管理" }
+  //     },
+  //     {
+  //       path: "role",
+  //       name: "Role",
+  //       component: () => import("@/views/system/role/index.vue"),
+  //       meta: { title: "角色管理" }
+  //     }
+  //   ]
+  // }
 ];
 
 const router = createRouter({
