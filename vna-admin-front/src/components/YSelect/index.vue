@@ -1,17 +1,7 @@
 <template>
-  <a-select
-    v-model:value="selectedValue"
-    :placeholder="placeholder"
-    :options="actualOptions"
-    :disabled="disabled"
-    :loading="loading"
-    :allow-clear="allowClear"
-    :show-search="showSearch"
-    :filter-option="filterOption"
-    :mode="mode"
-    @change="handleChange"
-    style="width: 100%"
-  >
+  <a-select v-model:value="selectedValue" :placeholder="placeholder" :options="actualOptions" :disabled="disabled"
+    :loading="loading" :allow-clear="allowClear" :show-search="showSearch" :filter-option="filterOption" :mode="mode"
+    @change="handleChange">
     <template v-if="$slots.option" #option="option">
       <slot name="option" :option="option"></slot>
     </template>
@@ -20,7 +10,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { OPTIONS } from '@/constants/options';
+import OPTIONS from '@/constants/options';
 
 const props = defineProps({
   modelValue: {

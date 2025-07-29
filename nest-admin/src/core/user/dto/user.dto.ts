@@ -31,9 +31,9 @@ export class CreateUserDto extends BaseDto {
   @IsString()
   phone?: string;
 
-  @ApiPropertyOptional({ description: "是否启用：true启用 false禁用", default: true })
-  @IsOptional()
-  isActive?: boolean;
+  // @ApiPropertyOptional({ description: "是否启用：true启用 false禁用", default: true })
+  // @IsOptional()
+  // isActive?: boolean;
 
   @ApiPropertyOptional({ description: "状态：1正常 0禁用", default: 1 })
   @IsOptional()

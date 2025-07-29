@@ -4,7 +4,7 @@
  */
 
 // 菜单类型选项
-const MENU_TYPE_OPTIONS = [
+export const MENU_TYPE_OPTIONS = [
   { label: '目录', value: 'dir' },
   { label: '菜单', value: 'menu' },
   { label: '按钮', value: 'button' },
@@ -12,7 +12,7 @@ const MENU_TYPE_OPTIONS = [
 ];
 
 // 布局选项
-const LAYOUT_OPTIONS = [
+export const LAYOUT_OPTIONS = [
   { label: '默认', value: 'default' },
   { label: '全屏', value: 'fullpage' },
   { label: '内嵌', value: 'iframe' },
@@ -20,32 +20,32 @@ const LAYOUT_OPTIONS = [
 ];
 
 // 用户状态选项
-const USER_STATUS_OPTIONS = [
+export const USER_STATUS_OPTIONS = [
   { label: '启用', value: 1 },
   { label: '禁用', value: 0 }
 ];
 
 // 角色状态选项
-const ROLE_STATUS_OPTIONS = [
+export const ROLE_STATUS_OPTIONS = [
   { label: '启用', value: 1 },
   { label: '禁用', value: 0 }
 ];
 
 // 性别选项
-const GENDER_OPTIONS = [
+export const GENDER_OPTIONS = [
   { label: '男', value: 1 },
   { label: '女', value: 0 },
   { label: '未知', value: 2 }
 ];
 
 // 是否选项
-const YES_NO_OPTIONS = [
+export const YES_NO_OPTIONS = [
   { label: '是', value: true },
   { label: '否', value: false }
 ];
 
 // 菜单显示状态选项
-const MENU_SHOW_OPTIONS = [
+export const MENU_SHOW_OPTIONS = [
   { label: '显示', value: true },
   { label: '隐藏', value: false }
 ];
@@ -54,18 +54,7 @@ const MENU_SHOW_OPTIONS = [
  * 统一的选项配置对象
  * 使用时通过key获取对应的选项数组
  */
-export const OPTIONS = {
-  MENU_TYPE: MENU_TYPE_OPTIONS,
-  LAYOUT: LAYOUT_OPTIONS,
-  USER_STATUS: USER_STATUS_OPTIONS,
-  ROLE_STATUS: ROLE_STATUS_OPTIONS,
-  GENDER: GENDER_OPTIONS,
-  YES_NO: YES_NO_OPTIONS,
-  MENU_SHOW: MENU_SHOW_OPTIONS
-};
-
-// 兼容旧版本的导出
-export {
+export default {
   MENU_TYPE_OPTIONS,
   LAYOUT_OPTIONS,
   USER_STATUS_OPTIONS,

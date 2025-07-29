@@ -34,7 +34,7 @@ export class AuthService {
       throw new UnauthorizedException("用户名或密码错误");
     }
 
-    if (!user.isActive) {
+    if (user.status === 0) {
       throw new UnauthorizedException("用户已被禁用");
     }
 
@@ -94,7 +94,6 @@ export class AuthService {
       nickname: user.nickname,
       email: user.email,
       phone: user.phone,
-      isActive: user.isActive,
       status: user.status,
       roles: user.roles.map(role => ({
         id: role.id,

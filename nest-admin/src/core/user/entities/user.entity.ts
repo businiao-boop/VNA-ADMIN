@@ -22,8 +22,8 @@ export class User extends BaseEntity {
   @Column({ comment: "手机号", nullable: true })
   phone: string;
 
-  @Column({ default: true, comment: "是否启用：true启用 false禁用" })
-  isActive: boolean;
+  // @Column({ default: true, comment: "是否启用：true启用 false禁用" })
+  // isActive: boolean;
 
   @Column({ default: 1, comment: "状态：1正常 0禁用" })
   status: number;
