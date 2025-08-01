@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise风格Modal对话框实现</title>
+    <script src="https://cdn.tailwindcss.com/3.3.3"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ant-design-vue@1.7.8/dist/antd.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ant-design-vue@1.7.8/dist/antd.min.js"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f5f7fa;
+            color: #2d3748;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .code-block {
+            background-color: #f8f9fa;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #4b5563;
+        }
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+        .example-section {
+            margin-bottom: 2rem;
+        }
+        .example-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="container">
+        <h1 class="text-3xl font-bold mb-6 text-center">Promise风格Modal对话框实现</h1>
+        
+        <div class="card">
+            <h2 class="text-2xl font-semibold mb-4">功能概述</h2>
+            <p class="mb-4">基于Ant Design Vue组件库实现Promise风格的Modal对话框，提供可复用的promiseDialog函数，支持标准属性配置和Promise逻辑处理。</p>
+            
+            <div class="code-block">
+                <pre>// 基本用法
+promiseDialog({
+    title: '确认操作',
+    content: '您确定要执行此操作吗？'
+}).then(result => {
+    console.log(result); // { confirmed: true }
+}).catch(error => {
+    console.log(error); // { confirmed: false, error: "用户取消" }
+});</pre>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <div class="example-title">1. 基础确认框</div>
+            <div class="flex space-x-4">
+                <button @click="showBasicModal" class="btn btn-primary">
+                    <i class="fas fa-check-circle mr-2"></i>显示基础确认框
+                </button>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <div class="example-title">2. 带表单的对话框</div>
+            <button @click="showFormModal" class="btn btn-primary">
+                <i class="fas fa-edit mr-2"></i>显示表单对话框
+            </button>
+        </div>
+        
+        <div class="example-section">
+            <div class="example-title">3. 自定义按钮和样式的对话框</div>
+            <button @click="showCustomModal" class="btn btn-primary">
+                <i class="fas fa-cog mr-2"></i>显示自定义对话框
+            </button>
+        </div>
+        
+        <div class="card mt-8">
+            <h2 class="text-2xl font-semibold mb-4">实现代码</h2>
+            
+            <div class="code-block">
+                <pre>// promiseDialog.js
+import { Modal } from 'ant-design-vue';
+
+/**
+ * Promise风格的Modal对话框
+ * @param {Object} config 配置参数
+ * @returns {Promise} 返回Promise对象
+ */
+export function promiseDialog(config = {}) {
+    return new Promise((resolve, reject) => {
+        let formData = {};
+        let modalRef = null;
+        
+        const defaultConfig = {
+            title: '提示',
+            content: '',
+            width: 520,
+            okText: '确定',
+            cancelText: '取消',
+            centered: false,
+            maskClosable: true,
+            onOk: () => {
+                resolve({ confirmed: true, data: formData });
+                modalRef.destroy();
+            },
+            onCancel: () => {
+                reject({ confirmed: false, error: "用户取消" });
+                modalRef.destroy();
+            }
+        };
+        
+        const mergedConfig = { ...defaultConfig, ...config };
+        
+        // 处理自定义内容
+        if (config.content) {
+            mergedConfig.content = config.content;
+        }
+        
+        // 创建Modal实例
+        modalRef = Modal.confirm(mergedConfig);
+        
+        // 提供关闭方法
+        modalRef.close = () => {
+            modalRef.destroy();
+            reject({ confirmed: false, error: "程序关闭" });
+        };
+        
+        // 更新表单数据
+        modalRef.updateFormData = (data) => {
+            formData = { ...formData, ...data };
+        };
+    });
+}</pre>
+            </div>
+            
+            <div class="code-block mt-4">
+                <pre>// 使用示例
+// 1. 基础确认框
+promiseDialog({
+    title: '确认删除',
+    content: '您确定要删除此项吗？'
+}).then(result => {
+    if (result.confirmed) {
+        // 执行删除操作
+    }
+});
+
+// 2. 带表单的对话框
+promiseDialog({
+    title: '填写信息',
+    content: `
+        &lt;a-input placeholder="请输入姓名" @change="e => updateFormData({ name: e.target.value })" /&gt;
+        &lt;a-input placeholder="请输入年龄" @change="e => updateFormData({ age: e.target.value })" /&gt;
+    `,
+    onOk: () => {
+        // 表单验证逻辑
+        if (!formData.name) {
+            return Promise.reject('请输入姓名');
+        }
+        return Promise.resolve();
+    }
+}).then(result => {
+    console.log('表单数据:', result.data);
+});
+
+// 3. 自定义对话框
+promiseDialog({
+    title: '自定义对话框',
+    content: '这是一个自定义样式的对话框',
+    width: 800,
+    okText: '我同意',
+    cancelText: '我拒绝',
+    okButtonProps: {
+        type: 'danger'
+    },
+    cancelButtonProps: {
+        type: 'dashed'
+    }
+});</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            methods: {
+                showBasicModal() {
+                    this.$confirm({
+                        title: '基础确认框',
+                        content: '这是一个基础确认对话框示例',
+                        onOk() {
+                            return new Promise(resolve => {
+                                setTimeout(() => {
+                                    resolve();
+                                }, 1000);
+                            });
+                        }
+                    });
+                },
+                
+                showFormModal() {
+                    this.$confirm({
+                        title: '表单对话框',
+                        content: h => {
+                            return h('div', [
+                                h('a-input', {
+                                    props: {
+                                        placeholder: '请输入姓名'
+                                    },
+                                    style: {
+                                        marginBottom: '10px'
+                                    },
+                                    on: {
+                                        change: e => {
+                                            this.formName = e.target.value;
+                                        }
+                                    }
+                                }),
+                                h('a-input', {
+                                    props: {
+                                        placeholder: '请输入年龄',
+                                        type: 'number'
+                                    },
+                                    on: {
+                                        change: e => {
+                                            this.formAge = e.target.value;
+                                        }
+                                    }
+                                })
+                            ]);
+                        },
+                        onOk: () => {
+                            if (!this.formName) {
+                                return Promise.reject('请输入姓名');
+                            }
+                            return Promise.resolve({
+                                name: this.formName,
+                                age: this.formAge
+                            });
+                        }
+                    }).then(result => {
+                        this.$info({
+                            title: '表单提交成功',
+                            content: `姓名: ${result.name}, 年龄: ${result.age}`
+                        });
+                    }).catch(error => {
+                        if (error !== 'cancel') {
+                            this.$error({
+                                title: '错误',
+                                content: error
+                            });
+                        }
+                    });
+                },
+                
+                showCustomModal() {
+                    this.$confirm({
+                        title: '自定义对话框',
+                        content: '这是一个自定义样式的对话框示例',
+                        width: 800,
+                        okText: '自定义确定',
+                        cancelText: '自定义取消',
+                        okButtonProps: {
+                            type: 'danger',
+                            icon: 'check'
+                        },
+                        cancelButtonProps: {
+                            type: 'dashed',
+                            icon: 'close'
+                        },
+                        centered: true
+                    });
+                }
+            }
+        });
+    </script>
+    
+    <footer class="text-center py-6 text-gray-500 text-sm">
+        <p>created by <a href="https://space.coze.cn" class="text-blue-500 hover:underline">coze space</a></p>
+        <p>页面内容均由 AI 生成，仅供参考</p>
+    </footer>
+</body>
+</html>

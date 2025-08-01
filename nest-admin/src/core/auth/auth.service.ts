@@ -15,8 +15,8 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
-    @InjectRepository(Permission)
-    private readonly permissionRepository: Repository<Permission>,
+    // @InjectRepository(Permission)
+    // private readonly permissionRepository: Repository<Permission>,
     @InjectRepository(Menu)
     private readonly menuRepository: Repository<Menu>,
     private readonly jwtService: JwtService
@@ -45,7 +45,38 @@ export class AuthService {
       accessToken
     };
   }
+  // 分步查询，在Service层处理
+  async getUserCompleteMenus(userId: number): Promise<Menu[]> {
+    // 1. 获取用户直接有权限的菜单
+    const directMenus = await this.menuRepository
+      .createQueryBuilder('menu')
+      .innerJoin('menu.permissions', 'permission')
+      .innerJoin('permission.role', 'role')
+      .innerJoin('role.users', 'user')
+      .where('user.id = :userId', { userId })
+      .andWhere('menu.status = 1')
+      .getMany();
 
+    // 2. 获取所有菜单构建树
+    const allMenus = await this.menuRepository
+      .find({ where: { status: 1 }, order: { sort: 'ASC' }, relations: ['permissions'] });
+
+    // 3. 构建菜单树并标记需要返回的菜单
+    const menuMap = new Map(allMenus.map(m => [m.id, m]));
+    const resultIds = new Set<number>();
+
+    // 对每个有权限的菜单，向上补全父菜单
+    directMenus.forEach(menu => {
+      let current: any = menu;
+      while (current) {
+        resultIds.add(current.id);
+        current = menuMap.get(current.parentId);
+      }
+    });
+
+    // 4. 返回完整菜单列表
+    return allMenus.filter(menu => resultIds.has(menu.id));
+  }
   /**
    * 获取用户资料，包含角色、菜单和权限信息
    * @param userId 用户ID
@@ -57,10 +88,14 @@ export class AuthService {
       relations: ["roles", "roles.permissions", "roles.permissions.menu"]
     });
 
+
+
     if (!user) {
       throw new NotFoundException("用户不存在");
     }
 
+    // 使用优化的菜单权限处理
+    const completeMenus = await this.getUserCompleteMenus(userId);
     // 构建菜单权限结构
     const menuMap = new Map();
     
@@ -85,6 +120,7 @@ export class AuthService {
     const menus = Array.from(menuMap.values()).sort((a, b) => a.sort - b.sort);
 
     return {
+      user: user,
       id: user.id,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
@@ -105,7 +141,8 @@ export class AuthService {
         description: role.description,
         status: role.status
       })),
-      menus: menus
+      menus: menus,
+      menuList: completeMenus,
     };
   }
 
