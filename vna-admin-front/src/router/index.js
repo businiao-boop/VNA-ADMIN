@@ -18,6 +18,12 @@ const routes = [
     path: '/',
     redirect: '/dashboard'
   },
+  {
+    path: '/demo',
+    name: 'demo',
+    component: () => import('@/views/example/useModal.vue'),
+    meta: { title: '示例' }
+  },
   // {
   //   path: "/system",
   //   name: "System",
@@ -56,7 +62,7 @@ router.beforeEach(async (to, from, next) => {
   const token = localStorage.getItem('token');
 
   // 不需要登录的页面
-  if (to.path === '/login' || to.path === '/register') {
+  if (to.path === '/login' || to.path === '/register' || to.path === '/demo' || to.path === '/promise-dialog') {
     if (token && userStore.isLoggedIn) {
       // 已登录，跳转到首页
       next('/dashboard');

@@ -1,11 +1,12 @@
 import GlobalComponents from './global-components'
 import antdV from './antdV'
 import setupVxeTable from './vxeTable'
-
+import setupModal from '@/hooks/modal/useModal'
 const plugins = [
   GlobalComponents,
   antdV,
-  setupVxeTable
+  setupVxeTable,
+  setupModal,
 ]
 
 export default {
