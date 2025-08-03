@@ -3,13 +3,21 @@ defineOptions({
   name: "Role",
 });
 import { getRolePage, getAllRoles, saveRole, deleteRole, getRoleDetail } from '@/api/role';
+import { getAllMenus } from '@/api/menu';
+import { buildTree } from '@/utils/buildTree';
+import YLoopMenu from './com/YLoopMenu.vue';
 import { ref } from 'vue';
 const roleList = ref([]);
+const menuTree = ref([])
 const searchRoleName = ref('');
 const selectedRole = ref(null);
 const init = async () => {
   const res = await getAllRoles();
+  const menuRes = await getAllMenus();
   roleList.value = res.data;
+  menuTree.value = buildTree(menuRes);
+  console.log(menuTree.value);
+
 }
 init();
 const search = () => { }
@@ -63,6 +71,9 @@ const handleRowClick = async ({ row }) => {
               菜单权限
             </span>
           </h3>
+          <div>
+            <YLoopMenu :menus="menuTree"></YLoopMenu>
+          </div>
           <a-list></a-list>
         </div>
       </div>
