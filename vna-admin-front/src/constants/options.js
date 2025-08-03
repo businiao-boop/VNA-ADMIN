@@ -54,7 +54,7 @@ export const MENU_SHOW_OPTIONS = [
  * 统一的选项配置对象
  * 使用时通过key获取对应的选项数组
  */
-export default {
+const OPTIONS = {
   MENU_TYPE_OPTIONS,
   LAYOUT_OPTIONS,
   USER_STATUS_OPTIONS,
@@ -63,3 +63,5 @@ export default {
   YES_NO_OPTIONS,
   MENU_SHOW_OPTIONS
 };
+
+export default OPTIONS;

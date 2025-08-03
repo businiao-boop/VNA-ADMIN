@@ -58,11 +58,13 @@ export function saveRole(data) {
  * @param {Number} data.id 角色ID
  * @returns {Promise} 返回角色详情包含菜单权限
  */
-export function getRoleDetail(data) {
+export function getRoleDetail(id) {
   return service({
     url: "/role/detail",
     method: "POST",
-    data
+    data: {
+      id
+    }
   })
 }
 

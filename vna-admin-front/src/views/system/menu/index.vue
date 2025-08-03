@@ -7,7 +7,6 @@ import YTable from '@/components/YTable/index.vue';
 import YSelect from '@/components/YSelect/index.vue';
 import YWrapper from '@/components/YWrapper/index.vue';
 import { getAllMenus, saveMenu, deleteMenu, getMenuDetail } from '@/api/menu';
-import { OPTIONS } from '@/constants/options';
 import { buildTree } from "@/utils/buildTree";
 
 const loading = ref(false);
@@ -57,6 +56,7 @@ const handleAdd = () => {
   menuForm.id = undefined;
   Object.assign(menuForm, {
     name: '',
+    title: "",
     path: '',
     component: '',
     parentId: null,
@@ -134,12 +134,12 @@ onMounted(() => {
 
 <template>
   <YWrapper title="菜单管理">
-    <template #extra>
-      <a-button type="primary" @click="handleAdd">
-        <PlusOutlined />
-        新增菜单
-      </a-button>
-    </template>
+    <!-- <template #extra> -->
+    <a-button type="primary" @click="handleAdd">
+      <PlusOutlined />
+      新增菜单
+    </a-button>
+    <!-- </template> -->
 
     <YTable ref="yTable" :data="menuData" id="id" :tree-config="{ childrenField: 'children' }" default-expand-all>
       <template #columns>
@@ -184,8 +184,8 @@ onMounted(() => {
       @cancel="handleModalCancel" width="600px">
       <a-form :model="menuForm" :rules="menuRules" ref="menuFormRef" :label-col="{ span: 6 }"
         :wrapper-col="{ span: 16 }">
-        <a-form-item label="菜单名称" name="name">
-          <a-input v-model:value="menuForm.name" placeholder="请输入菜单名称" />
+        <a-form-item label="菜单名称" name="title">
+          <a-input v-model:value="menuForm.title" placeholder="请输入菜单名称" />
         </a-form-item>
 
         <a-form-item label="父级菜单" name="parentId">
@@ -195,6 +195,10 @@ onMounted(() => {
 
         <a-form-item label="路由地址" name="path">
           <a-input v-model:value="menuForm.path" placeholder="请输入路由地址" />
+        </a-form-item>
+
+        <a-form-item label="路由名称" name="name">
+          <a-input v-model:value="menuForm.name" placeholder="请输入路由名称" />
         </a-form-item>
 
         <a-form-item label="组件路径" name="component">

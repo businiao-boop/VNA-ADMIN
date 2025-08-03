@@ -68,8 +68,7 @@ export class RoleController {
   @Post("detail")
   @ApiOperation({ summary: "获取角色详情" })
   async getRoleDetail(@Body("id") id: number) {
-    const role = await this.roleService.getRoleDetail(id);
-    return { data: role };
+    return await this.roleService.getRoleDetail(id);
   }
 
   /**

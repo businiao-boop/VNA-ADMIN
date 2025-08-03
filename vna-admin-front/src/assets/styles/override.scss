@@ -1,0 +1,6 @@
+.ant-btn-primary {
+  @apply bg-indigo-600  border-indigo-600 text-white !important;
+  &:hover {
+    @apply bg-indigo-700 border-indigo-700 !important;
+  }
+}

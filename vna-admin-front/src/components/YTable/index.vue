@@ -1,6 +1,6 @@
 <template>
-  <div class="y-table">
-    <vxe-table v-bind="$attrs" ref="xTable" :data="data" :height="height" @current-change="handleCurrentChange"
+  <div class="y-table" :style="{ height: height }">
+    <vxe-table v-bind="$attrs" ref="xTable" :data="data" height="auto" @current-change="handleCurrentChange"
       @cell-click="handleCellClick" @cell-dblclick="handleCellDblclick">
       <!-- 通过插槽传递列配置 -->
       <slot name="columns"></slot>
@@ -105,31 +105,5 @@ defineExpose({
 
 <style scoped lang="scss">
 .y-table {
-  height: 100%;
-
-  :deep(.vxe-table) {
-    font-size: 14px;
-
-    .vxe-header--column {
-      background-color: #fafafa;
-      font-weight: 600;
-    }
-
-    .vxe-body--column {
-      padding: 12px 8px;
-    }
-
-    .vxe-table--header {
-      border-bottom: 1px solid #f0f0f0;
-    }
-
-    .vxe-table--body {
-      .vxe-body--row {
-        &:hover {
-          background-color: #f5f5f5;
-        }
-      }
-    }
-  }
 }
 </style>

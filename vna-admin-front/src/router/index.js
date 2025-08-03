@@ -23,27 +23,7 @@ const routes = [
     name: 'demo',
     component: () => import('@/views/example/useModal.vue'),
     meta: { title: '示例' }
-  },
-  // {
-  //   path: "/system",
-  //   name: "System",
-  //   component: () => import("@/layouts/BasicLayout.vue"),
-  //   meta: { title: "系统管理" },
-  //   children: [
-  //     {
-  //       path: "user",
-  //       name: "User",
-  //       component: () => import("@/views/system/user/index.vue"),
-  //       meta: { title: "用户管理" }
-  //     },
-  //     {
-  //       path: "role",
-  //       name: "Role",
-  //       component: () => import("@/views/system/role/index.vue"),
-  //       meta: { title: "角色管理" }
-  //     }
-  //   ]
-  // }
+  }
 ];
 
 const router = createRouter({
@@ -62,7 +42,7 @@ router.beforeEach(async (to, from, next) => {
   const token = localStorage.getItem('token');
 
   // 不需要登录的页面
-  if (to.path === '/login' || to.path === '/register' || to.path === '/demo' || to.path === '/promise-dialog') {
+  if (to.path === '/login' || to.path === '/register') {
     if (token && userStore.isLoggedIn) {
       // 已登录，跳转到首页
       next('/dashboard');

@@ -69,7 +69,7 @@ const handleLogout = async () => {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: #f5f5f5;
+    // background: #f5f5f5;
     overflow: hidden;
     margin-top: 60px;
 
@@ -84,15 +84,7 @@ const handleLogout = async () => {
       flex: 1;
       padding: 24px;
       // overflow: auto;
-      background: #f5f5f5;
-
-      // 确保内容区域占满可用空间
-      // display: flex;
-      // flex-direction: column;
-
-      // >* {
-      //   flex: 1;
-      // }
+      // background: #f5f5f5;
     }
   }
 }

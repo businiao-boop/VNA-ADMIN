@@ -45,105 +45,102 @@ export class AuthService {
       accessToken
     };
   }
-  // 分步查询，在Service层处理
-  async getUserCompleteMenus(userId: number): Promise<Menu[]> {
-    // 1. 获取用户直接有权限的菜单
-    const directMenus = await this.menuRepository
-      .createQueryBuilder('menu')
-      .innerJoin('menu.permissions', 'permission')
-      .innerJoin('permission.role', 'role')
-      .innerJoin('role.users', 'user')
-      .where('user.id = :userId', { userId })
-      .andWhere('menu.status = 1')
-      .getMany();
-
-    // 2. 获取所有菜单构建树
+  /**
+   * 获取用户完整菜单（包含无权限的父菜单）
+   * @param userId 用户ID
+   * @returns 完整的菜单树，包含所有必要的父菜单
+   */
+  async getUserCompleteMenus(userId: number): Promise<Omit<Menu, 'permissions'>[]> {
+  // 1. 获取所有有效的菜单
     const allMenus = await this.menuRepository
-      .find({ where: { status: 1 }, order: { sort: 'ASC' }, relations: ['permissions'] });
+      .find({
+        where: { status: 1 },
+        order: { sort: 'ASC' },
+        relations: ['permissions', 'permissions.role', 'permissions.role.users']
+      });
 
-    // 3. 构建菜单树并标记需要返回的菜单
-    const menuMap = new Map(allMenus.map(m => [m.id, m]));
-    const resultIds = new Set<number>();
+    // 2. 标记用户有权限的菜单（包括子菜单）
+    const authorizedMenuIds = new Set<number>();
 
-    // 对每个有权限的菜单，向上补全父菜单
-    directMenus.forEach(menu => {
-      let current: any = menu;
-      while (current) {
-        resultIds.add(current.id);
-        current = menuMap.get(current.parentId);
+    // 找出用户有权限的菜单
+    allMenus.forEach(menu => {
+      menu.permissions.forEach(permission => {
+        if (permission.role.users.some(user => user.id === userId)) {
+          authorizedMenuIds.add(menu.id);
+        }
+      });
+    });
+
+    // 3. 收集所有需要的菜单ID（包含父菜单）
+    const requiredMenuIds = new Set<number>();
+
+    allMenus.forEach(menu => {
+      // 如果当前菜单有权限，收集它及其所有父菜单
+      if (authorizedMenuIds.has(menu.id)) {
+        let current: any = menu;
+        while (current) {
+          requiredMenuIds.add(current.id);
+          // 查找父菜单
+          current = allMenus.find(m => m.id === current.parentId);
+        }
       }
     });
 
-    // 4. 返回完整菜单列表
-    return allMenus.filter(menu => resultIds.has(menu.id));
+    // 4. 构建带权限的菜单列表
+    const menuWithPermissions = allMenus.map(menu => {
+      const hasPermission = authorizedMenuIds.has(menu.id);
+      const { permissions, ...rest } = menu;
+      return {
+        ...rest,
+        hasPermission,
+        permission: hasPermission
+          ? permissions
+            .filter(p => p.role.users.some(u => u.id === userId))
+            .flatMap(p => p.actions)
+          : []
+      };
+    });
+
+    return menuWithPermissions.filter(menu => requiredMenuIds.has(menu.id));
   }
+
   /**
-   * 获取用户资料，包含角色、菜单和权限信息
-   * @param userId 用户ID
-   * @returns 用户完整资料
+   * 优化的用户资料查询（确保父菜单完整性）
    */
   async getUserProfile(userId: number): Promise<any> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      relations: ["roles", "roles.permissions", "roles.permissions.menu"]
+      relations: ["roles"]
+      // , "roles.permissions", "roles.permissions.menu"
     });
-
-
 
     if (!user) {
       throw new NotFoundException("用户不存在");
     }
 
-    // 使用优化的菜单权限处理
+    // 使用新的菜单获取逻辑
     const completeMenus = await this.getUserCompleteMenus(userId);
-    // 构建菜单权限结构
-    const menuMap = new Map();
-    
-    user.roles.forEach(role => {
-      role.permissions.forEach(permission => {
-        const menuId = permission.menu.id;
-        if (!menuMap.has(menuId)) {
-          menuMap.set(menuId, {
-            ...permission.menu,
-            roleId: role.id,
-            permission: permission.actions
-          });
-        } else {
-          // 合并权限（去重）
-          const existingPermissions = menuMap.get(menuId).permission;
-          const newPermissions = [...new Set([...existingPermissions, ...permission.actions])];
-          menuMap.get(menuId).permission = newPermissions;
-        }
-      });
-    });
-
-    const menus = Array.from(menuMap.values()).sort((a, b) => a.sort - b.sort);
-
     return {
-      user: user,
-      id: user.id,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      deletedAt: user.deletedAt,
-      username: user.username,
-      password: user.password,
-      nickname: user.nickname,
-      email: user.email,
-      phone: user.phone,
-      status: user.status,
-      roles: user.roles.map(role => ({
-        id: role.id,
-        createdAt: role.createdAt,
-        updatedAt: role.updatedAt,
-        deletedAt: role.deletedAt,
-        name: role.name,
-        code: role.code,
-        description: role.description,
-        status: role.status
-      })),
-      menus: menus,
-      menuList: completeMenus,
-    };
+      ...user,
+      menus: completeMenus
+    }
+    // return {
+    //   id: user.id,
+    //   username: user.username,
+    //   nickname: user.nickname,
+    //   email: user.email,
+    //   phone: user.phone,
+    //   status: user.status,
+    //   roles: user.roles
+    //     .map(role => ({
+    //     id: role.id,
+    //     name: role.name,
+    //     code: role.code,
+    //     description: role.description,
+    //     status: role.status
+    //   })),
+    //   menus: completeMenus
+    // };
   }
 
   /**
