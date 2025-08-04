@@ -23,7 +23,7 @@ export class RoleController {
     const data = await this.roleService.findAll({
       where: query,
     });
-    return { data };
+    return data;
   }
 
   /**

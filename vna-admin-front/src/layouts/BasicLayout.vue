@@ -69,7 +69,7 @@ const handleLogout = async () => {
     flex: 1;
     display: flex;
     flex-direction: column;
-    // background: #f5f5f5;
+    height: calc(100% - 60px);
     overflow: hidden;
     margin-top: 60px;
 
@@ -83,8 +83,7 @@ const handleLogout = async () => {
     .content-area {
       flex: 1;
       padding: 24px;
-      // overflow: auto;
-      // background: #f5f5f5;
+      height: calc(100% - 33px);
     }
   }
 }
