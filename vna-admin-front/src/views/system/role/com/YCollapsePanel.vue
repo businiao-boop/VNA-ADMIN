@@ -16,35 +16,57 @@ const props = defineProps({
   openKeys: {
     type: Array,
     default: () => ([])
-  }
+  },
+  permissions: {
+    type: Array,
+    default: () => ([])
+  },
 });
-const permissions = [
+const allPermissions = [
   {
-    value: 'read',
-    label: '读取'
+    value: 'view',
+    label: '查看'
   },
   {
     value: 'write',
     label: '写入'
   }
 ];
-const selectedPermissions = ref([]);
 const hasChild = computed(() => {
   return props.menu.children && props.menu.children.length > 0;
 })
 const isOpen = computed(() => {
   return props.openKeys.includes(props.rowKey);
 })
+const currentPermissions = computed(() => {
+  return props.permissions.find(item => {
+    return item.menuId === props.menu.id;
+  }) || {
+    menuId: props.menu.id,
+    actions: []
+  }
+})
+const checkPermission = (val) => {
+  const exist = props.permissions.find(item => {
+    return item.menuId === props.menu.id;
+  });
+  if (!exist) {
+    props.permissions.push({
+      menuId: props.menu.id,
+      actions: val
+    })
+  }
+}
+
 </script>
 
 <template>
   <a-collapse-panel class="y-collapse-panel" :key="rowKey" :show-arrow="false"
     :class="[hasChild ? 'cursor-pointer' : 'cursor-default']">
     <template v-if="hasChild">
-      <YLoopMenu :menus="menu.children"></YLoopMenu>
+      <YLoopMenu :menus="menu.children" :permissions="permissions"></YLoopMenu>
     </template>
     <template #header>
-      <!-- fa-folder -->
       <div class="flex flex-1 justify-between">
         <div class="left">
           <span v-if="hasChild">
@@ -57,7 +79,8 @@ const isOpen = computed(() => {
         </div>
         <div class="right">
           <template v-if="!hasChild">
-            <a-checkbox-group v-model:value="menu.permissions" :options="permissions"></a-checkbox-group>
+            <a-checkbox-group v-model:value="currentPermissions.actions" :options="allPermissions"
+              @change="checkPermission"></a-checkbox-group>
           </template>
           <template v-else>
             <i class="fas  text-gray-400 fa-chevron-right transition-all"

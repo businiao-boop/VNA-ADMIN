@@ -8,10 +8,10 @@ import { Permission } from "@/core/permission/entities/permission.entity";
  */
 @Entity("roles")
 export class Role extends BaseEntity {
-  @Column({ unique: true, comment: "角色名称" })
+  @Column({ comment: "角色名称" })
   name: string;
 
-  @Column({ unique: true, comment: "角色编码" })
+  @Column({ comment: "角色编码" })
   code: string;
 
   @Column({ comment: "描述", nullable: true })

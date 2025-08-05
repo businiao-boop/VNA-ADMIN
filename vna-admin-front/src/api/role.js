@@ -74,10 +74,10 @@ export function getRoleDetail(id) {
  * @param {Number} data.id 角色ID
  * @returns {Promise} 返回删除结果
  */
-export function deleteRole(data) {
+export function deleteRole(id) {
   return service({
     url: "/role/delete",
     method: "POST",
-    data
+    data: { id }
   })
 }

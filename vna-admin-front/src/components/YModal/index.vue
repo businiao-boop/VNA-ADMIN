@@ -38,8 +38,8 @@ const handleClose = () => {
     <template #footer>
       <slot name="footer">
         <div>
-          <a-button @click="handleCancel">取消1</a-button>
-          <a-button type="primary" @click="handleConfirm">确定1</a-button>
+          <a-button @click="handleCancel">取消</a-button>
+          <a-button type="primary" @click="handleConfirm">确定</a-button>
         </div>
       </slot>
     </template>

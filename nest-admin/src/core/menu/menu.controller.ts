@@ -23,6 +23,7 @@ export class MenuController {
     const data = await this.menuService.findAll({
       where: query,
       order: { sort: "ASC" },
+      relations: ["permissions"],
     });
 
     return data;

@@ -69,7 +69,7 @@ export class PermissionController {
   @ApiOperation({ summary: "分配权限给角色" })
   async assignPermissions(@Body() dto: AssignPermissionDto) {
     await this.permissionService.assignPermissionsToRole(dto);
-    return { message: "权限分配成功" };
+    return dto.roleId;
   }
 
   /**

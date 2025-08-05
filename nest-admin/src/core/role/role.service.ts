@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { BaseService } from "@/common/base/base.service";
 import { Role } from "./entities/role.entity";
-import { CreateRoleDto } from "./dto/role.dto";
+import { CreateRoleDto, QueryRoleDto } from "./dto/role.dto";
 
 /**
  * 角色服务
@@ -21,12 +21,16 @@ export class RoleService extends BaseService<Role> {
    * 创建角色
    */
   async createRole(dto: CreateRoleDto): Promise<Role> {
-    const existingRole = await this.roleRepository.findOne({
+    const existingRole = await this.findOne({
       where: [{ name: dto.name }, { code: dto.code }],
     });
+    console.log(existingRole);
 
-    if (existingRole) {
-      throw new ConflictException("角色名称或编码已存在");
+    if (existingRole && existingRole.code === dto.code) {
+      throw new ConflictException("角色编码已存在");
+    }
+    if (existingRole && existingRole.name === dto.name) {
+      throw new ConflictException("角色名称已存在");
     }
 
     const role = this.roleRepository.create(dto);
@@ -81,5 +85,14 @@ export class RoleService extends BaseService<Role> {
     }
 
     return role;
+  }
+
+  async list(options: QueryRoleDto) {
+    // 模糊查询
+    const query = this.roleRepository.createQueryBuilder("role");
+    if (options.name) {
+      query.where("role.name LIKE :name", { name: `%${options.name}%` });
+    }
+    return query.getMany();
   }
 }

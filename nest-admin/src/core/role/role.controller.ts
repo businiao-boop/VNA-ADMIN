@@ -20,9 +20,7 @@ export class RoleController {
   @Post("list")
   @ApiOperation({ summary: "查询所有角色数据" })
   async getRoleList(@Body() query: QueryRoleDto) {
-    const data = await this.roleService.findAll({
-      where: query,
-    });
+    const data = await this.roleService.list(query);
     return data;
   }
 
@@ -54,10 +52,10 @@ export class RoleController {
   async saveRole(@Body() dto: CreateRoleDto) {
     if (dto.id) {
       const role = await this.roleService.updateRole(dto.id, dto);
-      return { message: "更新成功", data: role };
+      return role;
     } else {
       const role = await this.roleService.createRole(dto);
-      return { message: "创建成功", data: role };
+      return role;
     }
   }
 

@@ -109,12 +109,11 @@ const handleLogout = () => {
 };
 
 const handleSearch = (value) => {
-  console.log('搜索菜单:', value);
   // 这里可以实现菜单搜索过滤逻辑
 };
 
 const handleNotification = () => {
-  console.log('打开消息通知');
+  // 实现消息通知逻辑
 };
 
 const toggleFullscreen = () => {

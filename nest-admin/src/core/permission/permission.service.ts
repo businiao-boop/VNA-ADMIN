@@ -75,6 +75,7 @@ export class PermissionService extends BaseService<Permission> {
         })
       );
       await this.permissionRepository.save(permissionEntities);
+
     }
   }
 

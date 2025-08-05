@@ -46,8 +46,6 @@ service.interceptors.response.use(
     }
   },
   (error) => {
-    console.log(error);
-
     if (error.response) {
       const response = error.response;
       const status = response.status;

@@ -115,15 +115,12 @@ const loadData = async () => {
 };
 
 const handleAdd = () => {
-  console.log("新增数据");
 };
 
 const handleEdit = (row) => {
-  console.log("编辑数据:", row);
 };
 
 const handleDelete = (row) => {
-  console.log("删除数据:", row);
 };
 
 onMounted(() => {

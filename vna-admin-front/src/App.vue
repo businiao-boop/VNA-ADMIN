@@ -6,7 +6,6 @@
 import { onMounted } from 'vue';
 
 onMounted(() => {
-  console.log('VNA-Admin 启动成功');
 });
 </script>
 
