@@ -6,9 +6,14 @@ import { TreeSelect } from 'ant-design-vue';
 import YTable from '@/components/YTable/index.vue';
 import YSelect from '@/components/YSelect/index.vue';
 import YWrapper from '@/components/YWrapper/index.vue';
+import editMenuDialog from './com/editMenuDialog.vue';
+import { useModal } from '@/hooks/modal/useModal';
+import { useMessage } from "@/hooks/message/useMessage";
 import { getAllMenus, saveMenu, deleteMenu, getMenuDetail } from '@/api/menu';
 import { buildTree } from "@/utils/buildTree";
-
+import EditMenuDialog from './com/editMenuDialog.vue';
+const { showModal } = useModal();
+const { success } = useMessage();
 const loading = ref(false);
 const menuData = ref([]);
 const modalVisible = ref(false);
@@ -17,26 +22,30 @@ const modalTitle = ref('');
 const menuFormRef = ref();
 const yTable = ref(null);
 
-const menuForm = reactive({
-  id: undefined,
-  name: '',
-  path: '',
-  component: '',
-  parentId: null,
-  icon: '',
-  sort: 0,
-  status: 1
-});
+const menuForm = reactive(_initState());
+
+function _initState() {
+  return {
+    id: null,
+    name: '',
+    path: '',
+    component: '',
+    icon: '',
+    title: '',
+    show: true,
+    type: 'dir',
+    parentId: null,
+    sort: 0,
+    status: 1
+  }
+}
+
 
 const menuRules = {
   name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }],
   path: [{ required: true, message: '请输入路由地址', trigger: 'blur' }],
   component: [{ required: true, message: '请输入组件路径', trigger: 'blur' }]
 };
-
-
-
-
 
 const loadMenus = async () => {
   loading.value = true;
@@ -50,34 +59,21 @@ const loadMenus = async () => {
     loading.value = false;
   }
 };
-
+function openModal(row) {
+  showModal(EditMenuDialog, { formState: row }).then(res => {
+    if (row.id) {
+      success('菜单更新成功');
+    } else {
+      success('菜单新增成功');
+    }
+  })
+}
 const handleAdd = () => {
-  modalTitle.value = '新增菜单';
-  menuForm.id = undefined;
-  Object.assign(menuForm, {
-    name: '',
-    title: "",
-    path: '',
-    component: '',
-    parentId: null,
-    icon: '',
-    sort: 0,
-    status: 1
-  });
-  modalVisible.value = true;
+  openModal(_initState());
 };
 
 const handleEdit = async (record) => {
-  try {
-    modalTitle.value = '编辑菜单';
-    const response = await getMenuDetail(record.id);
-
-    const menuData = response.data || response;
-    Object.assign(menuForm, menuData);
-    modalVisible.value = true;
-  } catch (error) {
-    message.error('获取菜单详情失败');
-  }
+  openModal(record);
 };
 
 const handleDelete = async (record) => {
@@ -100,7 +96,8 @@ const handleAddChild = (record) => {
     parentId: record.id,
     icon: '',
     sort: 0,
-    status: 1
+    status: 1,
+    show: 1
   });
   modalVisible.value = true;
 };
@@ -133,15 +130,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <YWrapper title="菜单管理">
-    <!-- <template #extra> -->
-    <a-button type="primary" @click="handleAdd">
-      <PlusOutlined />
-      新增菜单
-    </a-button>
-    <!-- </template> -->
+  <YBaseLayout title="菜单管理">
+    <template #header>
+      <a-button type="primary" @click="handleAdd">
+        <i class="fa-solid fa-plus"></i>
+        新增菜单
+      </a-button>
+    </template>
 
-    <YTable ref="yTable" :data="menuData" id="id" :tree-config="{ childrenField: 'children' }" default-expand-all>
+    <YTable ref="yTable" :data="menuData" id="id" :round="true" :tree="true">
       <template #columns>
         <vxe-column field="name" title="菜单名称" tree-node min-width="180">
           <template #default="{ row }">
@@ -221,11 +218,7 @@ onMounted(() => {
         </a-form-item>
       </a-form>
     </a-modal>
-  </YWrapper>
+  </YBaseLayout>
 </template>
 
-<style scoped lang="scss">
-.menu-management {
-  padding: 24px;
-}
-</style>
+<style scoped lang="scss"></style>

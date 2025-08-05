@@ -43,11 +43,7 @@ export const useUserStore = defineStore('user', {
     // 构建菜单树
     buildMenuTree(menus) {
       // 使用 buildTree 构建基础树结构
-      const tree = buildTree(menus, {
-        rowKey: 'id',
-        parentKey: 'parentId',
-        childrenKey: 'children'
-      });
+      const tree = buildTree(menus);
 
       // 递归处理路径拼接
       const processPath = (nodes, parentPath = '') => {
@@ -67,7 +63,6 @@ export const useUserStore = defineStore('user', {
           }
         });
       };
-
       processPath(tree);
       return tree;
     },

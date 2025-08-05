@@ -8,7 +8,8 @@ export const MENU_TYPE_OPTIONS = [
   { label: '目录', value: 'dir' },
   { label: '菜单', value: 'menu' },
   { label: '按钮', value: 'button' },
-  { label: '权限', value: 'permission' }
+  { label: '权限', value: 'permission' },
+  { label: "IDE", value: "ide" }
 ];
 
 // 布局选项
@@ -17,6 +18,12 @@ export const LAYOUT_OPTIONS = [
   { label: '全屏', value: 'fullpage' },
   { label: '内嵌', value: 'iframe' },
   { label: '移动端', value: 'mobile' }
+];
+
+// 启用状态选项
+export const ENABLE_STATUS_OPTIONS = [
+  { label: '启用', value: 1 },
+  { label: '禁用', value: 0 }
 ];
 
 // 用户状态选项
@@ -40,14 +47,14 @@ export const GENDER_OPTIONS = [
 
 // 是否选项
 export const YES_NO_OPTIONS = [
-  { label: '是', value: true },
-  { label: '否', value: false }
+  { label: '是', value: 1 },
+  { label: '否', value: 0 }
 ];
 
 // 菜单显示状态选项
 export const MENU_SHOW_OPTIONS = [
-  { label: '显示', value: true },
-  { label: '隐藏', value: false }
+  { label: '显示', value: 1 },
+  { label: '隐藏', value: 0 }
 ];
 
 /**

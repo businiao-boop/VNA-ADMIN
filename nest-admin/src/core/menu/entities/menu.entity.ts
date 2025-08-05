@@ -1,6 +1,7 @@
 import { Entity, Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 import { BaseEntity } from "@/common/entities/base.entity";
 import { Permission } from "@/core/permission/entities/permission.entity";
+import { MenuTypeEnum } from "@/common/enums/menu.enum"
 
 /**
  * 菜单实体
@@ -22,11 +23,11 @@ export class Menu extends BaseEntity {
   @Column({ comment: "菜单标题", nullable: true })
   title: string;
 
-  @Column({ default: true, comment: "是否显示：true显示 false隐藏" })
-  show: boolean;
+  @Column({ default: 1, comment: "是否显示：1显示 0隐藏" })
+  show: number;
 
-  @Column({ comment: "菜单类型", nullable: true })
-  type: string;
+  @Column({ comment: "菜单类型", type: "enum", enum: MenuTypeEnum, default: MenuTypeEnum.DIRECTORY })
+  type: MenuTypeEnum;
 
   @Column({ comment: "父菜单ID", nullable: true })
   parentId: number;

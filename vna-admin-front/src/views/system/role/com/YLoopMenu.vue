@@ -35,7 +35,8 @@ const handleChange = (keys) => {
 </script>
 
 <template>
-  <a-collapse :activeKey="activeKey" expand-icon-position="end" :bordered="true" @change="handleChange">
+  <a-collapse class="bg-white y-loop-menu" :activeKey="activeKey" expand-icon-position="end" :bordered="false"
+    @change="handleChange">
     <YCollapsePanel v-for="menu in menus" :key="menu.id" :menu="menu" :rowKey="menu.id + ''" :openKeys="activeKey"
       :permissions="permissions">
     </YCollapsePanel>
@@ -43,5 +44,7 @@ const handleChange = (keys) => {
 </template>
 
 <style scoped lang="scss">
-.compoent-wrapper {}
+.y-loop-menu {
+  &.has-child {}
+}
 </style>

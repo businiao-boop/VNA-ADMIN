@@ -1,11 +1,8 @@
-import { IsString, IsOptional, IsNumber } from "class-validator";
+import { IsString, IsOptional, IsNumber, IsEnum, IsBoolean } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
 import { BaseDto } from "@/common/dto";
-
-/**
- * 创建/更新菜单DTO
- */
+import { MenuTypeEnum, MenuLayoutEnum } from "@/common/enums/menu.enum"
 export class CreateMenuDto extends BaseDto {
   @ApiProperty({ description: "菜单名称" })
   @IsString()
@@ -31,15 +28,15 @@ export class CreateMenuDto extends BaseDto {
   @IsString()
   title?: string;
 
-  @ApiPropertyOptional({ description: "是否显示", default: true })
+  @ApiPropertyOptional({ description: "是否显示", default: 1 })
   @IsOptional()
   @IsNumber()
-  show?: boolean;
+  show?: number;
 
   @ApiPropertyOptional({ description: "菜单类型" })
   @IsOptional()
-  @IsString()
-  type?: string;
+  @IsEnum(MenuTypeEnum)
+  type?: MenuTypeEnum;
 
   @ApiPropertyOptional({ description: "父菜单ID" })
   @IsOptional()

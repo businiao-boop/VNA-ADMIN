@@ -26,7 +26,7 @@ const handleClose = () => {
 </script>
 
 <template>
-  <a-modal v-bind="{ open: true, title }" @cancel="handleClose">
+  <a-modal v-bind="{ open: true, title }" @cancel="handleClose" :maskClosable="false">
     <template #header>
       <div>
         <slot name="header">

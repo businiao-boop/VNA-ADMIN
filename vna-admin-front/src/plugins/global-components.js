@@ -1,4 +1,6 @@
 import YSplitLayout from '@/components/Layouts/YSplitLayout.vue'
+import YBaseLayout from '@/components/Layouts/YBaseLayout.vue'
+
 export default {
   install(app) {
     // Register other common components
@@ -11,6 +13,7 @@ export default {
         app.component(dirName, component)
       }
     })
-    app.component('YSplitLayout', YSplitLayout)
+    app.component('YSplitLayout', YSplitLayout);
+    app.component('YBaseLayout', YBaseLayout);
   }
 }

@@ -61,13 +61,13 @@ const checkPermission = (val) => {
 </script>
 
 <template>
-  <a-collapse-panel class="y-collapse-panel" :key="rowKey" :show-arrow="false"
+  <a-collapse-panel class="y-collapse-panel mb-3" :key="rowKey" :show-arrow="false"
     :class="[hasChild ? 'cursor-pointer' : 'cursor-default']">
     <template v-if="hasChild">
-      <YLoopMenu :menus="menu.children" :permissions="permissions"></YLoopMenu>
+      <YLoopMenu class="has-child" :menus="menu.children" :permissions="permissions"></YLoopMenu>
     </template>
     <template #header>
-      <div class="flex flex-1 justify-between">
+      <div class="flex flex-1 justify-between" :class="hasChild ? 'has-child' : ''">
         <div class="left">
           <span v-if="hasChild">
             <i class="fas text-indigo-500 mr-2" :class="[isOpen ? 'fa-folder-open' : 'fa-folder']"></i>
@@ -97,5 +97,17 @@ const checkPermission = (val) => {
   :deep(.ant-collapse-header) {
     cursor: inherit;
   }
+
+  :deep(.ant-collapse-header) {
+    @apply bg-gray-50;
+  }
+
+  :deep(.ant-collapse-content) {
+    .ant-collapse-content-box {
+      @apply pt-3;
+    }
+  }
+
+  @apply border rounded-lg border-solid border-b border-gray-200 overflow-hidden #{!important};
 }
 </style>

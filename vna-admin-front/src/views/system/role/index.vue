@@ -171,7 +171,7 @@ const handleEdit = (role) => {
         </div>
         <div style="height: calc(100% - 70px);" class="p-6">
           <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-            <YSvg name="list" size="18" color="#6366f1" class="mr-2"></YSvg>
+            <i class="fa-solid fa-bars mr-2 text-indigo-600"></i>
             <span>
               菜单权限
             </span>

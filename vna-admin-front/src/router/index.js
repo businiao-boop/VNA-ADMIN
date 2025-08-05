@@ -13,11 +13,7 @@ const routes = [
     name: 'register',
     component: () => import('@/views/register/index.vue'),
     meta: { title: '注册' }
-  },
-  {
-    path: '/',
-    redirect: '/dashboard'
-  },
+  }
 ];
 
 const router = createRouter({
@@ -39,7 +35,7 @@ router.beforeEach(async (to, from, next) => {
   if (to.path === '/login' || to.path === '/register') {
     if (token && userStore.isLoggedIn) {
       // 已登录，跳转到首页
-      next();
+      next("/dashboard");
     } else {
       next();
     }
